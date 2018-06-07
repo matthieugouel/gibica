@@ -1,0 +1,23 @@
+language: python
+python:
+    - "3.6"
+
+stages:
+  - lint
+  - test
+  - type
+
+install:
+    - pip install -r requirements-dev.txt
+
+jobs:
+    include:
+        - stage: lint
+          script: tox -e lint
+        - stage: test
+          script: tox -e test
+        - stage: type
+          script: tox -e type
+
+after_success:
+    coveralls
