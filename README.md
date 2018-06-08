@@ -9,79 +9,36 @@
 
 ## Installation
 
-Note : The use of a virtual environment is heavily recommended.
+You can install the package from sources after cloning the project and navigating into the project directory.
 
-If you want to install the package :
-
-```bash
+```
 pip install .
 ```
 
-For development purposes, you can install the package in editable mode with the dev requirements.
+## Usage
 
-```bash
-pip install -e . -r requirements-dev.txt
-```
-
-## Syntax checking
-
-You can check the syntax using flake8 :
-
-```bash
-flake8 gibica
-```
-
-You can also use tox :
-
-```bash
-tox -e lint
-```
-
-## Test coverage
-
-You can run the coverage with the following command :
-
-```bash
-coverage run --source gibica -m py.test
-```
-
-You can also use tox :
-
-```bash
-tox -e test
-```
-
-## Type checking
-
-You use annotation to do static type checking with mypy :
-
-```bash
-mypy gibica
-```
-
-You can also use tox :
+After have installed the software, you can run it as a CLI program.
 
 ```
-tox -e type
+gibica
 ```
 
-## Documentation
+You can also pass a script file as an argument of the interpreter.
 
-The documentation of the project can be found under the directory `./doc/_build/html`.
-
-To rebuild the configuration, you can use the makefile (or the make.bat for Windows users) :
-
-```bash
-$ cd docs/
-$ make clean
-$ sphinx-apidoc -F -P -o . ../gibica
-$ make html
+```
+gibica script.gbc
 ```
 
-## Version bumping
+For more information, you can display the help.
 
-When you are satisfied with your code and you want to bump a version, just run the command :
-
-```bash
-bumversion [ major | minor | patch ]
 ```
+gibica --help
+```
+
+## Contributing
+
+See [CONTRIBUTING](CONTRIBUTING.md) for more information about how to contribute to this project.
+
+## Credits
+
+This project is based on the fantastic series of tutorials [Let’s Build A Simple Interpreter](https://ruslanspivak.com/lsbasi-part1/) by Ruslan Spivak.
