@@ -16,7 +16,7 @@ import pytest
     ('gibica1=2;', {'gibica1': 2}),
 ])
 def test_simple_assignments(evaluate, input, expected):
-    """Test simple variable assigments."""
+    """Test simple variable assignments."""
     instance = evaluate(input)
 
     assert instance.GLOBAL_SCOPE == expected
@@ -27,7 +27,7 @@ def test_simple_assignments(evaluate, input, expected):
     ('a=2 /   2 ;', {'a': 1}),
 ])
 def test_assignments_with_whitespaces(evaluate, input, expected):
-    """Test variable assigments with whitespaces."""
+    """Test variable assignments with whitespaces."""
     instance = evaluate(input)
 
     assert instance.GLOBAL_SCOPE == expected
@@ -38,7 +38,7 @@ def test_assignments_with_whitespaces(evaluate, input, expected):
     ('a=((2+2)*2)/2;', {'a': 4}),
 ])
 def test_assignments_with_parenthesis(evaluate, input, expected):
-    """Test variable assigments with parenthesis."""
+    """Test variable assignments with parenthesis."""
     instance = evaluate(input)
 
     assert instance.GLOBAL_SCOPE == expected
@@ -51,7 +51,7 @@ def test_assignments_with_parenthesis(evaluate, input, expected):
     ('a=((+10));', {'a': 10}),
 ])
 def test_unary_assignments(evaluate, input, expected):
-    """Test unary variable assigments."""
+    """Test unary variable assignments."""
     instance = evaluate(input)
 
     assert instance.GLOBAL_SCOPE == expected
@@ -62,7 +62,7 @@ def test_unary_assignments(evaluate, input, expected):
     ('a=2+2;b=a*2;', {'a': 4, 'b': 8}),
 ])
 def test_multiple_assignments(evaluate, input, expected):
-    """Test multiple variable assigments."""
+    """Test multiple variable assignments."""
     instance = evaluate(input)
 
     assert instance.GLOBAL_SCOPE == expected
