@@ -1,6 +1,6 @@
 language: python
 python:
-    - "3.6"
+    - "3.6.4"
 
 stages:
   - lint
@@ -14,10 +14,11 @@ jobs:
     include:
         - stage: lint
           script: tox -e lint
-        - stage: test
-          script: tox -e test
         - stage: type
           script: tox -e type
+        - stage: test
+          script: tox -e test
+
 
 after_success:
     coveralls
