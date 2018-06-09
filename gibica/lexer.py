@@ -18,6 +18,7 @@ class Type(object):
     MINUS = 'MINUS'
     MUL = 'MUL'
     DIV = 'DIV'
+    INT_DIV = 'INT_DIV'
     LPAREN = 'LPAREN'
     RPAREN = 'RPAREN'
     ASSIGN = 'ASSIGN'
@@ -57,6 +58,13 @@ class Lexer(object):
             self.char = None
         else:
             self.char = self.raw[self.cursor]
+
+    def peek(self):
+        peek_cursor = self.cursor + 1
+        if peek_cursor >= len(self.raw):
+            return None
+        else:
+            return self.raw[peek_cursor]
 
     def whitespace(self):
         """Handle whitespace."""
@@ -113,9 +121,15 @@ class Lexer(object):
                 self.advance()
                 return Token(Type.MUL, '*')
             elif self.char == '/':
-                # The current character is `/`
-                self.advance()
-                return Token(Type.DIV, '/')
+                if self.peek() == '/':
+                    # The current character is `//`
+                    self.advance()
+                    self.advance()
+                    return Token(Type.INT_DIV, '//')
+                else:
+                    # The current character is `/`
+                    self.advance()
+                    return Token(Type.DIV, '/')
             elif self.char == '(':
                 # The current character is `(`
                 self.advance()

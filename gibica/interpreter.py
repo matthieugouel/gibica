@@ -57,6 +57,8 @@ class Interpreter(NodeVisitor):
         elif node.op.type == Type.MUL:
             return self.visit(node.left) * self.visit(node.right)
         elif node.op.type == Type.DIV:
+            return self.visit(node.left) / self.visit(node.right)
+        elif node.op.type == Type.INT_DIV:
             return self.visit(node.left) // self.visit(node.right)
 
     def visit_UnaryOp(self, node):

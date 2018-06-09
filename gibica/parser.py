@@ -132,15 +132,17 @@ class Parser(object):
         return node
 
     def term(self):
-        """Rule: `factor:  factor ((MUL | DIV) factor)*`."""
+        """Rule: `factor:  factor ((MUL | DIV | INT_DIV) factor)*`."""
         node = self.factor()
 
-        while self.token.type in (Type.MUL, Type.DIV):
+        while self.token.type in (Type.MUL, Type.DIV, Type.INT_DIV):
             token = self.token
             if token.type == Type.MUL:
                 self._process(Type.MUL)
             elif token.type == Type.DIV:
                 self._process(Type.DIV)
+            elif token.type == Type.INT_DIV:
+                self._process(Type.INT_DIV)
             else:
                 raise Exception(f'SYNTAX: Unknown operand `{token}`.')
 
