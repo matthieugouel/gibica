@@ -68,11 +68,11 @@ docs/_build/
 # Swap
 *.swp
 
+# Temporary files
+*.tmp
+
 # Gibica scripts
 *.gbc
 
 # Others
-*.tmp
-.idea
-env
-tags
+debug/
