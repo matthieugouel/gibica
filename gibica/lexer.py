@@ -5,8 +5,8 @@
 # Lexical Analysis
 #
 
-# For now there is no reserverd keywords
-RESERVED_KEYWORDS = {}
+# List of reserved keywords
+RESERVED_KEYWORDS: dict = {}
 
 
 class Type(object):

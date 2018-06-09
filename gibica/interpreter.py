@@ -43,8 +43,8 @@ class Interpreter(NodeVisitor):
         variable_value = self.GLOBAL_SCOPE.get(variable_name)
         if variable_value is None:
             raise Exception(
-                    f'INTERPRETER: Unassigned variable `{variable_name}`.'
-                )
+                f'INTERPRETER: Unassigned variable `{variable_name}`.'
+            )
         else:
             return variable_value
 
