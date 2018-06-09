@@ -58,11 +58,6 @@ class UnaryOp(AST):
         self.right = right
 
 
-class NoOp(AST):
-    """No operand AST representation."""
-    pass
-
-
 class Num(AST):
     """Numeric AST representation."""
 
@@ -94,20 +89,19 @@ class Parser(object):
     def program(self):
         """Rule: `(program: statement SEMI)*`."""
         root = Compound()
-        root.children.append(self.statement())
 
-        while self.token.type == Type.SEMI:
-            self._process(Type.SEMI)
+        while self.token.type != Type.EOF:
             root.children.append(self.statement())
+            self._process(Type.SEMI)
 
         return root
 
     def statement(self):
-        """Rule: `statement: assignment_statement | empty`."""
+        """Rule: `statement: assignment_statement`."""
         if self.token.type == Type.ID:
             node = self.assignment_statement()
         else:
-            node = self.empty()
+            node = self._error()
 
         return node
 
@@ -181,10 +175,6 @@ class Parser(object):
         node = Var(self.token)
         self._process(Type.ID)
         return node
-
-    def empty(self):
-        """Rule: `empty:`."""
-        return NoOp()
 
     def parse(self):
         """Generic entrypoint of the `Parser` class."""

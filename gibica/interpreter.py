@@ -66,10 +66,6 @@ class Interpreter(NodeVisitor):
         elif node.op.type == Type.MINUS:
             return -self.visit(node.right)
 
-    def visit_NoOp(self, node):
-        """Visitor for `NoOp` AST node."""
-        pass
-
     def visit_Num(self, node):
         """Visitor for `Num` AST node."""
         return node.value
