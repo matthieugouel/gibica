@@ -11,49 +11,41 @@ from gibica.interpreter import Interpreter
 # Main
 #
 
-def evaluate(raw):
-    """Process the raw input."""
-
-    # Lexical analysis
-    lexer = Lexer(raw)
-
-    # Syntax analysis
-    parser = Parser(lexer)
-
-    # Program evaluation
-    intepreter = Interpreter(parser)
-
-    # Return the output
-    return intepreter.interpret()
-
 
 @click.command()
-@click.argument('filepath')
-def main(filepath):
+@click.argument(
+    'filepath'
+)
+@click.option(
+    '--debug',
+    'in_debug_mode',
+    is_flag=True,
+    help='Run in debug mode.'
+)
+def main(filepath, in_debug_mode):
     """Gibica Interpreter."""
 
-    if not filepath:
+    with open(filepath) as file:
 
-        # Live interpreter
-        while True:
+        # Lexical analysis instantiation
+        lexer = Lexer(file.read())
 
-            # Get the raw input
-            try:
-                raw = input('>>> ')
-            except EOFError:
-                break
+        # Syntax analysis instantiation
+        parser = Parser(lexer)
 
-            if not raw:
-                continue
+        # Interpreter instantiation
+        interpreter = Interpreter(parser)
 
-            # Print the result
-            print(evaluate(raw))
+        # Program evaluation
+        result = interpreter.interpret()
 
-    else:
+        # Display the output if it's an evaluation
+        if result:
+            click.echo(result)
 
-        # Evaluate the code provided as a file
-        with open(filepath) as file:
-            print(evaluate(file.read()))
+        # Display internal variables if debug option enabled
+        if in_debug_mode:
+            click.echo(f'GLOBAL_SCOPE: {interpreter.GLOBAL_SCOPE}')
 
 
 if __name__ == '__main__':

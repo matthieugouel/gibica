@@ -5,9 +5,14 @@
 # Lexical Analysis
 #
 
+# For now there is no reserverd keywords
+RESERVED_KEYWORDS = {}
+
+
 class Type(object):
     """Enumeration of token types."""
 
+    ID = 'ID'
     INTEGER = 'INTEGER'
     PLUS = 'PLUS'
     MINUS = 'MINUS'
@@ -15,6 +20,8 @@ class Type(object):
     DIV = 'DIV'
     LPAREN = 'LPAREN'
     RPAREN = 'RPAREN'
+    ASSIGN = 'ASSIGN'
+    SEMI = 'SEMI'
     EOF = 'EOF'
 
 
@@ -64,13 +71,32 @@ class Lexer(object):
             self.advance()
         return int(number)
 
+    def _id(self):
+        """Handle identifiers and reserverd keywords."""
+        result = ''
+        while self.char is not None and self.char.isalnum():
+            result += self.char
+            self.advance()
+
+        token = RESERVED_KEYWORDS.get(result, Token(Type.ID, result))
+        return token
+
     def next_token(self):
         """Lexical analyser of the raw input."""
         while self.char is not None:
             if self.char.isspace():
-                # The current char is a whitespace
+                # The current character is a whitespace
                 self.whitespace()
                 continue
+            elif self.char.isalpha():
+                # The curent character is a letter
+                return self._id()
+            elif self.char == '=':
+                self.advance()
+                return Token(Type.ASSIGN, '=')
+            elif self.char == ';':
+                self.advance()
+                return Token(Type.SEMI, ';')
             elif self.char.isdigit():
                 # The current character is an integer
                 return Token(Type.INTEGER, self.integer())

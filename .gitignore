@@ -68,7 +68,11 @@ docs/_build/
 # Swap
 *.swp
 
+# Gibica scripts
+*.gbc
+
 # Others
+*.tmp
 .idea
 env
 tags

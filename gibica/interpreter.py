@@ -7,6 +7,7 @@ from gibica.lexer import Type
 # Program Evaluation
 #
 
+
 class NodeVisitor(object):
     """Postorder traversal strategy."""
 
@@ -17,7 +18,7 @@ class NodeVisitor(object):
 
     def fallback(self, node):
         """Fallback if the child method doesn't exist."""
-        raise Exception(f'No visit_{type(node).__name__} method.')
+        raise Exception(f'INTERPRETER: No visit_{type(node).__name__} method.')
 
 
 class Interpreter(NodeVisitor):
@@ -25,6 +26,27 @@ class Interpreter(NodeVisitor):
 
     def __init__(self, parser):
         self.parser = parser
+        self.GLOBAL_SCOPE = {}
+
+    def visit_Compound(self, node):
+        """Visitor for `Compound` AST node."""
+        for child in node.children:
+            self.visit(child)
+
+    def visit_Assign(self, node):
+        """Visitor for `Compound` AST node."""
+        self.GLOBAL_SCOPE[node.left.value] = self.visit(node.right)
+
+    def visit_Var(self, node):
+        """Visitor for `Compound` AST node."""
+        variable_name = node.value
+        variable_value = self.GLOBAL_SCOPE.get(variable_name)
+        if variable_value is None:
+            raise Exception(
+                    f'INTERPRETER: Unassigned variable `{variable_name}`.'
+                )
+        else:
+            return variable_value
 
     def visit_BinOp(self, node):
         """Visitor for `BinOp` AST node."""
@@ -44,6 +66,10 @@ class Interpreter(NodeVisitor):
         elif node.op.type == Type.MINUS:
             return -self.visit(node.right)
 
+    def visit_NoOp(self, node):
+        """Visitor for `NoOp` AST node."""
+        pass
+
     def visit_Num(self, node):
         """Visitor for `Num` AST node."""
         return node.value
@@ -51,4 +77,6 @@ class Interpreter(NodeVisitor):
     def interpret(self):
         """Generic entrypoint of `Interpreter` class."""
         tree = self.parser.parse()
+        if tree is None:
+            return ''
         return self.visit(tree)
