@@ -12,6 +12,15 @@ For development purposes, you can install the package in editable mode with the 
 pip install -e . -r requirements-dev.txt
 ```
 
+## Debug mode
+
+
+You can launch Gibica in debug mode to see internal components.
+
+```
+gibica script.gbc --debug
+```
+
 ## Syntax checking
 
 You can check the syntax using flake8 :

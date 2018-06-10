@@ -17,13 +17,7 @@ pip install .
 
 ## Usage
 
-After have installed the software, you can run it as a CLI program.
-
-```
-gibica
-```
-
-You can also pass a script file as an argument of the interpreter.
+After have installed the software, you can run it as a CLI program with your Gibica script file as an argument.
 
 ```
 gibica script.gbc
