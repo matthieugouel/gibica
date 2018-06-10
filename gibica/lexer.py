@@ -83,6 +83,12 @@ class Lexer(object):
         while self.char is not None and self.char.isspace():
             self.advance()
 
+    def comment(self):
+        while self.char != '*' or self.peek() != '/':
+            self.advance()
+        self.advance()
+        self.advance()
+
     def number(self):
         """Return a multidigit int or float number."""
         number = ''
@@ -152,6 +158,12 @@ class Lexer(object):
                     self.advance()
                     self.advance()
                     return Token(Name.INT_DIV, '//')
+                elif self.peek() == '*':
+                    # The current character is `/*
+                    self.advance()
+                    self.advance()
+                    self.comment()
+                    continue
                 else:
                     # The current character is `/`
                     self.advance()

@@ -44,3 +44,13 @@ def test_invalid_variable_name(evaluate, input):
     """Test invalid variable name"""
     with pytest.raises(Exception):
         evaluate(input)
+
+
+@pytest.mark.parametrize('input, expected', [
+    ('int a = 1; /* This is a comment */', {'a': 1}),
+])
+def test_with_comments(evaluate, input, expected):
+    """Test a comment"""
+    instance = evaluate(input)
+
+    assert instance.GLOBAL_SCOPE == expected
