@@ -6,11 +6,19 @@ This is the current grammar of the Gibica language.
 
 ::
 
-    program: (statement SEMI)*
+    program: (statement)*
 
-    statement: assignment_statement
+    statement: declaration_statement
+             | expression_statement
 
-    assignment_statement : variable ASSIGN expr
+    declaration_statement: var_type assignment SEMI
+
+    type: INT
+        | FLOAT
+
+    expression_statement: assignment SEMI
+
+    assignment : variable ASSIGN expr
 
     variable: ID
 

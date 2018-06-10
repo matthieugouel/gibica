@@ -1,6 +1,6 @@
 """Interpreter."""
 
-from gibica.lexer import Type
+from gibica.lexer import Name
 
 
 #
@@ -33,6 +33,10 @@ class Interpreter(NodeVisitor):
         for child in node.children:
             self.visit(child)
 
+    def visit_VarDecl(self, node):
+        """Visitor for `VarDecl` AST node."""
+        self.visit(node.assignment)
+
     def visit_Assign(self, node):
         """Visitor for `Compound` AST node."""
         self.GLOBAL_SCOPE[node.left.value] = self.visit(node.right)
@@ -48,24 +52,28 @@ class Interpreter(NodeVisitor):
         else:
             return variable_value
 
+    def visit_VarType(self, node):
+        """Visitor for `VarType` AST node."""
+        pass
+
     def visit_BinOp(self, node):
         """Visitor for `BinOp` AST node."""
-        if node.op.type == Type.PLUS:
+        if node.op.name == Name.PLUS:
             return self.visit(node.left) + self.visit(node.right)
-        elif node.op.type == Type.MINUS:
+        elif node.op.name == Name.MINUS:
             return self.visit(node.left) - self.visit(node.right)
-        elif node.op.type == Type.MUL:
+        elif node.op.name == Name.MUL:
             return self.visit(node.left) * self.visit(node.right)
-        elif node.op.type == Type.DIV:
+        elif node.op.name == Name.DIV:
             return self.visit(node.left) / self.visit(node.right)
-        elif node.op.type == Type.INT_DIV:
+        elif node.op.name == Name.INT_DIV:
             return self.visit(node.left) // self.visit(node.right)
 
     def visit_UnaryOp(self, node):
         """Visitor for `UnaryOp` AST node."""
-        if node.op.type == Type.PLUS:
+        if node.op.name == Name.PLUS:
             return +self.visit(node.right)
-        elif node.op.type == Type.MINUS:
+        elif node.op.name == Name.MINUS:
             return -self.visit(node.right)
 
     def visit_Num(self, node):

@@ -6,8 +6,8 @@
 #
 
 
-class Type(object):
-    """Enumeration of token types."""
+class Name(object):
+    """Enumeration of token names."""
 
     ID = 'ID'
 
@@ -24,6 +24,7 @@ class Type(object):
 
     LPAREN = 'LPAREN'
     RPAREN = 'RPAREN'
+
     ASSIGN = 'ASSIGN'
 
     SEMI = 'SEMI'
@@ -31,16 +32,16 @@ class Type(object):
 
 
 class Token(object):
-    """Construct a token."""
+    """Token container"""
 
-    def __init__(self, type, value):
+    def __init__(self, name, value):
         """Initialization of `Token` class."""
-        self.type = type
+        self.name = name
         self.value = value
 
     def __str__(self):
         """String representation of a token."""
-        return f"Token({self.type}, {self.value})"
+        return f"Token({self.name}, {self.value})"
 
     def ___repr__(self):
         """String representation of the class."""
@@ -49,8 +50,8 @@ class Token(object):
 
 # List of reserved keywords
 RESERVED_KEYWORDS: dict = {
-    'int': Token(Type.INT, 'int'),
-    'float': Token(Type.FLOAT, 'float')
+    'int': Token(Name.INT, 'int'),
+    'float': Token(Name.FLOAT, 'float')
 }
 
 
@@ -97,10 +98,10 @@ class Lexer(object):
                 number += self.char
                 self.advance()
 
-            token = Token(Type.FLOAT_NUMBER, float(number))
+            token = Token(Name.FLOAT_NUMBER, float(number))
 
         else:
-            token = Token(Type.INT_NUMBER, int(number))
+            token = Token(Name.INT_NUMBER, int(number))
 
         return token
 
@@ -111,7 +112,7 @@ class Lexer(object):
             result += self.char
             self.advance()
 
-        token = RESERVED_KEYWORDS.get(result, Token(Type.ID, result))
+        token = RESERVED_KEYWORDS.get(result, Token(Name.ID, result))
         return token
 
     def next_token(self):
@@ -126,46 +127,46 @@ class Lexer(object):
                 return self._id()
             elif self.char == '=':
                 self.advance()
-                return Token(Type.ASSIGN, '=')
+                return Token(Name.ASSIGN, '=')
             elif self.char == ';':
                 self.advance()
-                return Token(Type.SEMI, ';')
+                return Token(Name.SEMI, ';')
             elif self.char.isdigit():
                 # The current character is a number
                 return self.number()
             elif self.char == '+':
                 # The current character is `+`
                 self.advance()
-                return Token(Type.PLUS, '+')
+                return Token(Name.PLUS, '+')
             elif self.char == '-':
                 # The current character is `-`
                 self.advance()
-                return Token(Type.MINUS, '-')
+                return Token(Name.MINUS, '-')
             elif self.char == '*':
                 # The current character is `*`
                 self.advance()
-                return Token(Type.MUL, '*')
+                return Token(Name.MUL, '*')
             elif self.char == '/':
                 if self.peek() == '/':
                     # The current character is `//`
                     self.advance()
                     self.advance()
-                    return Token(Type.INT_DIV, '//')
+                    return Token(Name.INT_DIV, '//')
                 else:
                     # The current character is `/`
                     self.advance()
-                    return Token(Type.DIV, '/')
+                    return Token(Name.DIV, '/')
             elif self.char == '(':
                 # The current character is `(`
                 self.advance()
-                return Token(Type.LPAREN, '(')
+                return Token(Name.LPAREN, '(')
             elif self.char == ')':
                 # The current character is `)`
                 self.advance()
-                return Token(Type.RPAREN, ')')
+                return Token(Name.RPAREN, ')')
             else:
                 # The current character is unknown
                 raise Exception(f'LEXICAL: Invalid character `{self.char}`.')
 
         # End of raw input
-        return Token(Type.EOF, None)
+        return Token(Name.EOF, None)
