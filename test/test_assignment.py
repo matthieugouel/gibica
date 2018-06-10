@@ -63,6 +63,7 @@ def test_unary_assignments(evaluate, input, expected):
 @pytest.mark.parametrize('input, expected', [
     ('a=2+2;b=4*2;', {'a': 4, 'b': 8}),
     ('a=2+2;b=a*2;', {'a': 4, 'b': 8}),
+    ('a=1;a=a+1;', {'a': 2}),
 ])
 def test_multiple_assignments(evaluate, input, expected):
     """Test multiple variable assignments."""

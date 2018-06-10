@@ -5,23 +5,27 @@
 # Lexical Analysis
 #
 
-# List of reserved keywords
-RESERVED_KEYWORDS: dict = {}
-
 
 class Type(object):
     """Enumeration of token types."""
 
     ID = 'ID'
-    INTEGER = 'INTEGER'
+
+    INT = 'INT'
+    FLOAT = 'FLOAT'
+    INT_NUMBER = 'INT_NUMBER'
+    FLOAT_NUMBER = 'FLOAT_NUMBER'
+
     PLUS = 'PLUS'
     MINUS = 'MINUS'
     MUL = 'MUL'
     DIV = 'DIV'
     INT_DIV = 'INT_DIV'
+
     LPAREN = 'LPAREN'
     RPAREN = 'RPAREN'
     ASSIGN = 'ASSIGN'
+
     SEMI = 'SEMI'
     EOF = 'EOF'
 
@@ -41,6 +45,13 @@ class Token(object):
     def ___repr__(self):
         """String representation of the class."""
         return self.__str__()
+
+
+# List of reserved keywords
+RESERVED_KEYWORDS: dict = {
+    'int': Token(Type.INT, 'int'),
+    'float': Token(Type.FLOAT, 'float')
+}
 
 
 class Lexer(object):
@@ -71,13 +82,27 @@ class Lexer(object):
         while self.char is not None and self.char.isspace():
             self.advance()
 
-    def integer(self):
-        """Return a multidigit integer."""
+    def number(self):
+        """Return a multidigit int or float number."""
         number = ''
         while self.char is not None and self.char.isdigit():
             number += self.char
             self.advance()
-        return int(number)
+
+        if self.char == '.':
+            number += self.char
+            self.advance()
+
+            while self.char is not None and self.char.isdigit():
+                number += self.char
+                self.advance()
+
+            token = Token(Type.FLOAT_NUMBER, float(number))
+
+        else:
+            token = Token(Type.INT_NUMBER, int(number))
+
+        return token
 
     def _id(self):
         """Handle identifiers and reserverd keywords."""
@@ -106,8 +131,8 @@ class Lexer(object):
                 self.advance()
                 return Token(Type.SEMI, ';')
             elif self.char.isdigit():
-                # The current character is an integer
-                return Token(Type.INTEGER, self.integer())
+                # The current character is a number
+                return self.number()
             elif self.char == '+':
                 # The current character is `+`
                 self.advance()

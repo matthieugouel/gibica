@@ -16,6 +16,11 @@ This is the current grammar of the Gibica language.
 
     expr: term ((PLUS | MINUS) term)*
 
-    factor:  factor ((MUL | DIV | INT_DIV) factor)*
+    term: factor ((MUL | DIV | INT_DIV) factor)*
 
-    term: (PLUS | MINUS) INTEGER | INTEGER | LPAREN expr RPAREN
+    factor: PLUS factor
+          | MINUS factor
+          | INT_NUMBER
+          | FLOAT_NUMBER
+          | LPAREN expr RPAREN
+          | variable

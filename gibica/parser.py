@@ -87,7 +87,7 @@ class Parser(object):
         raise Exception(f'SYNTAX: Error processing `{self.token}`.')
 
     def program(self):
-        """Rule: `(program: statement SEMI)*`."""
+        """Rule: `program: (statement SEMI)*`."""
         root = Compound()
 
         while self.token.type != Type.EOF:
@@ -114,6 +114,12 @@ class Parser(object):
         node = Assign(left, token, right)
         return node
 
+    def variable(self):
+        """Rule: `variable: ID`."""
+        node = Var(self.token)
+        self._process(Type.ID)
+        return node
+
     def expr(self):
         """Rule: `expr: term ((PLUS | MINUS) term)*`."""
         node = self.term()
@@ -132,7 +138,7 @@ class Parser(object):
         return node
 
     def term(self):
-        """Rule: `factor:  factor ((MUL | DIV | INT_DIV) factor)*`."""
+        """Rule: `term: factor ((MUL | DIV | INT_DIV) factor)*`."""
         node = self.factor()
 
         while self.token.type in (Type.MUL, Type.DIV, Type.INT_DIV):
@@ -152,7 +158,13 @@ class Parser(object):
 
     def factor(self):
         """
-        Rule: `term: (PLUS | MINUS) INTEGER | INTEGER | LPAREN expr RPAREN`.
+        Rule: `factor: PLUS factor
+                     | MINUS factor
+                     | INT_NUMBER
+                     | FLOAT_NUMBER
+                     | LPAREN expr RPAREN
+                     | variable
+              `.
         """
         token = self.token
         if token.type == Type.PLUS:
@@ -161,8 +173,11 @@ class Parser(object):
         elif token.type == Type.MINUS:
             self._process(Type.MINUS)
             return UnaryOp(op=token, right=self.factor())
-        elif token.type == Type.INTEGER:
-            self._process(Type.INTEGER)
+        elif token.type == Type.INT_NUMBER:
+            self._process(Type.INT_NUMBER)
+            return Num(token)
+        elif token.type == Type.FLOAT_NUMBER:
+            self._process(Type.FLOAT_NUMBER)
             return Num(token)
         elif token.type == Type.LPAREN:
             self._process(Type.LPAREN)
@@ -171,12 +186,6 @@ class Parser(object):
             return node
         else:
             return self.variable()
-
-    def variable(self):
-        """Rule: `variable: ID`."""
-        node = Var(self.token)
-        self._process(Type.ID)
-        return node
 
     def parse(self):
         """Generic entrypoint of the `Parser` class."""
