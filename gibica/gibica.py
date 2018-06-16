@@ -4,6 +4,7 @@ import click
 
 from gibica.lexer import Lexer
 from gibica.parser import Parser
+from gibica.interpreter import SymbolTableBuilder
 from gibica.interpreter import Interpreter
 
 
@@ -27,16 +28,19 @@ def main(filepath, in_debug_mode):
 
     with open(filepath) as file:
 
-        # Lexical analysis instantiation
+        # Lexical analysis
         lexer = Lexer(file.read())
 
-        # Syntax analysis instantiation
+        # Syntax analysis
         parser = Parser(lexer)
+        tree = parser.parse()
 
-        # Interpreter instantiation
-        interpreter = Interpreter(parser)
+        # Symbol table buiding
+        symtab_builder = SymbolTableBuilder(tree)
+        symtab_builder.build()
 
         # Program evaluation
+        interpreter = Interpreter(tree)
         result = interpreter.interpret()
 
         # Display the output if it's an evaluation
@@ -45,7 +49,8 @@ def main(filepath, in_debug_mode):
 
         # Display internal variables if debug option enabled
         if in_debug_mode:
-            click.echo(f'GLOBAL_SCOPE: {interpreter.GLOBAL_SCOPE}')
+            click.echo(f'SYMBOL TABLE: {symtab_builder.SYMBOL_TABLE}')
+            click.echo(f'GLOBAL MEMORY: {interpreter.GLOBAL_MEMORY}')
 
 
 if __name__ == '__main__':

@@ -5,7 +5,6 @@
 # Lexical Analysis
 #
 
-
 class Name(object):
     """Enumeration of token names."""
 

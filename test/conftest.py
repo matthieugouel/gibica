@@ -3,6 +3,7 @@ import pytest
 
 from gibica.lexer import Lexer
 from gibica.parser import Parser
+from gibica.interpreter import SymbolTableBuilder
 from gibica.interpreter import Interpreter
 
 
@@ -12,12 +13,19 @@ def evaluate():
 
     def nested(raw):
 
-        # Instantiate the interpreter
+        # Lexical analysis
         lexer = Lexer(raw)
-        parser = Parser(lexer)
-        interpreter = Interpreter(parser)
 
-        # Evaluate the input
+        # Syntax analysis
+        parser = Parser(lexer)
+        tree = parser.parse()
+
+        # Symbol table buiding
+        symtab_builder = SymbolTableBuilder(tree)
+        symtab_builder.build()
+
+        # Program evaluation
+        interpreter = Interpreter(tree)
         interpreter.interpret()
 
         # Return the instance

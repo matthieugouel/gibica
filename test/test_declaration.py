@@ -22,7 +22,7 @@ def test_int_declaration(evaluate, input, expected):
     """Test `int` type variable declaration."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_SCOPE == expected
+    assert instance.GLOBAL_MEMORY == expected
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -34,7 +34,7 @@ def test_float_declaration(evaluate, input, expected):
     """Test `float` type variable declaration."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_SCOPE == expected
+    assert instance.GLOBAL_MEMORY == expected
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -45,7 +45,7 @@ def test_declaration_with_parenthesis(evaluate, input, expected):
     """Test variable declaration with parenthesis."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_SCOPE == expected
+    assert instance.GLOBAL_MEMORY == expected
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -58,7 +58,7 @@ def test_unary_declaration(evaluate, input, expected):
     """Test unary variable declaration."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_SCOPE == expected
+    assert instance.GLOBAL_MEMORY == expected
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -71,4 +71,4 @@ def test_multiple_declaration(evaluate, input, expected):
     """Test multiple variable declaration."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_SCOPE == expected
+    assert instance.GLOBAL_MEMORY == expected
