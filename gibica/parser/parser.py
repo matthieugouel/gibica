@@ -1,6 +1,6 @@
-"""Parser."""
+"""Parser module."""
 
-from gibica.lexer import Name
+from gibica.lexer.token import Name
 
 
 #

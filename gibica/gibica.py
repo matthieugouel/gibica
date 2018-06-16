@@ -2,16 +2,15 @@
 
 import click
 
-from gibica.lexer import Lexer
-from gibica.parser import Parser
-from gibica.interpreter import SymbolTableBuilder
-from gibica.interpreter import Interpreter
+from gibica.lexer.lexer import Lexer
+from gibica.parser.parser import Parser
+from gibica.sementic.symbol import SymbolTableBuilder
+from gibica.interpreter.interpreter import Interpreter
 
 
 #
 # Main
 #
-
 
 @click.command()
 @click.argument(
@@ -28,29 +27,36 @@ def main(filepath, in_debug_mode):
 
     with open(filepath) as file:
 
-        # Lexical analysis
-        lexer = Lexer(file.read())
+        try:
 
-        # Syntax analysis
-        parser = Parser(lexer)
-        tree = parser.parse()
+            # Lexical analysis
+            lexer = Lexer(file.read())
 
-        # Sementic analysis
-        symtab_builder = SymbolTableBuilder(tree)
-        symtab_builder.build()
+            # Syntax analysis
+            parser = Parser(lexer)
+            tree = parser.parse()
 
-        # Program evaluation
-        interpreter = Interpreter(tree)
-        result = interpreter.interpret()
+            # Sementic analysis
+            symtab_builder = SymbolTableBuilder(tree)
+            symtab_builder.build()
 
-        # Display the output if it's an evaluation
-        if result:
-            click.echo(result)
+            # Program evaluation
+            interpreter = Interpreter(tree)
+            interpreter.interpret()
 
-        # Display internal variables if debug option enabled
-        if in_debug_mode:
-            click.echo(f'SYMBOL TABLE: {symtab_builder.SYMBOL_TABLE}')
-            click.echo(f'GLOBAL MEMORY: {interpreter.GLOBAL_MEMORY}')
+            # Display internal variables if debug option is enabled
+            if in_debug_mode:
+                click.echo(f'SYMBOL TABLE: {symtab_builder.SYMBOL_TABLE}')
+                click.echo(f'GLOBAL MEMORY: {interpreter.GLOBAL_MEMORY}')
+
+        except Exception as interpreter_exception:
+
+            # Display the full trace if debug option is enabled
+            if in_debug_mode:
+                raise
+            # In classic mode, just display the interpreter trace
+            else:
+                print(f'{interpreter_exception}')
 
 
 if __name__ == '__main__':

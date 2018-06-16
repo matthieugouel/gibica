@@ -1,10 +1,10 @@
 """Configuration of tests."""
 import pytest
 
-from gibica.lexer import Lexer
-from gibica.parser import Parser
-from gibica.interpreter import SymbolTableBuilder
-from gibica.interpreter import Interpreter
+from gibica.lexer.lexer import Lexer
+from gibica.parser.parser import Parser
+from gibica.sementic.symbol import SymbolTableBuilder
+from gibica.interpreter.interpreter import Interpreter
 
 
 @pytest.fixture
