@@ -51,7 +51,7 @@ tox -e test
 
 ## Type checking
 
-If You used annotation to do static Python type checking with mypy :
+If you used annotations to do static Python type checking with mypy :
 
 ```
 mypy gibica
