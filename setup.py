@@ -12,7 +12,7 @@ REQS = [str(ir.req) for ir in INSTALL_REQS]
 
 setup(
     name="gibica",
-    version="0.2.0",
+    version="0.3.0",
     author="Matthieu Gouel",
     author_email="matthieu.gouel@gmail.com",
     url="https://github.com/matthieugouel/gibica",
