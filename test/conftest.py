@@ -20,7 +20,7 @@ def evaluate():
         parser = Parser(lexer)
         tree = parser.parse()
 
-        # Symbol table buiding
+        # Sementic analysis
         symtab_builder = SymbolTableBuilder(tree)
         symtab_builder.build()
 

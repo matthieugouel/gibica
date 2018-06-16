@@ -35,7 +35,7 @@ def main(filepath, in_debug_mode):
         parser = Parser(lexer)
         tree = parser.parse()
 
-        # Symbol table buiding
+        # Sementic analysis
         symtab_builder = SymbolTableBuilder(tree)
         symtab_builder.build()
 

@@ -96,17 +96,18 @@ class SymbolTableBuilder(NodeVisitor):
         type_symbol = BuiltinTypeSymbol(type_name)
         var_name = node.assignment.left.value
         var_symbol = VarSymbol(var_name, type_symbol)
+
+        if self.SYMBOL_TABLE.get(var_name) is not None:
+            raise Exception(
+                f'SYMBOL TABLE: Variable {repr(var_name)} already declared.'
+            )
+
         self.SYMBOL_TABLE[var_symbol.name] = var_symbol
         self.visit(node.assignment)
 
     def visit_Assign(self, node):
         """Visitor for `Assign` AST node."""
-        var_name = node.left.value
-        var_symbol = self.SYMBOL_TABLE.get(var_name)
-        if var_symbol is None:
-            raise Exception(
-                f'SYMBOL TABLE: Variable {repr(var_name)} not declared.'
-            )
+        self.visit(node.left)
         self.visit(node.right)
 
     def visit_Var(self, node):
