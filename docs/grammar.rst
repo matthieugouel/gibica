@@ -13,8 +13,8 @@ This is the current grammar of the Gibica language.
 
     declaration_statement: var_type assignment SEMI
 
-    type: INT
-        | FLOAT
+    var_type: INT
+            | FLOAT
 
     expression_statement: assignment SEMI
 

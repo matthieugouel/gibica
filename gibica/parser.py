@@ -139,8 +139,8 @@ class Parser(object):
 
     def var_type(self):
         """
-        type: INT
-            | FLOAT
+        var_type: INT
+                | FLOAT
         """
         node = VarType(self.token)
 
