@@ -138,7 +138,10 @@ class Lexer(object):
                 return Token(Name.RPAREN, ')')
             else:
                 # The current character is unknown
-                raise Exception(f'LEXICAL: Invalid character `{self.char}`.')
+                raise Exception(
+                    (f'LEXICAL ERROR: '
+                     f'Invalid character `{self.char}`.')
+                )
 
         # End of raw input
         return Token(Name.EOF, None)

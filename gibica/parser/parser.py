@@ -103,7 +103,10 @@ class Parser(object):
 
     def _error(self):
         """Raise a Syntax Error."""
-        raise Exception(f'SYNTAX: Error processing `{self.token}`.')
+        raise Exception(
+            (f'SYNTAX ERROR: '
+             f'Unable to process `{self.token}`.')
+        )
 
     def program(self):
         """
@@ -199,7 +202,7 @@ class Parser(object):
             elif token.name == Name.MINUS:
                 self._process(Name.MINUS)
             else:
-                raise Exception(f'SYNTAX: Unknown operand `{token}`.')
+                self._error()
 
             node = BinOp(left=node, op=token, right=self.term())
 
@@ -220,7 +223,7 @@ class Parser(object):
             elif token.name == Name.INT_DIV:
                 self._process(Name.INT_DIV)
             else:
-                raise Exception(f'SYNTAX: Unknown operand `{token}`.')
+                self._error()
 
             node = BinOp(left=node, op=token, right=self.factor())
 
