@@ -4,7 +4,7 @@ import pytest
 
 @pytest.mark.parametrize('input', [
     'int a=2+2',
-    'int a=2-2; int a=2+4',
+    'int mut a=2-2; a=2+4',
 ])
 def test_missing_semicolon(evaluate, input):
     """Test missing semicolon."""

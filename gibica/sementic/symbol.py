@@ -11,10 +11,11 @@ from gibica.interpreter.interpreter import NodeVisitor
 class Symbol(object):
     """Container of a symbol."""
 
-    def __init__(self, name, type=None):
+    def __init__(self, name, type=None, is_mutable=None):
         """Initialization of `Symbol` class."""
         self.name = name
         self.type = type
+        self.is_mutable = is_mutable
 
 
 class BuiltinTypeSymbol(Symbol):
@@ -36,13 +37,13 @@ class BuiltinTypeSymbol(Symbol):
 class VarSymbol(Symbol):
     """Container of a variable symbol."""
 
-    def __init__(self, name, type):
+    def __init__(self, name, type, is_mutable):
         """Initialization of `VarSymbol` class."""
-        super().__init__(name, type)
+        super().__init__(name, type, is_mutable)
 
     def __str__(self):
         """String representation of a variable symbol."""
-        return f'<{self.name}:{self.type}>'
+        return f"<{self.name}:{self.type}{':mut' if self.is_mutable else ''}>"
 
     def __repr__(self):
         """String representation of the class."""
@@ -82,18 +83,28 @@ class SymbolTableBuilder(NodeVisitor):
         type_name = node.var_type.value
         type_symbol = BuiltinTypeSymbol(type_name)
         var_name = node.assignment.left.value
-        var_symbol = VarSymbol(var_name, type_symbol)
+        var_is_mutable = node.assignment.left.is_mutable
+        var_symbol = VarSymbol(var_name, type_symbol, var_is_mutable)
 
         if self.SYMBOL_TABLE.get(var_name) is not None:
             raise Exception(
-                f'SYMBOL TABLE: Variable {repr(var_name)} already declared.'
+                (f'SEMENTIC ERROR: '
+                 f'Variable {repr(var_name)} is already declared.')
             )
 
         self.SYMBOL_TABLE[var_symbol.name] = var_symbol
-        self.visit(node.assignment)
 
     def visit_Assign(self, node):
         """Visitor for `Assign` AST node."""
+        var_name = node.left.value
+        var_symbol = self.SYMBOL_TABLE.get(var_name)
+
+        if var_symbol is not None and not var_symbol.is_mutable:
+            raise Exception(
+                (f'SEMENTIC ERROR: '
+                 f'Re-assignment of immutable variable {repr(var_name)}.')
+            )
+
         self.visit(node.left)
         self.visit(node.right)
 
@@ -103,7 +114,8 @@ class SymbolTableBuilder(NodeVisitor):
 
         if var_symbol is None:
             raise Exception(
-                f'SYMBOL TABLE: Variable {repr(var_name)} not declared.'
+                (f'SEMENTIC ERROR: '
+                 f'Variable {repr(var_name)} is not declared.')
             )
 
     def visit_BinOp(self, node):

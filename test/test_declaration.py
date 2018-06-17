@@ -64,11 +64,31 @@ def test_unary_declaration(evaluate, input, expected):
 @pytest.mark.parametrize('input, expected', [
     ('int a=2+2; int b=4*2;', {'a': 4, 'b': 8}),
     ('int a=2+2; int b=a*2;', {'a': 4, 'b': 8}),
-    ('int a=1; a=2;', {'a': 2}),
-    ('int a=1; a=a+1;', {'a': 2}),
 ])
 def test_multiple_declaration(evaluate, input, expected):
     """Test multiple variable declaration."""
     instance = evaluate(input)
 
     assert instance.GLOBAL_MEMORY == expected
+
+
+@pytest.mark.parametrize('input, expected', [
+    ('int mut a=2+2; int b=4*2;', {'a': 4, 'b': 8}),
+    ('int a=2+2; int mut b=a*2;', {'a': 4, 'b': 8}),
+    ('int mut a=1; a=2;', {'a': 2}),
+    ('int mut a=1; a=a+1;', {'a': 2}),
+])
+def test_mutable_declaration(evaluate, input, expected):
+    """Test mutable variable declaration."""
+    instance = evaluate(input)
+
+    assert instance.GLOBAL_MEMORY == expected
+
+
+@pytest.mark.parametrize('input', [
+    'int a = 1; a = 2;',
+])
+def test_reassignment_of_immutable_variable(evaluate, input):
+    """Test re-assignment of immutable variable."""
+    with pytest.raises(Exception):
+        evaluate(input)

@@ -20,7 +20,7 @@ This is the current grammar of the Gibica language.
 
     assignment : variable ASSIGN expr
 
-    variable: ID
+    variable: [ MUT ] ID
 
     expr: term ((PLUS | MINUS) term)*
 

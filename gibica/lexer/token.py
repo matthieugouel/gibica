@@ -11,6 +11,8 @@ class Name(object):
     INT_NUMBER = 'INT_NUMBER'
     FLOAT_NUMBER = 'FLOAT_NUMBER'
 
+    MUT = 'MUT'
+
     PLUS = 'PLUS'
     MINUS = 'MINUS'
     MUL = 'MUL'

@@ -10,7 +10,8 @@ from gibica.lexer.token import Name
 # List of reserved keywords
 RESERVED_KEYWORDS: dict = {
     'int': Token(Name.INT, 'int'),
-    'float': Token(Name.FLOAT, 'float')
+    'float': Token(Name.FLOAT, 'float'),
+    'mut': Token(Name.MUT, 'mut')
 }
 
 

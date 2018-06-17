@@ -42,10 +42,11 @@ class Assign(AST):
 class Var(AST):
     """Variable AST representation."""
 
-    def __init__(self, token):
+    def __init__(self, token, is_mutable):
         """Initialization of `Var` class."""
         self.token = token
         self.value = token.value
+        self.is_mutable = is_mutable
 
 
 class VarType(AST):
@@ -174,9 +175,14 @@ class Parser(object):
 
     def variable(self):
         """
-        variable: ID
+        variable: [ MUT ] ID
         """
-        node = Var(self.token)
+        is_mutable = False
+        if self.token.name == Name.MUT:
+            is_mutable = True
+            self._process(Name.MUT)
+
+        node = Var(self.token, is_mutable)
         self._process(Name.ID)
         return node
 
