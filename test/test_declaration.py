@@ -38,6 +38,17 @@ def test_float_declaration(evaluate, input, expected):
 
 
 @pytest.mark.parametrize('input, expected', [
+    ('bool a = true;', {'a': True}),
+    ('bool a = false;', {'a': False}),
+])
+def test_bool_declaration(evaluate, input, expected):
+    """Test `Bool` type variable declaration."""
+    instance = evaluate(input)
+
+    assert instance.GLOBAL_MEMORY == expected
+
+
+@pytest.mark.parametrize('input, expected', [
     ('int a = (2 + 2) * 2;', {'a': 8}),
     ('int a = (( 2+2 ) *2) / 2;', {'a': 4}),
 ])

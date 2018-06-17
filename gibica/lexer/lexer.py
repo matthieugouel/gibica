@@ -3,6 +3,7 @@
 from gibica.lexer.token import Token
 from gibica.lexer.token import Name
 
+
 #
 # Lexical Analysis
 #
@@ -11,6 +12,9 @@ from gibica.lexer.token import Name
 RESERVED_KEYWORDS: dict = {
     'int': Token(Name.INT, 'int'),
     'float': Token(Name.FLOAT, 'float'),
+    'bool': Token(Name.BOOL, 'bool'),
+    'true': Token(Name.TRUE, 'true'),
+    'false': Token(Name.FALSE, 'false'),
     'mut': Token(Name.MUT, 'mut')
 }
 

@@ -15,6 +15,7 @@ This is the current grammar of the Gibica language.
 
     var_type: INT
             | FLOAT
+            | BOOL
 
     expression_statement: assignment SEMI
 
@@ -33,4 +34,6 @@ This is the current grammar of the Gibica language.
           | INT_NUMBER
           | FLOAT_NUMBER
           | LPAREN expr RPAREN
+          | TRUE
+          | FALSE
           | variable

@@ -86,6 +86,15 @@ class Num(AST):
         self.value = token.value
 
 
+class Bool(AST):
+    """Boolean AST representation."""
+
+    def __init__(self, token):
+        """Initialization of `Boolean` class."""
+        self.token = token
+        self.value = token.value
+
+
 class Parser(object):
     """Parser returning an AST of the input."""
 
@@ -124,7 +133,7 @@ class Parser(object):
         statement: declaration_statement
                  | expression_statement
         """
-        if self.token.name in (Name.INT, Name.FLOAT):
+        if self.token.name in (Name.INT, Name.FLOAT, Name.BOOL):
             node = self.declaration_statement()
         elif self.token.name == Name.ID:
             node = self.expression_statement()
@@ -145,6 +154,7 @@ class Parser(object):
         """
         var_type: INT
                 | FLOAT
+                | BOOL
         """
         node = VarType(self.token)
 
@@ -152,6 +162,8 @@ class Parser(object):
             self._process(Name.INT)
         elif self.token.name == Name.FLOAT:
             self._process(Name.FLOAT)
+        elif self.token.name == Name.BOOL:
+            self._process(Name.BOOL)
         else:
             self._error()
 
@@ -263,6 +275,8 @@ class Parser(object):
               | INT_NUMBER
               | FLOAT_NUMBER
               | LPAREN expr RPAREN
+              | TRUE
+              | FALSE
               | variable
         """
         token = self.token
@@ -283,6 +297,12 @@ class Parser(object):
             node = self.expr()
             self._process(Name.RPAREN)
             return node
+        elif token.name == Name.TRUE:
+            self._process(Name.TRUE)
+            return Bool(token)
+        elif token.name == Name.FALSE:
+            self._process(Name.FALSE)
+            return Bool(token)
         else:
             return self.variable()
 

@@ -8,8 +8,12 @@ class Name(object):
 
     INT = 'INT'
     FLOAT = 'FLOAT'
+    BOOL = 'BOOL'
+
     INT_NUMBER = 'INT_NUMBER'
     FLOAT_NUMBER = 'FLOAT_NUMBER'
+    TRUE = 'TRUE'
+    FALSE = 'FALSE'
 
     MUT = 'MUT'
 

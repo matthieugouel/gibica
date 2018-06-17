@@ -88,6 +88,13 @@ class Interpreter(NodeVisitor):
         """Visitor for `Num` AST node."""
         return node.value
 
+    def visit_Bool(self, node):
+        """Visitor for `Bool` AST node."""
+        if node.value == 'true':
+            return True
+        elif node.value == 'false':
+            return False
+
     def interpret(self):
         """Generic entrypoint of `Interpreter` class."""
         self.visit(self.tree)
