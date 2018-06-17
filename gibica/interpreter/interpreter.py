@@ -40,6 +40,10 @@ class Interpreter(NodeVisitor):
         """Visitor for `VarDecl` AST node."""
         self.visit(node.assignment)
 
+    def visit_VarType(self, node):
+        """Visitor for `VarType` AST node."""
+        pass
+
     def visit_Assign(self, node):
         """Visitor for `Assign` AST node."""
         self.GLOBAL_MEMORY[node.left.value] = self.visit(node.right)
@@ -49,10 +53,6 @@ class Interpreter(NodeVisitor):
         variable_name = node.value
         variable_value = self.GLOBAL_MEMORY.get(variable_name)
         return variable_value
-
-    def visit_VarType(self, node):
-        """Visitor for `VarType` AST node."""
-        pass
 
     def visit_BinOp(self, node):
         """Visitor for `BinOp` AST node."""
@@ -66,6 +66,16 @@ class Interpreter(NodeVisitor):
             return self.visit(node.left) / self.visit(node.right)
         elif node.op.name == Name.INT_DIV:
             return self.visit(node.left) // self.visit(node.right)
+        elif node.op.name == Name.EQ:
+            return self.visit(node.left) == self.visit(node.right)
+        elif node.op.name == Name.LE:
+            return self.visit(node.left) <= self.visit(node.right)
+        elif node.op.name == Name.GE:
+            return self.visit(node.left) >= self.visit(node.right)
+        elif node.op.name == Name.LT:
+            return self.visit(node.left) < self.visit(node.right)
+        elif node.op.name == Name.GT:
+            return self.visit(node.left) > self.visit(node.right)
 
     def visit_UnaryOp(self, node):
         """Visitor for `UnaryOp` AST node."""

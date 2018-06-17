@@ -29,6 +29,15 @@ class VarDecl(AST):
         self.assignment = assignment
 
 
+class VarType(AST):
+    """Variable Type AST representation."""
+
+    def __init__(self, token):
+        """Initialization of `VarType` class."""
+        self.token = token
+        self.value = token.value
+
+
 class Assign(AST):
     """Assignment AST representation."""
 
@@ -47,15 +56,6 @@ class Var(AST):
         self.token = token
         self.value = token.value
         self.is_mutable = is_mutable
-
-
-class VarType(AST):
-    """Variable Type AST representation."""
-
-    def __init__(self, token):
-        """Initialization of `Type` class."""
-        self.token = token
-        self.value = token.value
 
 
 class BinOp(AST):
@@ -167,12 +167,12 @@ class Parser(object):
 
     def assignment(self):
         """
-        assignment : variable ASSIGN expr
+        assignment : variable ASSIGN comparison
         """
         left = self.variable()
         token = self.token
         self._process(Name.ASSIGN)
-        right = self.expr()
+        right = self.comparison()
         node = Assign(left, token, right)
         return node
 
@@ -187,6 +187,33 @@ class Parser(object):
 
         node = Var(self.token, is_mutable)
         self._process(Name.ID)
+        return node
+
+    def comparison(self):
+        """
+        comparison: expr ((EQ | LE | GE | LT | GT) expr)*
+        """
+        node = self.expr()
+
+        while self.token.name in (
+                Name.EQ, Name.LE, Name.GE, Name.LT, Name.GT
+                ):
+            token = self.token
+            if token.name == Name.EQ:
+                self._process(Name.EQ)
+            elif token.name == Name.LE:
+                self._process(Name.LE)
+            elif token.name == Name.GE:
+                self._process(Name.GE)
+            elif token.name == Name.LT:
+                self._process(Name.LT)
+            elif token.name == Name.GT:
+                self._process(Name.GT)
+            else:
+                self.error()
+
+            node = BinOp(left=node, op=token, right=self.expr())
+
         return node
 
     def expr(self):

@@ -91,15 +91,39 @@ class Lexer(object):
             elif self.char.isalpha():
                 # The curent character is a letter
                 return self._id()
-            elif self.char == '=':
-                self.advance()
-                return Token(Name.ASSIGN, '=')
             elif self.char == ';':
                 self.advance()
                 return Token(Name.SEMI, ';')
             elif self.char.isdigit():
                 # The current character is a number
                 return self.number()
+            elif self.char == '=' and self.peek() == '=':
+                # The current character is `==`
+                self.advance()
+                self.advance()
+                return Token(Name.EQ, '==')
+            elif self.char == '<' and self.peek() == '=':
+                # The current character is `<=`
+                self.advance()
+                self.advance()
+                return Token(Name.LE, '<=')
+            elif self.char == '>' and self.peek() == '=':
+                # The current character is `>=`
+                self.advance()
+                self.advance()
+                return Token(Name.GE, '>=')
+            elif self.char == '<':
+                # The current character is `<`
+                self.advance()
+                return Token(Name.LT, '<')
+            elif self.char == '>':
+                # The current character is `>`
+                self.advance()
+                return Token(Name.GT, '>')
+            elif self.char == '=':
+                # The current character is `=`
+                self.advance()
+                return Token(Name.ASSIGN, '=')
             elif self.char == '+':
                 # The current character is `+`
                 self.advance()
@@ -112,22 +136,21 @@ class Lexer(object):
                 # The current character is `*`
                 self.advance()
                 return Token(Name.MUL, '*')
+            elif self.char == '/' and self.peek() == '/':
+                # The current character is `//`
+                self.advance()
+                self.advance()
+                return Token(Name.INT_DIV, '//')
+            elif self.char == '/' and self.peek() == '*':
+                # The current character is `/*
+                self.advance()
+                self.advance()
+                self.comment()
+                continue
             elif self.char == '/':
-                if self.peek() == '/':
-                    # The current character is `//`
-                    self.advance()
-                    self.advance()
-                    return Token(Name.INT_DIV, '//')
-                elif self.peek() == '*':
-                    # The current character is `/*
-                    self.advance()
-                    self.advance()
-                    self.comment()
-                    continue
-                else:
-                    # The current character is `/`
-                    self.advance()
-                    return Token(Name.DIV, '/')
+                # The current character is `/`
+                self.advance()
+                return Token(Name.DIV, '/')
             elif self.char == '(':
                 # The current character is `(`
                 self.advance()

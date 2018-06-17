@@ -13,6 +13,12 @@ class Name(object):
 
     MUT = 'MUT'
 
+    EQ = 'EQ'
+    LE = 'LE'
+    GE = 'GE'
+    LT = 'LT'
+    GT = 'GT'
+
     PLUS = 'PLUS'
     MINUS = 'MINUS'
     MUL = 'MUL'

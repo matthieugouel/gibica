@@ -18,9 +18,11 @@ This is the current grammar of the Gibica language.
 
     expression_statement: assignment SEMI
 
-    assignment : variable ASSIGN expr
+    assignment : variable ASSIGN comparison
 
     variable: [ MUT ] ID
+
+    comparison: expr ((EQ | LE | GE | LT | GT) expr)*
 
     expr: term ((PLUS | MINUS) term)*
 

@@ -94,6 +94,10 @@ class SymbolTableBuilder(NodeVisitor):
 
         self.SYMBOL_TABLE[var_symbol.name] = var_symbol
 
+    def visit_VarType(self, node):
+        """Visitor for `VarType` AST node."""
+        pass
+
     def visit_Assign(self, node):
         """Visitor for `Assign` AST node."""
         var_name = node.left.value
