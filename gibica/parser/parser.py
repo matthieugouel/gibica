@@ -197,7 +197,7 @@ class Parser(object):
 
         while self.token.name in (
                 Name.EQ, Name.LE, Name.GE, Name.LT, Name.GT
-                ):
+        ):
             token = self.token
             if token.name == Name.EQ:
                 self._process(Name.EQ)
