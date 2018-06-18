@@ -1,108 +1,23 @@
 """Parser module."""
 
 from gibica.lexer.token import Name
+from gibica.parser.ast import (
+    Compound,
+    VarDecl,
+    VarType,
+    Assign,
+    Var,
+    BinOp,
+    UnaryOp,
+    Integer,
+    FloatingPoint,
+    Boolean
+)
 
 
 #
 # Syntax Analysis
 #
-
-class AST(object):
-    """Parent class of all AST classes."""
-    pass
-
-
-class Compound(AST):
-    """Compound AST representation."""
-
-    def __init__(self):
-        """Initialization of `Compound` class."""
-        self.children = []
-
-
-class VarDecl(AST):
-    """Variable declaration AST representation."""
-
-    def __init__(self, var_type, assignment):
-        """Initialization of `VarDecl` class."""
-        self.var_type = var_type
-        self.assignment = assignment
-
-
-class VarType(AST):
-    """Variable Type AST representation."""
-
-    def __init__(self, token):
-        """Initialization of `VarType` class."""
-        self.token = token
-        self.value = token.value
-
-
-class Assign(AST):
-    """Assignment AST representation."""
-
-    def __init__(self, left, op, right):
-        """Initialization of `Assign` class."""
-        self.left = left
-        self.token = self.op = op
-        self.right = right
-
-
-class Var(AST):
-    """Variable AST representation."""
-
-    def __init__(self, token, is_mutable):
-        """Initialization of `Var` class."""
-        self.token = token
-        self.value = token.value
-        self.is_mutable = is_mutable
-
-
-class BinOp(AST):
-    """Binary operands AST representation."""
-
-    def __init__(self, left, op, right):
-        """Initialization of `BinOp` class."""
-        self.left = left
-        self.op = self.token = op
-        self.right = right
-
-
-class UnaryOp(AST):
-    """Unary oprerands AST representation."""
-
-    def __init__(self, op, right):
-        """Initialization of `UnaryOp` class."""
-        self.op = self.token = op
-        self.right = right
-
-
-class Integer(AST):
-    """Integer AST representation."""
-
-    def __init__(self, token):
-        """Initialization of `Integer` class."""
-        self.token = token
-        self.value = token.value
-
-
-class FloatingPoint(AST):
-    """Floating Point AST representation."""
-
-    def __init__(self, token):
-        """Initialization of `FloatingPoint` class."""
-        self.token = token
-        self.value = token.value
-
-
-class Boolean(AST):
-    """Boolean AST representation."""
-
-    def __init__(self, token):
-        """Initialization of `Boolean` class."""
-        self.token = token
-        self.value = token.value
-
 
 class Parser(object):
     """Parser returning an AST of the input."""

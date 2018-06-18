@@ -1,4 +1,4 @@
-"""Representation of types."""
+"""Type module."""
 
 from abc import ABC, abstractmethod
 

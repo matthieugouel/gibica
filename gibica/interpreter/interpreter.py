@@ -1,23 +1,8 @@
 """Interpreter module."""
 
 from gibica.lexer.token import Name
+from gibica.parser.ast import NodeVisitor
 from gibica.interpreter.type import Int, Float, Bool
-
-
-class NodeVisitor(object):
-    """Postorder traversal strategy."""
-
-    def visit(self, node):
-        """Visit the right method of the child class according to the node."""
-        method = 'visit_' + type(node).__name__
-        return getattr(self, method, self.fallback)(node)
-
-    def fallback(self, node):
-        """Fallback if the child method doesn't exist."""
-        raise Exception(
-            (f'INTERPRETER ERROR: '
-             f'No visit_{type(node).__name__} method.')
-        )
 
 
 #
