@@ -35,4 +35,4 @@ See [CONTRIBUTING](CONTRIBUTING.md) for more information about how to contribute
 
 ## Credits
 
-This project is based on the fantastic series of tutorials [Let’s Build A Simple Interpreter](https://ruslanspivak.com/lsbasi-part1/) by Ruslan Spivak.
+This project was initially born by the reading of the amazing series of articles [Let’s Build A Simple Interpreter](https://ruslanspivak.com/lsbasi-part1/) written by Ruslan Spivak.
