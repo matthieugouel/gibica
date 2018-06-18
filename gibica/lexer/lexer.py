@@ -68,10 +68,10 @@ class Lexer(object):
                 number += self.char
                 self.advance()
 
-            token = Token(Name.FLOAT_NUMBER, float(number))
+            token = Token(Name.FLOAT_NUMBER, number)
 
         else:
-            token = Token(Name.INT_NUMBER, int(number))
+            token = Token(Name.INT_NUMBER, number)
 
         return token
 

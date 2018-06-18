@@ -131,8 +131,16 @@ class SymbolTableBuilder(NodeVisitor):
         """Visitor for `UnaryOp` AST node."""
         self.visit(node.right)
 
-    def visit_Num(self, node):
-        """Visitor for `Num` AST node."""
+    def visit_Integer(self, node):
+        """Visitor for `Integer` AST node."""
+        pass
+
+    def visit_FloatingPoint(self, node):
+        """Visitor for `FloatingPoint` AST node."""
+        pass
+
+    def visit_Boolean(self, node):
+        """Visitor for `Boolean` AST node."""
         pass
 
     def build(self):

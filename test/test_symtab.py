@@ -1,4 +1,5 @@
 """Test: Symbol table."""
+
 import pytest
 
 

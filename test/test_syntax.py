@@ -1,5 +1,8 @@
 """Test: Syntax."""
+
 import pytest
+
+from gibica.interpreter.type import Int
 
 
 @pytest.mark.parametrize('input', [
@@ -47,7 +50,7 @@ def test_invalid_variable_name(evaluate, input):
 
 
 @pytest.mark.parametrize('input, expected', [
-    ('int a = 1; /* This is a comment */', {'a': 1}),
+    ('int a = 1; /* This is a comment */', {'a': Int(1)}),
 ])
 def test_with_comments(evaluate, input, expected):
     """Test a comment."""

@@ -1,6 +1,7 @@
 """Interpreter module."""
 
 from gibica.lexer.token import Name
+from gibica.interpreter.type import Int, Float, Bool
 
 
 class NodeVisitor(object):
@@ -84,16 +85,20 @@ class Interpreter(NodeVisitor):
         elif node.op.name == Name.MINUS:
             return -self.visit(node.right)
 
-    def visit_Num(self, node):
-        """Visitor for `Num` AST node."""
-        return node.value
+    def visit_Integer(self, node):
+        """Visitor for `Integer` AST node."""
+        return Int(node.value)
 
-    def visit_Bool(self, node):
-        """Visitor for `Bool` AST node."""
+    def visit_FloatingPoint(self, node):
+        """Visitor for `FloatingPoint` AST node."""
+        return Float(node.value)
+
+    def visit_Boolean(self, node):
+        """Visitor for `Boolean` AST node."""
         if node.value == 'true':
-            return True
+            return Bool(True)
         elif node.value == 'false':
-            return False
+            return Bool(False)
 
     def interpret(self):
         """Generic entrypoint of `Interpreter` class."""

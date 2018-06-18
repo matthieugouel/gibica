@@ -77,16 +77,25 @@ class UnaryOp(AST):
         self.right = right
 
 
-class Num(AST):
-    """Numeric AST representation."""
+class Integer(AST):
+    """Integer AST representation."""
 
     def __init__(self, token):
-        """Initialization of `Num` class."""
+        """Initialization of `Integer` class."""
         self.token = token
         self.value = token.value
 
 
-class Bool(AST):
+class FloatingPoint(AST):
+    """Floating Point AST representation."""
+
+    def __init__(self, token):
+        """Initialization of `FloatingPoint` class."""
+        self.token = token
+        self.value = token.value
+
+
+class Boolean(AST):
     """Boolean AST representation."""
 
     def __init__(self, token):
@@ -288,10 +297,10 @@ class Parser(object):
             return UnaryOp(op=token, right=self.factor())
         elif token.name == Name.INT_NUMBER:
             self._process(Name.INT_NUMBER)
-            return Num(token)
+            return Integer(token)
         elif token.name == Name.FLOAT_NUMBER:
             self._process(Name.FLOAT_NUMBER)
-            return Num(token)
+            return FloatingPoint(token)
         elif token.name == Name.LPAREN:
             self._process(Name.LPAREN)
             node = self.expr()
@@ -299,10 +308,10 @@ class Parser(object):
             return node
         elif token.name == Name.TRUE:
             self._process(Name.TRUE)
-            return Bool(token)
+            return Boolean(token)
         elif token.name == Name.FALSE:
             self._process(Name.FALSE)
-            return Bool(token)
+            return Boolean(token)
         else:
             return self.variable()
 
