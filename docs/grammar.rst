@@ -23,7 +23,7 @@ This is the current grammar of the Gibica language.
 
     variable: [ MUT ] ID
 
-    comparison: expr ((EQ | LE | GE | LT | GT) expr)*
+    comparison: expr ((EQ | NE | LE | GE | LT | GT) expr)*
 
     expr: term ((PLUS | MINUS) term)*
 

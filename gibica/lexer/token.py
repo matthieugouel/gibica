@@ -18,6 +18,7 @@ class Name(object):
     MUT = 'MUT'
 
     EQ = 'EQ'
+    NE = 'NE'
     LE = 'LE'
     GE = 'GE'
     LT = 'LT'

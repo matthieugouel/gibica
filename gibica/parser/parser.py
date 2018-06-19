@@ -127,16 +127,18 @@ class Parser(object):
 
     def comparison(self):
         """
-        comparison: expr ((EQ | LE | GE | LT | GT) expr)*
+        comparison: expr ((EQ | NE | LE | GE | LT | GT) expr)*
         """
         node = self.expr()
 
         while self.token.name in (
-                Name.EQ, Name.LE, Name.GE, Name.LT, Name.GT
+                Name.EQ, Name.NE, Name.LE, Name.GE, Name.LT, Name.GT
         ):
             token = self.token
             if token.name == Name.EQ:
                 self._process(Name.EQ)
+            elif token.name == Name.NE:
+                self._process(Name.NE)
             elif token.name == Name.LE:
                 self._process(Name.LE)
             elif token.name == Name.GE:

@@ -48,6 +48,8 @@ def test_float_declaration(evaluate, input, expected):
     ('bool a = true == true;', {'a': Bool(True)}),
     ('bool a = false == false;', {'a': Bool(True)}),
     ('bool a = true == false;', {'a': Bool(False)}),
+    ('bool a = true == 1 != 2;', {'a': Bool(True)}),
+    ('bool a = true == 1 != 1;', {'a': Bool(False)}),
 ])
 def test_bool_declaration(evaluate, input, expected):
     """Test `Bool` type variable declaration."""
@@ -109,22 +111,5 @@ def test_mutable_declaration(evaluate, input, expected):
 ])
 def test_reassignment_of_immutable_variable(evaluate, input):
     """Test re-assignment of immutable variable."""
-    with pytest.raises(Exception):
-        evaluate(input)
-
-
-@pytest.mark.parametrize('input', [
-    'int a = true + 1;',
-    'int a = false + 1;',
-    'float a = true + 1.0;',
-    'float a = false + 1.0;',
-    'bool a = false + false;',
-    'bool a = true < false;',
-    'bool a = true > false;',
-    'bool a = true <= false;',
-    'bool a = true >= false;',
-])
-def test_invalid_operation_or_comparison(evaluate, input):
-    """Test invalid operation or comparison of variables."""
     with pytest.raises(Exception):
         evaluate(input)

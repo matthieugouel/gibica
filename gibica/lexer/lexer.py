@@ -106,6 +106,11 @@ class Lexer(object):
                 self.advance()
                 self.advance()
                 return Token(Name.EQ, '==')
+            elif self.char == '!' and self.peek() == '=':
+                # The current character is `!=`
+                self.advance()
+                self.advance()
+                return Token(Name.NE, '!=')
             elif self.char == '<' and self.peek() == '=':
                 # The current character is `<=`
                 self.advance()

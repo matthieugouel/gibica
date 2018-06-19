@@ -43,6 +43,10 @@ class Generic(ABC):
         """Handle the `==` operator."""
         return Bool(True) if self.value == other.value else Bool(False)
 
+    def __ne__(self, other):
+        """Handle the `!=` operator."""
+        return Bool(True) if self.value != other.value else Bool(False)
+
     def __le__(self, other):
         """Handle the `<=` operator."""
         return Bool(True) if self.value <= other.value else Bool(False)
@@ -72,11 +76,16 @@ class Bool(object):
     """Representation of a Boolean."""
 
     def __init__(self, value):
+        """Initialization of `Bool` class."""
         self.value = bool(value)
 
     def __eq__(self, other):
         """Handle the `==` operator."""
         return Bool(True) if self.value == other.value else Bool(False)
+
+    def __ne__(self, other):
+        """Handle the `!=` operator."""
+        return Bool(True) if self.value != other.value else Bool(False)
 
     def __str__(self):
         """String representation of a boolean."""

@@ -54,6 +54,8 @@ class Interpreter(NodeVisitor):
             return self.visit(node.left) // self.visit(node.right)
         elif node.op.name == Name.EQ:
             return self.visit(node.left) == self.visit(node.right)
+        elif node.op.name == Name.NE:
+            return self.visit(node.left) != self.visit(node.right)
         elif node.op.name == Name.LE:
             return self.visit(node.left) <= self.visit(node.right)
         elif node.op.name == Name.GE:
