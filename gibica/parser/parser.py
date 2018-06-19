@@ -23,7 +23,7 @@ class Parser(object):
     """Parser returning an AST of the input."""
 
     def __init__(self, lexer):
-        """Initialization of `Interpreter` class."""
+        """Initialization of `Parser` class."""
         self.lexer = lexer
         self.token = self.lexer.next_token()
 

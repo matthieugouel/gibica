@@ -12,6 +12,7 @@ def evaluate():
     """Interpret a raw input."""
 
     def nested(raw):
+        """Actual processing."""
 
         # Lexical analysis
         lexer = Lexer(raw)

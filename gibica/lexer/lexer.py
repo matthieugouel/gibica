@@ -23,6 +23,7 @@ class Lexer(object):
     """Lexical analyser."""
 
     def __init__(self, raw):
+        """Initialization of `Lexer` class."""
         self.raw = raw
         self.cursor = 0
         self.char = self.raw[self.cursor]
@@ -36,6 +37,7 @@ class Lexer(object):
             self.char = self.raw[self.cursor]
 
     def peek(self):
+        """Get the next character without moving the cursor."""
         peek_cursor = self.cursor + 1
         if peek_cursor >= len(self.raw):
             return None
@@ -48,6 +50,7 @@ class Lexer(object):
             self.advance()
 
     def comment(self):
+        """Handle comments."""
         while self.char != '*' or self.peek() != '/':
             self.advance()
         self.advance()
