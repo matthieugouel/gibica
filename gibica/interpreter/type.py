@@ -87,6 +87,10 @@ class Bool(object):
         """Handle the `!=` operator."""
         return Bool(True) if self.value != other.value else Bool(False)
 
+    def __bool__(self):
+        """Handle the boolean value of the class itself."""
+        return True if self.value is True else False
+
     def __str__(self):
         """String representation of a boolean."""
         return 'true' if self.value is True else 'false'
