@@ -1,4 +1,4 @@
-"""Token module."""
+"""Tokens module."""
 
 
 class Name(object):

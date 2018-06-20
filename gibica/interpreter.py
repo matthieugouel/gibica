@@ -1,8 +1,8 @@
 """Interpreter module."""
 
-from gibica.lexer.token import Name
-from gibica.parser.ast import NodeVisitor
-from gibica.interpreter.type import Int, Float, Bool
+from gibica.tokens import Name
+from gibica.ast import NodeVisitor
+from gibica.types import Int, Float, Bool
 
 
 #

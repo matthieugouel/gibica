@@ -1,7 +1,7 @@
-"""Symbol module."""
+"""Symbols module."""
 
 from collections import OrderedDict
-from gibica.parser.ast import NodeVisitor
+from gibica.ast import NodeVisitor
 
 
 #

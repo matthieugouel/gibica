@@ -2,7 +2,7 @@
 
 import pytest
 
-from gibica.interpreter.type import Int
+from gibica.types import Int
 
 
 @pytest.mark.parametrize('input', [

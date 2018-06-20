@@ -2,10 +2,10 @@
 
 import click
 
-from gibica.lexer.lexer import Lexer
-from gibica.parser.parser import Parser
-from gibica.sementic.symbol import SymbolTableBuilder
-from gibica.interpreter.interpreter import Interpreter
+from gibica.lexer import Lexer
+from gibica.parser import Parser
+from gibica.symbols import SymbolTableBuilder
+from gibica.interpreter import Interpreter
 
 
 #

@@ -1,4 +1,4 @@
-"""Type module."""
+"""Types module."""
 
 from abc import ABC, abstractmethod
 

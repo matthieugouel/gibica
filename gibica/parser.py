@@ -1,7 +1,7 @@
 """Parser module."""
 
-from gibica.lexer.token import Name
-from gibica.parser.ast import (
+from gibica.tokens import Name
+from gibica.ast import (
     Compound,
     VarDecl,
     VarType,

@@ -1,7 +1,6 @@
 """Lexer module."""
 
-from gibica.lexer.token import Token
-from gibica.lexer.token import Name
+from gibica.tokens import Token, Name
 
 
 #

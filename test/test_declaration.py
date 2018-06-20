@@ -2,7 +2,7 @@
 
 import pytest
 
-from gibica.interpreter.type import Int, Float, Bool
+from gibica.types import Int, Float, Bool
 
 
 @pytest.mark.parametrize('input, expected', [
