@@ -109,11 +109,17 @@ class Bool(AbstractType):
 
     def __eq__(self, other):
         """Handle the `==` operator."""
-        return Bool(True) if self.value == other.value else Bool(False)
+        if isinstance(other.value, bool):
+            return Bool(True) if self.value == other.value else Bool(False)
+        else:
+            raise self._type_error()
 
     def __ne__(self, other):
         """Handle the `!=` operator."""
-        return Bool(True) if self.value != other.value else Bool(False)
+        if isinstance(other.value, bool):
+            return Bool(True) if self.value != other.value else Bool(False)
+        else:
+            raise self._type_error()
 
     def __bool__(self):
         """Handle the boolean value of the class itself."""

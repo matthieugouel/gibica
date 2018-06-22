@@ -29,6 +29,7 @@ def test_expression_comparison(evaluate, input, expected):
 
 @pytest.mark.parametrize('input', [
     'int a = true + 1;',
+    'int a = true + 5;',
     'int a = false + 1;',
     'float a = true + 1.0;',
     'float a = false + 1.0;',
@@ -37,6 +38,11 @@ def test_expression_comparison(evaluate, input, expected):
     'bool a = true > false;',
     'bool a = true <= false;',
     'bool a = true >= false;',
+    'bool a = true == 1;',
+    'bool a = false == 0;',
+    'bool a = false != 0;',
+    'bool a = false == 5;',
+    'bool a = true != 5;',
 ])
 def test_invalid_operation_or_comparison(evaluate, input):
     """Test invalid operation or comparison of variables."""
