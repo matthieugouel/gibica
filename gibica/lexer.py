@@ -173,7 +173,7 @@ class Lexer(object):
             else:
                 # The current character is unknown
                 raise LexicalError(
-                     f'Invalid character `{self.char}`.'
+                    f'Invalid character `{self.char}`.'
                 )
 
         # End of raw input

@@ -8,7 +8,9 @@ class AbstractType(ABC):
     """Abstract class for generic type."""
 
     # Raises a custom TypeError if the operator is not overrided
-    def _type_error(self): raise TypeError("Unsupported operator.")
+    def _type_error(self):
+        """Raises a TypeError."""
+        raise TypeError("Unsupported operator.")
 
     # Triggers `_type_error` for all implemented operators
     for operator in (
@@ -137,8 +139,8 @@ class Int(AbstractNumber):
             return Float
         else:
             raise TypeError(
-                 f'Unsuported operation between '
-                 f'`{type(self)}` and `{type(other)}`.'
+                f'Unsuported operation between '
+                f'`{type(self)}` and `{type(other)}`.'
             )
 
     def __init__(self, value):
@@ -157,8 +159,8 @@ class Float(AbstractNumber):
             return Float
         else:
             raise TypeError(
-                 f'Unsuported operation between '
-                 f'`{type(self)}` and `{type(other)}`.'
+                f'Unsuported operation between '
+                f'`{type(self)}` and `{type(other)}`.'
             )
 
     def __init__(self, value):

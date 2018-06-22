@@ -38,7 +38,7 @@ class Parser(object):
     def _error(self):
         """Raise a Syntax Error."""
         raise SyntaxError(
-             f'Unable to process `{self.token}`.'
+            f'Unable to process `{self.token}`.'
         )
 
     def program(self):
