@@ -21,6 +21,10 @@ from gibica.exceptions import SementicError
     ('int GIBICA = 2 + 4;', {'GIBICA': Int(6)}),
     ('int GiBiCa = 1;', {'GiBiCa': Int(1)}),
     ('int gibica1 = 2;', {'gibica1': Int(2)}),
+
+    ('int _gibica = 2;', {'_gibica': Int(2)}),
+    ('int __gibica = 2;', {'__gibica': Int(2)}),
+    ('int _gibi_ca = 2;', {'_gibi_ca': Int(2)}),
 ])
 def test_int_declaration(evaluate, input, expected):
     """Test `int` type variable declaration."""

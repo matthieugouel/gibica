@@ -80,7 +80,8 @@ class Lexer(object):
     def _id(self):
         """Handle identifiers and reserverd keywords."""
         result = ''
-        while self.char is not None and self.char.isalnum():
+        while (self.char is not None and
+               (self.char.isalnum() or self.char == '_')):
             result += self.char
             self.advance()
 
@@ -94,8 +95,8 @@ class Lexer(object):
                 # The current character is a whitespace
                 self.whitespace()
                 continue
-            elif self.char.isalpha():
-                # The curent character is a letter
+            elif self.char.isalpha() or self.char == '_':
+                # The curent character is a letter or `_`
                 return self._id()
             elif self.char == ';':
                 self.advance()
