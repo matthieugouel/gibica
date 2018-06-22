@@ -2,6 +2,7 @@
 
 from collections import OrderedDict
 from gibica.ast import NodeVisitor
+from gibica.exceptions import SementicError
 
 
 #
@@ -87,9 +88,8 @@ class SymbolTableBuilder(NodeVisitor):
         var_symbol = VarSymbol(var_name, type_symbol, var_is_mutable)
 
         if self.SYMBOL_TABLE.get(var_name) is not None:
-            raise Exception(
-                (f'SEMENTIC ERROR: '
-                 f'Variable `{var_name}` is already declared.')
+            raise SementicError(
+                 f'Variable `{var_name}` is already declared.'
             )
 
         self.SYMBOL_TABLE[var_symbol.name] = var_symbol
@@ -104,9 +104,8 @@ class SymbolTableBuilder(NodeVisitor):
         var_symbol = self.SYMBOL_TABLE.get(var_name)
 
         if var_symbol is not None and not var_symbol.is_mutable:
-            raise Exception(
-                (f'SEMENTIC ERROR: '
-                 f'Re-assignment of immutable variable `{var_name}`.')
+            raise SementicError(
+                 f'Re-assignment of immutable variable `{var_name}`.'
             )
 
         self.visit(node.left)
@@ -118,9 +117,8 @@ class SymbolTableBuilder(NodeVisitor):
         var_symbol = self.SYMBOL_TABLE.get(var_name)
 
         if var_symbol is None:
-            raise Exception(
-                (f'SEMENTIC ERROR: '
-                 f'Variable `{var_name}` is not declared.')
+            raise SementicError(
+                 f'Variable `{var_name}` is not declared.'
             )
 
     def visit_BinOp(self, node):

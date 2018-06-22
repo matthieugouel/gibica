@@ -3,6 +3,7 @@
 import pytest
 
 from gibica.types import Int, Bool
+from gibica.exceptions import TypeError
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -39,5 +40,5 @@ def test_expression_comparison(evaluate, input, expected):
 ])
 def test_invalid_operation_or_comparison(evaluate, input):
     """Test invalid operation or comparison of variables."""
-    with pytest.raises(Exception):
+    with pytest.raises(TypeError):
         evaluate(input)

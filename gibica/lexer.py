@@ -1,7 +1,7 @@
 """Lexer module."""
 
 from gibica.tokens import Token, Name
-
+from gibica.exceptions import LexicalError
 
 #
 # Lexical Analysis
@@ -172,9 +172,8 @@ class Lexer(object):
                 return Token(Name.RPAREN, ')')
             else:
                 # The current character is unknown
-                raise Exception(
-                    (f'LEXICAL ERROR: '
-                     f'Invalid character `{self.char}`.')
+                raise LexicalError(
+                     f'Invalid character `{self.char}`.'
                 )
 
         # End of raw input

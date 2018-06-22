@@ -2,6 +2,8 @@
 
 import pytest
 
+from gibica.exceptions import SementicError
+
 
 @pytest.mark.parametrize('input', [
     'int a = 1; b = a + 1;',
@@ -9,7 +11,7 @@ import pytest
 ])
 def test_assignment_before_declaration(evaluate, input):
     """Test assignment before declaration."""
-    with pytest.raises(Exception):
+    with pytest.raises(SementicError):
         evaluate(input)
 
 
@@ -18,5 +20,5 @@ def test_assignment_before_declaration(evaluate, input):
 ])
 def test_redefinition_of_variable(evaluate, input):
     """Test redefinition of a variable."""
-    with pytest.raises(Exception):
+    with pytest.raises(SementicError):
         evaluate(input)

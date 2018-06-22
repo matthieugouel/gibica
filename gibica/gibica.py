@@ -49,14 +49,18 @@ def main(filepath, in_debug_mode):
                 click.echo(f'SYMBOL TABLE: {symtab_builder.SYMBOL_TABLE}')
                 click.echo(f'GLOBAL MEMORY: {interpreter.GLOBAL_MEMORY}')
 
-        except Exception as interpreter_exception:
+        except Exception as gibica_exception:
 
             # Display the full trace if debug option is enabled
             if in_debug_mode:
                 raise
+
             # In classic mode, just display the interpreter trace
             else:
-                print(f'{interpreter_exception}')
+                print(
+                    f'{gibica_exception.__class__.__name__}: '
+                    f'{gibica_exception}'
+                )
 
 
 if __name__ == '__main__':

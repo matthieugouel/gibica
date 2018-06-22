@@ -1,6 +1,7 @@
 """Parser module."""
 
 from gibica.tokens import Name
+from gibica.exceptions import SyntaxError
 from gibica.ast import (
     Compound,
     VarDecl,
@@ -36,9 +37,8 @@ class Parser(object):
 
     def _error(self):
         """Raise a Syntax Error."""
-        raise Exception(
-            (f'SYNTAX ERROR: '
-             f'Unable to process `{self.token}`.')
+        raise SyntaxError(
+             f'Unable to process `{self.token}`.'
         )
 
     def program(self):

@@ -1,10 +1,44 @@
 """Types module."""
 
 from abc import ABC, abstractmethod
+from gibica.exceptions import TypeError
 
 
-class Generic(ABC):
-    """Generic abstract class for generic type."""
+class AbstractType(ABC):
+    """Abstract class for generic type."""
+
+    # Raises a custom TypeError if the operator is not overrided
+    def _type_error(self): raise TypeError("Unsupported operator.")
+
+    # Triggers `_type_error` for all implemented operators
+    for operator in (
+        '__add__',
+        '__sub__',
+        '__mul__',
+        '__truediv__',
+        '__floordiv__',
+        '__pos__',
+        '__neg__',
+        '__eq__',
+        '__ne__',
+        '__le__',
+        '__ge__',
+        '__lt__',
+        '__gt__',
+    ):
+        locals()[operator] = lambda self, *args, **kwargs: self._type_error()
+
+    def __str__(self):
+        """String representation of a boolean."""
+        return str(self.value)
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
+
+
+class AbstractNumber(AbstractType, ABC):
+    """Abstract class for generic number."""
 
     @abstractmethod
     def _handle_type(self, other):
@@ -63,17 +97,9 @@ class Generic(ABC):
         """Handle the `>` operator."""
         return Bool(True) if self.value > other.value else Bool(False)
 
-    def __str__(self):
-        """String representation of a boolean."""
-        return str(self.value)
 
-    def __repr__(self):
-        """String representation of the class."""
-        return self.__str__()
-
-
-class Bool(object):
-    """Representation of a Boolean."""
+class Bool(AbstractType):
+    """Representation of a `Boolean`."""
 
     def __init__(self, value):
         """Initialization of `Bool` class."""
@@ -100,8 +126,8 @@ class Bool(object):
         return self.__str__()
 
 
-class Int(Generic):
-    """Representation of a Integer."""
+class Int(AbstractNumber):
+    """Representation of an `Integer` number."""
 
     def _handle_type(self, other):
         """Helper to handle the return type."""
@@ -110,9 +136,9 @@ class Int(Generic):
         elif isinstance(other, Float):
             return Float
         else:
-            raise Exception(
-                (f'TYPE ERROR: '
-                 f'Insuported {type(self)} {type(other)} evaluation.')
+            raise TypeError(
+                 f'Unsuported operation between '
+                 f'`{type(self)}` and `{type(other)}`.'
             )
 
     def __init__(self, value):
@@ -120,8 +146,8 @@ class Int(Generic):
         self.value = int(value)
 
 
-class Float(Generic):
-    """Representation of a Float."""
+class Float(AbstractNumber):
+    """Representation of a `Float` number."""
 
     def _handle_type(self, other):
         """Helper to handle the return type."""
@@ -130,9 +156,9 @@ class Float(Generic):
         elif isinstance(other, Float):
             return Float
         else:
-            raise Exception(
-                (f'TYPE ERROR: '
-                 f'Insuported {type(self)} {type(other)} evaluation.')
+            raise TypeError(
+                 f'Unsuported operation between '
+                 f'`{type(self)}` and `{type(other)}`.'
             )
 
     def __init__(self, value):

@@ -3,6 +3,7 @@
 import pytest
 
 from gibica.types import Int, Float, Bool
+from gibica.exceptions import SementicError
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -42,14 +43,11 @@ def test_float_declaration(evaluate, input, expected):
 
 @pytest.mark.parametrize('input, expected', [
     ('bool a = true;', {'a': Bool(True)}),
-    ('bool a = false;', {'a': Bool(False)}),
-    ('bool a = true == 1 < 2;', {'a': Bool(True)}),
-    ('bool a = true == 1 >= 2;', {'a': Bool(False)}),
     ('bool a = true == true;', {'a': Bool(True)}),
+    ('bool a = true != true;', {'a': Bool(False)}),
+    ('bool a = true != false;', {'a': Bool(True)}),
     ('bool a = false == false;', {'a': Bool(True)}),
     ('bool a = true == false;', {'a': Bool(False)}),
-    ('bool a = true == 1 != 2;', {'a': Bool(True)}),
-    ('bool a = true == 1 != 1;', {'a': Bool(False)}),
 ])
 def test_bool_declaration(evaluate, input, expected):
     """Test `Bool` type variable declaration."""
@@ -111,5 +109,5 @@ def test_mutable_declaration(evaluate, input, expected):
 ])
 def test_reassignment_of_immutable_variable(evaluate, input):
     """Test re-assignment of immutable variable."""
-    with pytest.raises(Exception):
+    with pytest.raises(SementicError):
         evaluate(input)

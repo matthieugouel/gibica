@@ -3,6 +3,8 @@
 import pytest
 
 from gibica.types import Int
+from gibica.exceptions import LexicalError
+from gibica.exceptions import SyntaxError
 
 
 @pytest.mark.parametrize('input', [
@@ -11,7 +13,7 @@ from gibica.types import Int
 ])
 def test_missing_semicolon(evaluate, input):
     """Test missing semicolon."""
-    with pytest.raises(Exception):
+    with pytest.raises(SyntaxError):
         evaluate(input)
 
 
@@ -25,7 +27,7 @@ def test_missing_semicolon(evaluate, input):
 ])
 def test_invalid_statements(evaluate, input):
     """Test invalid statements."""
-    with pytest.raises(Exception):
+    with pytest.raises(SyntaxError):
         evaluate(input)
 
 
@@ -35,17 +37,17 @@ def test_invalid_statements(evaluate, input):
 ])
 def test_invalid_operators(evaluate, input):
     """Test invalid operators."""
-    with pytest.raises(Exception):
+    with pytest.raises(LexicalError):
         evaluate(input)
 
 
 @pytest.mark.parametrize('input', [
-    'int gibica* =2+2;',
+    'int gibica§ =2+2;',
     'int gibica& =2+2;',
 ])
 def test_invalid_variable_name(evaluate, input):
     """Test invalid variable name."""
-    with pytest.raises(Exception):
+    with pytest.raises(LexicalError):
         evaluate(input)
 
 
