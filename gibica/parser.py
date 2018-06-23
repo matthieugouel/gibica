@@ -127,7 +127,7 @@ class Parser(object):
 
     def variable(self):
         """
-        variable: [ MUT ] ID
+        variable: [MUT] ID
         """
         is_mutable = False
         if self.token.name == Name.MUT:
@@ -141,21 +141,31 @@ class Parser(object):
     def if_statement(self):
         """
         if_statement: IF logical_or_expr compound_statement
-                    [ ELSE compound_statement ]
+                    (ELSE IF local_or_expr compound_statement)*
+                    [ELSE compound_statement]
         """
         self._process(Name.IF)
-        condition = self.logical_or_expr()
+        if_condition = self.logical_or_expr()
         if_body = self.compound_statement()
 
-        else_body = None
-        if self.token.name == Name.ELSE:
+        else_statement = None
+        else_if_statements = []
+        while self.token.name == Name.ELSE:
             self._process(Name.ELSE)
-            else_body = self.compound_statement()
+
+            if self.token.name == Name.IF:
+                self._process(Name.IF)
+                else_if_statements.append(
+                    (self.logical_or_expr(), self.compound_statement())
+                )
+            else:
+                else_statement = (None, self.compound_statement())
 
         return IfStatement(
-            condition=condition,
-            if_body=if_body,
-            else_body=else_body
+
+            if_statement=(if_condition, if_body),
+            else_if_statements=else_if_statements,
+            else_statement=else_statement
         )
 
     def logical_or_expr(self):

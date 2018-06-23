@@ -42,10 +42,17 @@ class Interpreter(NodeVisitor):
 
     def visit_IfStatement(self, node):
         """Visitor for `IfStatement` AST node."""
-        if self.visit(node.condition):
-            return self.visit(node.if_body)
+        if_conditon, if_body = node.if_statement
+        if self.visit(if_conditon):
+            return self.visit(if_body)
         else:
-            return self.visit(node.else_body)
+            for else_if_statement in node.else_if_statements:
+                else_if_condition, else_if_body = else_if_statement
+                if self.visit(else_if_condition):
+                    return self.visit(else_if_body)
+
+            _, else_body = node.else_statement
+            return self.visit(else_body)
 
     def visit_BinOp(self, node):
         """Visitor for `BinOp` AST node."""

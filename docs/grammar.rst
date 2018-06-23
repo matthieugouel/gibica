@@ -24,10 +24,11 @@ This is the current grammar of the Gibica language.
 
     assignment : variable ASSIGN logical_or_expr
 
-    variable: [ MUT ] ID
+    variable: [MUT] ID
 
     if_statement: IF logical_or_expr compound_statement
-                [ ELSE compound_statement ]
+                (ELSE IF local_or_expr compound_statement)*
+                [ELSE compound_statement]
 
     logical_or_expr: logical_and_expr (OR logical_and_expr)*
 

@@ -71,10 +71,15 @@ class Var(AST):
 class IfStatement(AST):
     """If statement AST representation."""
 
-    def __init__(self, condition, if_body, else_body=None):
-        self.condition = condition
-        self.if_body = if_body
-        self.else_body = else_body
+    def __init__(self, if_statement,
+                 else_if_statements=None,
+                 else_statement=None):
+        self.if_statement = if_statement
+        if else_if_statements is None:
+            self.else_if_statements = []
+        else:
+            self.else_if_statements = else_if_statements
+        self.else_statement = else_statement
 
 
 class BinOp(AST):

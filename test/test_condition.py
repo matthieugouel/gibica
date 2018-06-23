@@ -2,30 +2,46 @@
 
 import pytest
 
-from gibica.types import Bool, Int
+from gibica.types import Int
 
 
 @pytest.mark.parametrize('input, expected', [
     ("""
-     bool _condition = true;
+     bool _condition = 3;
      int mut container = 0;
 
-     if _condition {
+     if _condition < 5 {
          container = 1;
-     } else {
+     } else if _condition == 5 {
          container = 2;
+     } else {
+         container = 3;
      }
-    """, {'_condition': Bool(True), 'container': Int(1)}),
+    """, {'_condition': Int(3), 'container': Int(1)}),
     ("""
-     bool _condition = false;
+     bool _condition = 5;
      int mut container = 0;
 
-     if _condition {
+     if _condition < 5 {
          container = 1;
-     } else {
+     } else if _condition == 5 {
          container = 2;
+     } else {
+         container = 3;
      }
-    """, {'_condition': Bool(False), 'container': Int(2)}),
+    """, {'_condition': Int(5), 'container': Int(2)}),
+    ("""
+     bool _condition = 6;
+     int mut container = 0;
+
+     if _condition < 5 {
+         container = 1;
+     } else if _condition == 5 {
+         container = 2;
+     } else {
+         container = 3;
+     }
+    """, {'_condition': Int(6), 'container': Int(3)}),
 ])
 def test_expression_comparison(evaluate, input, expected):
     """Test expression comparison."""
