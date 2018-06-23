@@ -9,12 +9,18 @@ from gibica.exceptions import LexicalError
 
 # List of reserved keywords
 RESERVED_KEYWORDS: dict = {
+    'mut': Token(Name.MUT, 'mut'),
+
     'int': Token(Name.INT, 'int'),
     'float': Token(Name.FLOAT, 'float'),
     'bool': Token(Name.BOOL, 'bool'),
+
     'true': Token(Name.TRUE, 'true'),
     'false': Token(Name.FALSE, 'false'),
-    'mut': Token(Name.MUT, 'mut')
+
+    'or': Token(Name.OR, 'or'),
+    'and': Token(Name.AND, 'and'),
+    'not': Token(Name.NOT, 'not'),
 }
 
 

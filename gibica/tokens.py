@@ -24,6 +24,10 @@ class Name(object):
     LT = 'LT'
     GT = 'GT'
 
+    OR = 'OR'
+    AND = 'AND'
+    NOT = 'NOT'
+
     PLUS = 'PLUS'
     MINUS = 'MINUS'
     MUL = 'MUL'

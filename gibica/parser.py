@@ -103,12 +103,12 @@ class Parser(object):
 
     def assignment(self):
         """
-        assignment : variable ASSIGN comparison
+        assignment : variable ASSIGN logical_or_expr
         """
         left = self.variable()
         token = self.token
         self._process(Name.ASSIGN)
-        right = self.comparison()
+        right = self.logical_or_expr()
         node = Assign(left, token, right)
         return node
 
@@ -124,6 +124,46 @@ class Parser(object):
         node = Var(self.token, is_mutable)
         self._process(Name.ID)
         return node
+
+    def logical_or_expr(self):
+        """
+        logical_or_expr: logical_and_expr (OR logical_and_expr)*
+        """
+        node = self.logical_and_expr()
+
+        while self.token.name == Name.OR:
+            token = self.token
+            self._process(Name.OR)
+
+            node = BinOp(left=node, op=token, right=self.logical_and_expr())
+
+        return node
+
+    def logical_and_expr(self):
+        """
+        logical_and_expr: logical_not_expr (AND logical_not_expr)*
+        """
+        node = self.logical_not_expr()
+
+        while self.token.name == Name.AND:
+            token = self.token
+            self._process(Name.AND)
+
+            node = BinOp(left=node, op=token, right=self.logical_not_expr())
+
+        return node
+
+    def logical_not_expr(self):
+        """
+        logical_not_expr: NOT logical_not_expr
+                        | comparison
+        """
+        if self.token.name == Name.NOT:
+            token = self.token
+            self._process(Name.NOT)
+            return UnaryOp(op=token, right=self.logical_not_expr())
+        else:
+            return self.comparison()
 
     def comparison(self):
         """
@@ -200,7 +240,7 @@ class Parser(object):
               | MINUS factor
               | INT_NUMBER
               | FLOAT_NUMBER
-              | LPAREN comparison RPAREN
+              | LPAREN logical_or_expr RPAREN
               | TRUE
               | FALSE
               | variable
@@ -220,7 +260,7 @@ class Parser(object):
             return FloatingPoint(token)
         elif token.name == Name.LPAREN:
             self._process(Name.LPAREN)
-            node = self.comparison()
+            node = self.logical_or_expr()
             self._process(Name.RPAREN)
             return node
         elif token.name == Name.TRUE:

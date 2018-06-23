@@ -30,6 +30,10 @@ class AbstractType(ABC):
     ):
         locals()[operator] = lambda self, *args, **kwargs: self._type_error()
 
+    def __bool__(self):
+        """Handle the boolean value of the instance."""
+        self._type_error()
+
     def __str__(self):
         """String representation of a boolean."""
         return str(self.value)
@@ -122,7 +126,7 @@ class Bool(AbstractType):
             raise self._type_error()
 
     def __bool__(self):
-        """Handle the boolean value of the class itself."""
+        """Handle the boolean value of the instance."""
         return True if self.value is True else False
 
     def __str__(self):

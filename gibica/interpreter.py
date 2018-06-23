@@ -64,6 +64,10 @@ class Interpreter(NodeVisitor):
             return self.visit(node.left) < self.visit(node.right)
         elif node.op.name == Name.GT:
             return self.visit(node.left) > self.visit(node.right)
+        elif node.op.name == Name.OR:
+            return self.visit(node.left) or self.visit(node.right)
+        elif node.op.name == Name.AND:
+            return self.visit(node.left) and self.visit(node.right)
 
     def visit_UnaryOp(self, node):
         """Visitor for `UnaryOp` AST node."""
@@ -71,6 +75,8 @@ class Interpreter(NodeVisitor):
             return +self.visit(node.right)
         elif node.op.name == Name.MINUS:
             return -self.visit(node.right)
+        elif node.op.name == Name.NOT:
+            return Bool(not self.visit(node.right))
 
     def visit_Integer(self, node):
         """Visitor for `Integer` AST node."""

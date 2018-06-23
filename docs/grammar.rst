@@ -19,9 +19,16 @@ This is the current grammar of the Gibica language.
 
     expression_statement: assignment SEMI
 
-    assignment : variable ASSIGN comparison
+    assignment : variable ASSIGN logical_or_expr
 
     variable: [ MUT ] ID
+
+    logical_or_expr: logical_and_expr (OR logical_and_expr)*
+
+    logical_and_expr: logical_not_expr (AND logical_not_expr)*
+
+    logical_not_expr: NOT logical_not_expr
+                    | comparison
 
     comparison: expr ((EQ | NE | LE | GE | LT | GT) expr)*
 
@@ -33,7 +40,7 @@ This is the current grammar of the Gibica language.
           | MINUS factor
           | INT_NUMBER
           | FLOAT_NUMBER
-          | LPAREN comparison RPAREN
+          | LPAREN logical_or_expr RPAREN
           | TRUE
           | FALSE
           | variable
