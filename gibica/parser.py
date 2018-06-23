@@ -8,6 +8,7 @@ from gibica.ast import (
     VarType,
     Assign,
     Var,
+    IfStatement,
     BinOp,
     UnaryOp,
     Integer,
@@ -52,15 +53,27 @@ class Parser(object):
 
         return root
 
+    def compound_statement(self):
+        """
+        compound_statement: LBRACKET statement RBRACKET
+        """
+        self._process(Name.LBRACKET)
+        node = self.statement()
+        self._process(Name.RBRACKET)
+        return node
+
     def statement(self):
         """
         statement: declaration_statement
                  | expression_statement
+                 | if_statement
         """
         if self.token.name in (Name.INT, Name.FLOAT, Name.BOOL):
             node = self.declaration_statement()
         elif self.token.name == Name.ID:
             node = self.expression_statement()
+        elif self.token.name == Name.IF:
+            node = self.if_statement()
         else:
             node = self._error()
 
@@ -124,6 +137,26 @@ class Parser(object):
         node = Var(self.token, is_mutable)
         self._process(Name.ID)
         return node
+
+    def if_statement(self):
+        """
+        if_statement: IF logical_or_expr compound_statement
+                    [ ELSE compound_statement ]
+        """
+        self._process(Name.IF)
+        condition = self.logical_or_expr()
+        if_body = self.compound_statement()
+
+        else_body = None
+        if self.token.name == Name.ELSE:
+            self._process(Name.ELSE)
+            else_body = self.compound_statement()
+
+        return IfStatement(
+            condition=condition,
+            if_body=if_body,
+            else_body=else_body
+        )
 
     def logical_or_expr(self):
         """

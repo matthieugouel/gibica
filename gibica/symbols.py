@@ -121,6 +121,13 @@ class SymbolTableBuilder(NodeVisitor):
                 f'Variable `{var_name}` is not declared.'
             )
 
+    def visit_IfStatement(self, node):
+        """Visitor for `IfStatement` AST node."""
+        if node.condition:
+            return self.visit(node.if_body)
+        else:
+            return self.visit(node.else_body)
+
     def visit_BinOp(self, node):
         """Visitor for `BinOp` AST node."""
         self.visit(node.left)

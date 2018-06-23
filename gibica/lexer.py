@@ -1,28 +1,12 @@
 """Lexer module."""
 
-from gibica.tokens import Token, Name
+from gibica.tokens import Token, Name, RESERVED_KEYWORDS
 from gibica.exceptions import LexicalError
+
 
 #
 # Lexical Analysis
 #
-
-# List of reserved keywords
-RESERVED_KEYWORDS: dict = {
-    'mut': Token(Name.MUT, 'mut'),
-
-    'int': Token(Name.INT, 'int'),
-    'float': Token(Name.FLOAT, 'float'),
-    'bool': Token(Name.BOOL, 'bool'),
-
-    'true': Token(Name.TRUE, 'true'),
-    'false': Token(Name.FALSE, 'false'),
-
-    'or': Token(Name.OR, 'or'),
-    'and': Token(Name.AND, 'and'),
-    'not': Token(Name.NOT, 'not'),
-}
-
 
 class Lexer(object):
     """Lexical analyser."""
@@ -177,6 +161,14 @@ class Lexer(object):
                 # The current character is `)`
                 self.advance()
                 return Token(Name.RPAREN, ')')
+            elif self.char == '{':
+                # The current character is `{`
+                self.advance()
+                return Token(Name.LBRACKET, '{')
+            elif self.char == '}':
+                # The current character is `}`
+                self.advance()
+                return Token(Name.RBRACKET, '}')
             else:
                 # The current character is unknown
                 raise LexicalError(

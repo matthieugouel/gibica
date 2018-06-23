@@ -94,8 +94,8 @@ def test_unary_declaration(evaluate, input, expected):
     ('int a=2+2; int b=4*2;', {'a': Int(4), 'b': Int(8)}),
     ('int a=2+2; int b=a*2;', {'a': Int(4), 'b': Int(8)}),
 ])
-def test_multiple_declaration(evaluate, input, expected):
-    """Test multiple variable declaration."""
+def test_multiple_declarations(evaluate, input, expected):
+    """Test multiple variable declarations."""
     instance = evaluate(input)
 
     assert instance.GLOBAL_MEMORY == expected

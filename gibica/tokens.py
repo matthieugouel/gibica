@@ -37,7 +37,13 @@ class Name(object):
     LPAREN = 'LPAREN'
     RPAREN = 'RPAREN'
 
+    LBRACKET = 'LBRACKET'
+    RBRACKET = 'RBRACKET'
+
     ASSIGN = 'ASSIGN'
+
+    IF = 'IF'
+    ELSE = 'ELSE'
 
     SEMI = 'SEMI'
     EOF = 'EOF'
@@ -58,3 +64,23 @@ class Token(object):
     def ___repr__(self):
         """String representation of the class."""
         return self.__str__()
+
+
+# List of reserved keywords
+RESERVED_KEYWORDS: dict = {
+    'mut': Token(Name.MUT, 'mut'),
+
+    'int': Token(Name.INT, 'int'),
+    'float': Token(Name.FLOAT, 'float'),
+    'bool': Token(Name.BOOL, 'bool'),
+
+    'true': Token(Name.TRUE, 'true'),
+    'false': Token(Name.FALSE, 'false'),
+
+    'or': Token(Name.OR, 'or'),
+    'and': Token(Name.AND, 'and'),
+    'not': Token(Name.NOT, 'not'),
+
+    'if': Token(Name.IF, 'if'),
+    'else': Token(Name.ELSE, 'else'),
+}

@@ -68,6 +68,15 @@ class Var(AST):
         self.is_mutable = is_mutable
 
 
+class IfStatement(AST):
+    """If statement AST representation."""
+
+    def __init__(self, condition, if_body, else_body=None):
+        self.condition = condition
+        self.if_body = if_body
+        self.else_body = else_body
+
+
 class BinOp(AST):
     """Binary operands AST representation."""
 

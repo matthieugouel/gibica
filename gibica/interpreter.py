@@ -40,6 +40,13 @@ class Interpreter(NodeVisitor):
         variable_value = self.GLOBAL_MEMORY.get(variable_name)
         return variable_value
 
+    def visit_IfStatement(self, node):
+        """Visitor for `IfStatement` AST node."""
+        if self.visit(node.condition):
+            return self.visit(node.if_body)
+        else:
+            return self.visit(node.else_body)
+
     def visit_BinOp(self, node):
         """Visitor for `BinOp` AST node."""
         if node.op.name == Name.PLUS:
