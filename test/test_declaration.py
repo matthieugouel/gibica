@@ -52,6 +52,9 @@ def test_float_declaration(evaluate, input, expected):
     ('bool a = true != false;', {'a': Bool(True)}),
     ('bool a = false == false;', {'a': Bool(True)}),
     ('bool a = true == false;', {'a': Bool(False)}),
+    ('bool a = true == ( 1 < 2 ) ;', {'a': Bool(True)}),
+    ('bool a = true == ( 5 == 5 ) ;', {'a': Bool(True)}),
+    ('bool a = false == ( 1 < 2 ) ;', {'a': Bool(False)}),
 ])
 def test_bool_declaration(evaluate, input, expected):
     """Test `Bool` type variable declaration."""

@@ -33,7 +33,7 @@ This is the current grammar of the Gibica language.
           | MINUS factor
           | INT_NUMBER
           | FLOAT_NUMBER
-          | LPAREN expr RPAREN
+          | LPAREN comparison RPAREN
           | TRUE
           | FALSE
           | variable

@@ -200,7 +200,7 @@ class Parser(object):
               | MINUS factor
               | INT_NUMBER
               | FLOAT_NUMBER
-              | LPAREN expr RPAREN
+              | LPAREN comparison RPAREN
               | TRUE
               | FALSE
               | variable
@@ -220,7 +220,7 @@ class Parser(object):
             return FloatingPoint(token)
         elif token.name == Name.LPAREN:
             self._process(Name.LPAREN)
-            node = self.expr()
+            node = self.comparison()
             self._process(Name.RPAREN)
             return node
         elif token.name == Name.TRUE:
