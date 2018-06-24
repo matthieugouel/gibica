@@ -12,39 +12,22 @@ from gibica.exceptions import SementicError
 class Symbol(object):
     """Container of a symbol."""
 
-    def __init__(self, name, type=None, is_mutable=None):
+    def __init__(self, name, is_mutable):
         """Initialization of `Symbol` class."""
         self.name = name
-        self.type = type
         self.is_mutable = is_mutable
-
-
-class BuiltinTypeSymbol(Symbol):
-    """Container of a Built-in type symbol."""
-
-    def __init__(self, name):
-        """Initialization of `BuiltinTypeSymbol` class."""
-        super().__init__(name)
-
-    def __str__(self):
-        """String representation of a built-in symbol."""
-        return self.name
-
-    def __repr__(self):
-        """String representation of the class."""
-        return self.__str__()
 
 
 class VarSymbol(Symbol):
     """Container of a variable symbol."""
 
-    def __init__(self, name, type, is_mutable):
+    def __init__(self, name, is_mutable):
         """Initialization of `VarSymbol` class."""
-        super().__init__(name, type, is_mutable)
+        super().__init__(name, is_mutable)
 
     def __str__(self):
         """String representation of a variable symbol."""
-        return f"<{self.name}:{self.type}{':mut' if self.is_mutable else ''}>"
+        return f"<{self.name}{':mut' if self.is_mutable else ''}>"
 
     def __repr__(self):
         """String representation of the class."""
@@ -81,11 +64,9 @@ class SymbolTableBuilder(NodeVisitor):
 
     def visit_VarDecl(self, node):
         """Visitor for `VarDecl` AST node."""
-        type_name = node.var_type.value
-        type_symbol = BuiltinTypeSymbol(type_name)
         var_name = node.assignment.left.value
         var_is_mutable = node.assignment.left.is_mutable
-        var_symbol = VarSymbol(var_name, type_symbol, var_is_mutable)
+        var_symbol = VarSymbol(var_name, var_is_mutable)
 
         if self.SYMBOL_TABLE.get(var_name) is not None:
             raise SementicError(
@@ -93,10 +74,6 @@ class SymbolTableBuilder(NodeVisitor):
             )
 
         self.SYMBOL_TABLE[var_symbol.name] = var_symbol
-
-    def visit_VarType(self, node):
-        """Visitor for `VarType` AST node."""
-        pass
 
     def visit_Assign(self, node):
         """Visitor for `Assign` AST node."""

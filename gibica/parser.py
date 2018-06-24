@@ -5,7 +5,6 @@ from gibica.exceptions import SyntaxError
 from gibica.ast import (
     Compound,
     VarDecl,
-    VarType,
     Assign,
     Var,
     IfStatement,
@@ -68,7 +67,7 @@ class Parser(object):
                  | expression_statement
                  | if_statement
         """
-        if self.token.name in (Name.INT, Name.FLOAT, Name.BOOL):
+        if self.token.name == Name.LET:
             node = self.declaration_statement()
         elif self.token.name == Name.ID:
             node = self.expression_statement()
@@ -81,29 +80,11 @@ class Parser(object):
 
     def declaration_statement(self):
         """
-        declaration_statement: var_type assignment SEMI
+        declaration_statement: LET assignment SEMI
         """
-        node = VarDecl(self.var_type(), self.assignment())
+        self._process(Name.LET)
+        node = VarDecl(self.assignment())
         self._process(Name.SEMI)
-        return node
-
-    def var_type(self):
-        """
-        var_type: INT
-                | FLOAT
-                | BOOL
-        """
-        node = VarType(self.token)
-
-        if self.token.name == Name.INT:
-            self._process(Name.INT)
-        elif self.token.name == Name.FLOAT:
-            self._process(Name.FLOAT)
-        elif self.token.name == Name.BOOL:
-            self._process(Name.BOOL)
-        else:
-            self._error()
-
         return node
 
     def expression_statement(self):

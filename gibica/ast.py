@@ -33,19 +33,9 @@ class Compound(AST):
 class VarDecl(AST):
     """Variable declaration AST representation."""
 
-    def __init__(self, var_type, assignment):
+    def __init__(self, assignment):
         """Initialization of `VarDecl` class."""
-        self.var_type = var_type
         self.assignment = assignment
-
-
-class VarType(AST):
-    """Variable Type AST representation."""
-
-    def __init__(self, token):
-        """Initialization of `VarType` class."""
-        self.token = token
-        self.value = token.value
 
 
 class Assign(AST):

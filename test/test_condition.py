@@ -7,8 +7,8 @@ from gibica.types import Int
 
 @pytest.mark.parametrize('input, expected', [
     ("""
-     bool _condition = 3;
-     int mut container = 0;
+     let _condition = 3;
+     let mut container = 0;
 
      if _condition < 5 {
          container = 1;
@@ -19,8 +19,8 @@ from gibica.types import Int
      }
     """, {'_condition': Int(3), 'container': Int(1)}),
     ("""
-     bool _condition = 5;
-     int mut container = 0;
+     let _condition = 5;
+     let mut container = 0;
 
      if _condition < 5 {
          container = 1;
@@ -31,8 +31,8 @@ from gibica.types import Int
      }
     """, {'_condition': Int(5), 'container': Int(2)}),
     ("""
-     bool _condition = 6;
-     int mut container = 0;
+     let _condition = 6;
+     let mut container = 0;
 
      if _condition < 5 {
          container = 1;

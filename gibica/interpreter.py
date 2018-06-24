@@ -26,10 +26,6 @@ class Interpreter(NodeVisitor):
         """Visitor for `VarDecl` AST node."""
         self.visit(node.assignment)
 
-    def visit_VarType(self, node):
-        """Visitor for `VarType` AST node."""
-        pass
-
     def visit_Assign(self, node):
         """Visitor for `Assign` AST node."""
         self.GLOBAL_MEMORY[node.left.value] = self.visit(node.right)

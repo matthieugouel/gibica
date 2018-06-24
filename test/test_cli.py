@@ -17,7 +17,7 @@ def test_cli_standard(runner):
 
     with runner.isolated_filesystem():
         with open('script.gbc', 'w') as f:
-            f.write('int a = 2; int b = a + 1;')
+            f.write('let a = 2; let b = a + 1;')
 
         result = runner.invoke(main, ['script.gbc'])
         assert result.exit_code == 0
@@ -29,11 +29,11 @@ def test_cli_debug(runner):
 
     with runner.isolated_filesystem():
         with open('script.gbc', 'w') as f:
-            f.write('int a = 2; int b = a + 1;')
+            f.write('let a = 2; let mut b = a + 1;')
 
         result = runner.invoke(main, ['script.gbc', '--debug'])
         assert result.exit_code == 0
         assert result.output == (
-                                    "SYMBOL TABLE: [<a:int>, <b:int>]\n"
+                                    "SYMBOL TABLE: [<a>, <b:mut>]\n"
                                     "GLOBAL MEMORY: {'a': 2, 'b': 3}\n"
                                 )

@@ -14,11 +14,7 @@ This is the current grammar of the Gibica language.
              | expression_statement
              | if_statement
 
-    declaration_statement: var_type assignment SEMI
-
-    var_type: INT
-            | FLOAT
-            | BOOL
+    declaration_statement: LET assignment SEMI
 
     expression_statement: assignment SEMI
 

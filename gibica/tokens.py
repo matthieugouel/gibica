@@ -6,15 +6,12 @@ class Name(object):
 
     ID = 'ID'
 
-    INT = 'INT'
-    FLOAT = 'FLOAT'
-    BOOL = 'BOOL'
-
     INT_NUMBER = 'INT_NUMBER'
     FLOAT_NUMBER = 'FLOAT_NUMBER'
     TRUE = 'TRUE'
     FALSE = 'FALSE'
 
+    LET = 'LET'
     MUT = 'MUT'
 
     EQ = 'EQ'
@@ -68,11 +65,9 @@ class Token(object):
 
 # List of reserved keywords
 RESERVED_KEYWORDS: dict = {
+    'let': Token(Name.LET, 'let'),
     'mut': Token(Name.MUT, 'mut'),
 
-    'int': Token(Name.INT, 'int'),
-    'float': Token(Name.FLOAT, 'float'),
-    'bool': Token(Name.BOOL, 'bool'),
 
     'true': Token(Name.TRUE, 'true'),
     'false': Token(Name.FALSE, 'false'),
