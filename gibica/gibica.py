@@ -46,8 +46,8 @@ def main(filepath, in_debug_mode):
 
             # Display internal variables if debug option is enabled
             if in_debug_mode:
-                click.echo(f'SYMBOL TABLE: {symtab_builder.SYMBOL_TABLE}')
-                click.echo(f'GLOBAL MEMORY: {interpreter.GLOBAL_MEMORY}')
+                print(f'SYMBOL TABLE: {symtab_builder.SYMBOL_TABLE}')
+                print(f'GLOBAL MEMORY: {interpreter.GLOBAL_MEMORY}')
 
         except Exception as gibica_exception:
 
