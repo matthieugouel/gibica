@@ -40,10 +40,8 @@ class Lexer(object):
 
     def comment(self):
         """Handle comments."""
-        while self.char != '*' or self.peek() != '/':
+        while self.char is not None and self.char != '\n':
             self.advance()
-        self.advance()
-        self.advance()
 
     def number(self):
         """Return a multidigit int or float number."""
@@ -84,6 +82,11 @@ class Lexer(object):
             if self.char.isspace():
                 # The current character is a whitespace
                 self.whitespace()
+                continue
+            elif self.char == '#':
+                # The current character is `#`
+                self.advance()
+                self.comment()
                 continue
             elif self.char.isalpha() or self.char == '_':
                 # The curent character is a letter or `_`
@@ -143,12 +146,6 @@ class Lexer(object):
                 self.advance()
                 self.advance()
                 return Token(Name.INT_DIV, '//')
-            elif self.char == '/' and self.peek() == '*':
-                # The current character is `/*
-                self.advance()
-                self.advance()
-                self.comment()
-                continue
             elif self.char == '/':
                 # The current character is `/`
                 self.advance()

@@ -52,7 +52,9 @@ def test_invalid_variable_name(evaluate, input):
 
 
 @pytest.mark.parametrize('input, expected', [
-    ('let a = 1; /* This is a comment */', {'a': Int(1)}),
+    ('let a = 1; # This is a comment\n', {'a': Int(1)}),
+    ('let a = 1; # This is a comment', {'a': Int(1)}),
+    ('# This is a comment\n let a = 1;', {'a': Int(1)}),
 ])
 def test_with_comments(evaluate, input, expected):
     """Test a comment."""
