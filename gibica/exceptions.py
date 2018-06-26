@@ -16,6 +16,11 @@ class SementicError(Exception):
     pass
 
 
+class ObjectError(Exception):
+    """Object error."""
+    pass
+
+
 class TypeError(Exception):
     """Type error."""
     pass

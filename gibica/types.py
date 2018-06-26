@@ -1,16 +1,37 @@
 """Types module."""
 
 from abc import ABC, abstractmethod
-from gibica.exceptions import TypeError
+from gibica.exceptions import ObjectError, TypeError
 
 
-class AbstractType(ABC):
+class AbstractObject(ABC):
+    """Abstract class for generic object."""
+
+    # Raises a custom `ObjectError` if the attribute or method doesn't exist
+    def _object_error(self):
+        """Raise an `ObjectError`."""
+        raise ObjectError("Unsupported method.")
+
+    def __getattr__(self, name):
+        """Handle methods and attributes fetching."""
+        try:
+            if callable(getattr(self, name)):
+                # Requests a method
+                return getattr(self, name)()
+            else:
+                # Requests an attribute
+                return getattr(self, name)
+        except AttributeError:
+            self._object_error()
+
+
+class AbstractType(AbstractObject, ABC):
     """Abstract class for generic type."""
 
-    # Raises a custom TypeError if the operator is not overrided
+    # Raises a custom `TypeError` if the operator is not overrided
     def _type_error(self):
-        """Raises a TypeError."""
-        raise TypeError("Unsupported operator.")
+        """Raise a `TypeError`."""
+        raise TypeError("Unsupported operation.")
 
     # Triggers `_type_error` for all implemented operators
     for operator in (
