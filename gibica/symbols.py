@@ -100,17 +100,24 @@ class SymbolTableBuilder(NodeVisitor):
 
     def visit_IfStatement(self, node):
         """Visitor for `IfStatement` AST node."""
-        if_conditon, if_body = node.if_statement
+        if_conditon, if_body = node.if_compound
         if self.visit(if_conditon):
-            return self.visit(if_body)
+            self.visit(if_body)
         else:
-            for else_if_statement in node.else_if_statements:
-                else_if_condition, else_if_body = else_if_statement
+            for else_if_compound in node.else_if_compounds:
+                else_if_condition, else_if_body = else_if_compound
                 if self.visit(else_if_condition):
-                    return self.visit(else_if_body)
+                    self.visit(else_if_body)
+                    break
+            else:
+                if node.else_compound is not None:
+                    _, else_body = node.else_compound
+                    self.visit(else_body)
 
-            _, else_body = node.else_statement
-            return self.visit(else_body)
+    def visit_WhileStatement(self, node):
+        """Visitor for `WhileStatement` AST node."""
+        while self.visit(node.condition):
+            self.visit(node.compound)
 
     def visit_BinOp(self, node):
         """Visitor for `BinOp` AST node."""

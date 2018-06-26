@@ -8,11 +8,12 @@ This is the current grammar of the Gibica language.
 
     program: (statement)*
 
-    compound_statement: LBRACKET statement RBRACKET
+    compound_statement: LBRACKET (statements)* RBRACKET
 
     statement: declaration_statement
              | expression_statement
              | if_statement
+             | while_statement
 
     declaration_statement: LET assignment SEMI
 
@@ -25,6 +26,8 @@ This is the current grammar of the Gibica language.
     if_statement: IF logical_or_expr compound_statement
                 (ELSE IF local_or_expr compound_statement)*
                 [ELSE compound_statement]
+
+    while_statement: WHILE local_or_expr compound_statement
 
     logical_or_expr: logical_and_expr (OR logical_and_expr)*
 

@@ -61,15 +61,25 @@ class Var(AST):
 class IfStatement(AST):
     """If statement AST representation."""
 
-    def __init__(self, if_statement,
-                 else_if_statements=None,
-                 else_statement=None):
-        self.if_statement = if_statement
-        if else_if_statements is None:
-            self.else_if_statements = []
+    def __init__(self, if_compound,
+                 else_if_compounds=None,
+                 else_compound=None):
+        """Initialization of `IfStatement` class."""
+        self.if_compound = if_compound
+        if else_if_compounds is None:
+            self.else_if_compounds = []
         else:
-            self.else_if_statements = else_if_statements
-        self.else_statement = else_statement
+            self.else_if_compounds = else_if_compounds
+        self.else_compound = else_compound
+
+
+class WhileStatement(AST):
+    """While statement AST representation."""
+
+    def __init__(self, condition, compound):
+        """Initialization of `WhileStatement` class."""
+        self.condition = condition
+        self.compound = compound
 
 
 class BinOp(AST):

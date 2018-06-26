@@ -42,6 +42,8 @@ class Name(object):
     IF = 'IF'
     ELSE = 'ELSE'
 
+    WHILE = 'WHILE'
+
     SEMI = 'SEMI'
     EOF = 'EOF'
 
@@ -78,4 +80,6 @@ RESERVED_KEYWORDS: dict = {
 
     'if': Token(Name.IF, 'if'),
     'else': Token(Name.ELSE, 'else'),
+
+    'while': Token(Name.WHILE, 'while'),
 }

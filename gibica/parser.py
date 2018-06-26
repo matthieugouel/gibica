@@ -8,6 +8,7 @@ from gibica.ast import (
     Assign,
     Var,
     IfStatement,
+    WhileStatement,
     BinOp,
     UnaryOp,
     Integer,
@@ -54,12 +55,16 @@ class Parser(object):
 
     def compound_statement(self):
         """
-        compound_statement: LBRACKET statement RBRACKET
+        compound_statement: LBRACKET (statements)* RBRACKET
         """
+        root = Compound()
         self._process(Name.LBRACKET)
-        node = self.statement()
+
+        while self.token.name != Name.RBRACKET:
+            root.children.append(self.statement())
+
         self._process(Name.RBRACKET)
-        return node
+        return root
 
     def statement(self):
         """
@@ -73,6 +78,8 @@ class Parser(object):
             node = self.expression_statement()
         elif self.token.name == Name.IF:
             node = self.if_statement()
+        elif self.token.name == Name.WHILE:
+            node = self.while_statement()
         else:
             node = self._error()
 
@@ -129,25 +136,33 @@ class Parser(object):
         if_condition = self.logical_or_expr()
         if_body = self.compound_statement()
 
-        else_statement = None
-        else_if_statements = []
+        else_compound = None
+        else_if_compounds = []
         while self.token.name == Name.ELSE:
             self._process(Name.ELSE)
 
             if self.token.name == Name.IF:
                 self._process(Name.IF)
-                else_if_statements.append(
+                else_if_compounds.append(
                     (self.logical_or_expr(), self.compound_statement())
                 )
             else:
-                else_statement = (None, self.compound_statement())
+                else_compound = (None, self.compound_statement())
 
         return IfStatement(
-
-            if_statement=(if_condition, if_body),
-            else_if_statements=else_if_statements,
-            else_statement=else_statement
+            if_compound=(if_condition, if_body),
+            else_if_compounds=else_if_compounds,
+            else_compound=else_compound
         )
+
+    def while_statement(self):
+        """
+        while_statement: WHILE local_or_expr compound_statement
+        """
+        self._process(Name.WHILE)
+        condition = self.logical_or_expr()
+        compound = self.compound_statement()
+        return WhileStatement(condition=condition, compound=compound)
 
     def logical_or_expr(self):
         """
