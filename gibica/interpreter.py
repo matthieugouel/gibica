@@ -22,6 +22,14 @@ class Interpreter(NodeVisitor):
         for child in node.children:
             self.visit(child)
 
+    def visit_FuncDecl(self, node):
+        """Visitor for `FuncDecl` AST node."""
+        self.visit(node.body)
+
+    def visit_Params(self, node):
+        """Visitor for `Params` AST node."""
+        pass
+
     def visit_VarDecl(self, node):
         """Visitor for `VarDecl` AST node."""
         self.visit(node.assignment)

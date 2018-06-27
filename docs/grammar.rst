@@ -14,6 +14,11 @@ This is the current grammar of the Gibica language.
              | expression_statement
              | if_statement
              | while_statement
+             | function_definition
+
+    function_definition: DEF ID parameters compound_statement
+
+    parameters: LPAREN [variable] (COMMA variable)* RPAREN
 
     declaration_statement: LET assignment SEMI
 

@@ -79,93 +79,121 @@ class Lexer(object):
     def next_token(self):
         """Lexical analyser of the raw input."""
         while self.char is not None:
+
             if self.char.isspace():
                 # The current character is a whitespace
                 self.whitespace()
                 continue
+
             elif self.char == '#':
                 # The current character is `#`
                 self.advance()
                 self.comment()
                 continue
+
             elif self.char.isalpha() or self.char == '_':
                 # The curent character is a letter or `_`
                 return self._id()
+
             elif self.char == ';':
+                # The current character is `;`
                 self.advance()
                 return Token(Name.SEMI, ';')
+
+            elif self.char == ',':
+                # The current character is `,`
+                self.advance()
+                return Token(Name.COMMA, ';')
+
             elif self.char.isdigit():
                 # The current character is a number
                 return self.number()
+
             elif self.char == '=' and self.peek() == '=':
                 # The current character is `==`
                 self.advance()
                 self.advance()
                 return Token(Name.EQ, '==')
+
             elif self.char == '!' and self.peek() == '=':
                 # The current character is `!=`
                 self.advance()
                 self.advance()
                 return Token(Name.NE, '!=')
+
             elif self.char == '<' and self.peek() == '=':
                 # The current character is `<=`
                 self.advance()
                 self.advance()
                 return Token(Name.LE, '<=')
+
             elif self.char == '>' and self.peek() == '=':
                 # The current character is `>=`
                 self.advance()
                 self.advance()
                 return Token(Name.GE, '>=')
+
             elif self.char == '<':
                 # The current character is `<`
                 self.advance()
                 return Token(Name.LT, '<')
+
             elif self.char == '>':
                 # The current character is `>`
                 self.advance()
                 return Token(Name.GT, '>')
+
             elif self.char == '=':
                 # The current character is `=`
                 self.advance()
                 return Token(Name.ASSIGN, '=')
+
             elif self.char == '+':
                 # The current character is `+`
                 self.advance()
                 return Token(Name.PLUS, '+')
+
             elif self.char == '-':
                 # The current character is `-`
                 self.advance()
                 return Token(Name.MINUS, '-')
+
             elif self.char == '*':
                 # The current character is `*`
                 self.advance()
                 return Token(Name.MUL, '*')
+
             elif self.char == '/' and self.peek() == '/':
                 # The current character is `//`
                 self.advance()
                 self.advance()
                 return Token(Name.INT_DIV, '//')
+
             elif self.char == '/':
                 # The current character is `/`
                 self.advance()
                 return Token(Name.DIV, '/')
+
             elif self.char == '(':
                 # The current character is `(`
                 self.advance()
                 return Token(Name.LPAREN, '(')
+
             elif self.char == ')':
                 # The current character is `)`
                 self.advance()
                 return Token(Name.RPAREN, ')')
+
             elif self.char == '{':
                 # The current character is `{`
                 self.advance()
                 return Token(Name.LBRACKET, '{')
+
             elif self.char == '}':
                 # The current character is `}`
                 self.advance()
                 return Token(Name.RBRACKET, '}')
+
             else:
                 # The current character is unknown
                 raise LexicalError(

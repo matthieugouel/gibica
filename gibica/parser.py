@@ -4,6 +4,8 @@ from gibica.tokens import Name
 from gibica.exceptions import SyntaxError
 from gibica.ast import (
     Compound,
+    FuncDecl,
+    Params,
     VarDecl,
     Assign,
     Var,
@@ -80,10 +82,43 @@ class Parser(object):
             node = self.if_statement()
         elif self.token.name == Name.WHILE:
             node = self.while_statement()
+        elif self.token.name == Name.DEF:
+            node = self.function_definition()
         else:
             node = self._error()
 
         return node
+
+    def function_definition(self):
+        """
+        function_definition: DEF ID parameters compound_statement
+        """
+        self._process(Name.DEF)
+        name = self.token.value
+        self._process(Name.ID)
+        parameters = self.parameters()
+        return FuncDecl(
+            name=name,
+            parameters=parameters,
+            body=self.compound_statement()
+        )
+
+    def parameters(self):
+        """
+        parameters: LPAREN [variable] (COMMA variable)* RPAREN
+        """
+        nodes = []
+        self._process(Name.LPAREN)
+
+        while self.token.name != Name.RPAREN:
+            nodes.append(Params(self.variable()))
+
+            if self.token.name == Name.COMMA:
+                self._process(Name.COMMA)
+
+        self._process(Name.RPAREN)
+
+        return nodes
 
     def declaration_statement(self):
         """

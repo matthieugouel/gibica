@@ -30,6 +30,24 @@ class Compound(AST):
         self.children = []
 
 
+class FuncDecl(AST):
+    """Function declaration AST representation."""
+
+    def __init__(self, name, parameters, body):
+        """Initialization of `FuncDecl` class."""
+        self.name = name
+        self.parameters = parameters
+        self.body = body
+
+
+class Params(AST):
+    """Parameters declaration AST representation."""
+
+    def __init__(self, variable):
+        """Initialization of `Params` class."""
+        self.variable = variable
+
+
 class VarDecl(AST):
     """Variable declaration AST representation."""
 

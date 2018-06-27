@@ -44,6 +44,9 @@ class Name(object):
 
     WHILE = 'WHILE'
 
+    DEF = 'DEF'
+
+    COMMA = 'COMMA'
     SEMI = 'SEMI'
     EOF = 'EOF'
 
@@ -82,4 +85,6 @@ RESERVED_KEYWORDS: dict = {
     'else': Token(Name.ELSE, 'else'),
 
     'while': Token(Name.WHILE, 'while'),
+
+    'def': Token(Name.DEF, 'def'),
 }
