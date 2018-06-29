@@ -3,6 +3,7 @@
 from gibica.tokens import Name
 from gibica.exceptions import SyntaxError
 from gibica.ast import (
+    Program,
     Compound,
     FuncDecl,
     Params,
@@ -48,7 +49,7 @@ class Parser(object):
         """
         program: (statement)*
         """
-        root = Compound()
+        root = Program()
 
         while self.token.name != Name.EOF:
             root.children.append(self.statement())

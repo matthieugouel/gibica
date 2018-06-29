@@ -1,7 +1,7 @@
 """Interpreter module."""
 
 from gibica.tokens import Name
-from gibica.ast import NodeVisitor
+from gibica.ast import NodeVisitor, FuncDecl
 from gibica.types import Int, Float, Bool
 
 
@@ -16,6 +16,13 @@ class Interpreter(NodeVisitor):
         """Initialization of `Interpreter` class."""
         self.tree = tree
         self.GLOBAL_MEMORY = {}
+
+    def visit_Program(self, node):
+        """Vsitor for `Program` AST node."""
+        for child in node.children:
+            # Skip function declaration nodes
+            if not isinstance(child, FuncDecl):
+                self.visit(child)
 
     def visit_Compound(self, node):
         """Visitor for `Compound` AST node."""

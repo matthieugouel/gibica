@@ -1,7 +1,7 @@
 """Symbols module."""
 
 from collections import OrderedDict
-from gibica.ast import NodeVisitor
+from gibica.ast import NodeVisitor, FuncDecl
 from gibica.exceptions import SementicError
 
 
@@ -56,6 +56,13 @@ class SymbolTableBuilder(NodeVisitor):
         """Initialization of `SymbolTableBuilder` class."""
         self.tree = tree
         self.SYMBOL_TABLE = SymbolTable()
+
+    def visit_Program(self, node):
+        """Vsitor for `Program` AST node."""
+        for child in node.children:
+            # Skip function declaration nodes
+            if not isinstance(child, FuncDecl):
+                self.visit(child)
 
     def visit_Compound(self, node):
         """Visitor for `Compound` AST node."""

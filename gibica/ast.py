@@ -22,6 +22,14 @@ class AST(object):
     pass
 
 
+class Program(AST):
+    """Program AST representation."""
+
+    def __init__(self):
+        """Initialization of `Program` class."""
+        self.children = []
+
+
 class Compound(AST):
     """Compound AST representation."""
 
