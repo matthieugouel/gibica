@@ -79,7 +79,7 @@ class SymbolTableBuilder(NodeVisitor):
 
     def visit_VarDecl(self, node):
         """Visitor for `VarDecl` AST node."""
-        var_name = node.assignment.left.value
+        var_name = node.assignment.left.atom.name
         var_is_mutable = node.assignment.left.is_mutable
         var_symbol = VarSymbol(var_name, var_is_mutable)
 
@@ -92,7 +92,7 @@ class SymbolTableBuilder(NodeVisitor):
 
     def visit_Assign(self, node):
         """Visitor for `Assign` AST node."""
-        var_name = node.left.value
+        var_name = node.left.atom.name
         var_symbol = self.SYMBOL_TABLE.get(var_name)
 
         if var_symbol is not None and not var_symbol.is_mutable:
@@ -105,13 +105,17 @@ class SymbolTableBuilder(NodeVisitor):
 
     def visit_Var(self, node):
         """Visitor for `Var` AST node."""
-        var_name = node.value
+        var_name = node.atom.name
         var_symbol = self.SYMBOL_TABLE.get(var_name)
 
         if var_symbol is None:
             raise SementicError(
                 f'Variable `{var_name}` is not declared.'
             )
+
+    def visit_Atom(self, node):
+        """Visitor for `Atom` AST node."""
+        pass
 
     def visit_IfStatement(self, node):
         """Visitor for `IfStatement` AST node."""
@@ -142,6 +146,10 @@ class SymbolTableBuilder(NodeVisitor):
     def visit_UnaryOp(self, node):
         """Visitor for `UnaryOp` AST node."""
         self.visit(node.right)
+
+    def visit_FuncCall(self, node):
+        """Visitor for `FuncCall` AST node."""
+        pass
 
     def visit_Integer(self, node):
         """Visitor for `Integer` AST node."""

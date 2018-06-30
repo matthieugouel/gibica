@@ -1,5 +1,7 @@
 """Parser module."""
 
+from copy import copy
+
 from gibica.tokens import Name
 from gibica.exceptions import SyntaxError
 from gibica.ast import (
@@ -10,10 +12,12 @@ from gibica.ast import (
     VarDecl,
     Assign,
     Var,
+    Atom,
     IfStatement,
     WhileStatement,
     BinOp,
     UnaryOp,
+    FuncCall,
     Integer,
     FloatingPoint,
     Boolean
@@ -39,6 +43,12 @@ class Parser(object):
         else:
             self._error()
 
+    def _fake_process(self, name):
+        """Simulate the process to have access to the next token."""
+        current_lexer = copy(self.lexer)
+        if self.token.name == name:
+            return current_lexer.next_token()
+
     def _error(self):
         """Raise a Syntax Error."""
         raise SyntaxError(
@@ -56,35 +66,29 @@ class Parser(object):
 
         return root
 
-    def compound_statement(self):
-        """
-        compound_statement: LBRACKET (statements)* RBRACKET
-        """
-        root = Compound()
-        self._process(Name.LBRACKET)
-
-        while self.token.name != Name.RBRACKET:
-            root.children.append(self.statement())
-
-        self._process(Name.RBRACKET)
-        return root
-
     def statement(self):
         """
-        statement: declaration_statement
+        statement: function_definition
+                 | declaration_statement
+                 | assignment_statement
                  | expression_statement
                  | if_statement
+                 | while_statement
         """
-        if self.token.name == Name.LET:
+        if self.token.name == Name.DEF:
+            node = self.function_definition()
+        elif self.token.name == Name.LET:
             node = self.declaration_statement()
         elif self.token.name == Name.ID:
-            node = self.expression_statement()
+            # Could either suggest an assignement of an expression statement
+            if self._fake_process(Name.ID).name == Name.ASSIGN:
+                node = self.assignment_statement()
+            else:
+                node = self.expression_statement()
         elif self.token.name == Name.IF:
             node = self.if_statement()
         elif self.token.name == Name.WHILE:
             node = self.while_statement()
-        elif self.token.name == Name.DEF:
-            node = self.function_definition()
         else:
             node = self._error()
 
@@ -92,16 +96,15 @@ class Parser(object):
 
     def function_definition(self):
         """
-        function_definition: DEF ID parameters compound_statement
+        function_definition: DEF atom parameters compound
         """
         self._process(Name.DEF)
-        name = self.token.value
-        self._process(Name.ID)
+        name = self.atom()
         parameters = self.parameters()
         return FuncDecl(
             name=name,
             parameters=parameters,
-            body=self.compound_statement()
+            body=self.compound()
         )
 
     def parameters(self):
@@ -112,14 +115,27 @@ class Parser(object):
         self._process(Name.LPAREN)
 
         while self.token.name != Name.RPAREN:
+
             nodes.append(Params(self.variable()))
 
             if self.token.name == Name.COMMA:
                 self._process(Name.COMMA)
 
         self._process(Name.RPAREN)
-
         return nodes
+
+    def compound(self):
+        """
+        compound: LBRACKET (statement)* RBRACKET
+        """
+        root = Compound()
+        self._process(Name.LBRACKET)
+
+        while self.token.name != Name.RBRACKET:
+            root.children.append(self.statement())
+
+        self._process(Name.RBRACKET)
+        return root
 
     def declaration_statement(self):
         """
@@ -130,9 +146,9 @@ class Parser(object):
         self._process(Name.SEMI)
         return node
 
-    def expression_statement(self):
+    def assignment_statement(self):
         """
-        expression_statement: assignment SEMI
+        assignment_statement: assignment SEMI
         """
         node = self.assignment()
         self._process(Name.SEMI)
@@ -151,26 +167,41 @@ class Parser(object):
 
     def variable(self):
         """
-        variable: [MUT] ID
+        variable: [MUT] atom
         """
         is_mutable = False
         if self.token.name == Name.MUT:
             is_mutable = True
             self._process(Name.MUT)
 
-        node = Var(self.token, is_mutable)
+        return Var(self.atom(), is_mutable)
+
+    def atom(self):
+        """
+        atom: ID
+        """
+
+        node = Atom(self.token.value)
         self._process(Name.ID)
+        return node
+
+    def expression_statement(self):
+        """
+        expression_statement: logical_or_expr SEMI
+        """
+        node = self.logical_or_expr()
+        self._process(Name.SEMI)
         return node
 
     def if_statement(self):
         """
-        if_statement: IF logical_or_expr compound_statement
-                    (ELSE IF local_or_expr compound_statement)*
-                    [ELSE compound_statement]
+        if_statement: IF logical_or_expr compound
+                    (ELSE IF local_or_expr compound)*
+                    [ELSE compound]
         """
         self._process(Name.IF)
         if_condition = self.logical_or_expr()
-        if_body = self.compound_statement()
+        if_body = self.compound()
 
         else_compound = None
         else_if_compounds = []
@@ -180,10 +211,10 @@ class Parser(object):
             if self.token.name == Name.IF:
                 self._process(Name.IF)
                 else_if_compounds.append(
-                    (self.logical_or_expr(), self.compound_statement())
+                    (self.logical_or_expr(), self.compound())
                 )
             else:
-                else_compound = (None, self.compound_statement())
+                else_compound = (None, self.compound())
 
         return IfStatement(
             if_compound=(if_condition, if_body),
@@ -193,11 +224,11 @@ class Parser(object):
 
     def while_statement(self):
         """
-        while_statement: WHILE local_or_expr compound_statement
+        while_statement: WHILE local_or_expr compound
         """
         self._process(Name.WHILE)
         condition = self.logical_or_expr()
-        compound = self.compound_statement()
+        compound = self.compound()
         return WhileStatement(condition=condition, compound=compound)
 
     def logical_or_expr(self):
@@ -309,16 +340,30 @@ class Parser(object):
 
         return node
 
+    def call(self):
+        """
+        call: atom [LPAREN parameters RPAREN]
+        """
+        atom = self.atom()
+
+        if self.token.name == Name.LPAREN:
+            return FuncCall(
+                name=atom,
+                parameters=self.parameters()
+            )
+        else:
+            return atom
+
     def factor(self):
         """
         factor: PLUS factor
               | MINUS factor
+              | call
               | INT_NUMBER
               | FLOAT_NUMBER
               | LPAREN logical_or_expr RPAREN
               | TRUE
               | FALSE
-              | variable
         """
         token = self.token
         if token.name == Name.PLUS:
@@ -327,6 +372,8 @@ class Parser(object):
         elif token.name == Name.MINUS:
             self._process(Name.MINUS)
             return UnaryOp(op=token, right=self.factor())
+        elif token.name == Name.ID:
+            return self.call()
         elif token.name == Name.INT_NUMBER:
             self._process(Name.INT_NUMBER)
             return Integer(token)
@@ -345,7 +392,7 @@ class Parser(object):
             self._process(Name.FALSE)
             return Boolean(token)
         else:
-            return self.variable()
+            self._error()
 
     def parse(self):
         """Generic entrypoint of the `Parser` class."""

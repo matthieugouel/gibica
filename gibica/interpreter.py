@@ -17,6 +17,12 @@ class Interpreter(NodeVisitor):
         self.tree = tree
         self.GLOBAL_MEMORY = {}
 
+    def load_functions(self, tree):
+        """Load the functions in the scope."""
+        for child in tree.children:
+            if isinstance(child, FuncDecl):
+                self.GLOBAL_MEMORY[child.name.name] = child
+
     def visit_Program(self, node):
         """Vsitor for `Program` AST node."""
         for child in node.children:
@@ -31,7 +37,7 @@ class Interpreter(NodeVisitor):
 
     def visit_FuncDecl(self, node):
         """Visitor for `FuncDecl` AST node."""
-        self.visit(node.body)
+        return self.visit(node.body)
 
     def visit_Params(self, node):
         """Visitor for `Params` AST node."""
@@ -43,13 +49,16 @@ class Interpreter(NodeVisitor):
 
     def visit_Assign(self, node):
         """Visitor for `Assign` AST node."""
-        self.GLOBAL_MEMORY[node.left.value] = self.visit(node.right)
+        self.GLOBAL_MEMORY[node.left.atom.name] = self.visit(node.right)
 
     def visit_Var(self, node):
         """Visitor for `Var` AST node."""
-        variable_name = node.value
-        variable_value = self.GLOBAL_MEMORY.get(variable_name)
-        return variable_value
+        return self.visit(node.atom)
+
+    def visit_Atom(self, node):
+        """Visitor for `Atom` AST node."""
+        atom_value = self.GLOBAL_MEMORY.get(node.name)
+        return atom_value
 
     def visit_IfStatement(self, node):
         """Visitor for `IfStatement` AST node."""
@@ -110,6 +119,12 @@ class Interpreter(NodeVisitor):
         elif node.op.name == Name.NOT:
             return Bool(not self.visit(node.right))
 
+    def visit_FuncCall(self, node):
+        """Visitor for `FuncCall` AST node."""
+        node = self.GLOBAL_MEMORY.get(node.name.name)
+        if node is not None:
+            return self.visit(node)
+
     def visit_Integer(self, node):
         """Visitor for `Integer` AST node."""
         return Int(node.value)
@@ -127,4 +142,5 @@ class Interpreter(NodeVisitor):
 
     def interpret(self):
         """Generic entrypoint of `Interpreter` class."""
+        self.load_functions(self.tree)
         self.visit(self.tree)

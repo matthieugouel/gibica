@@ -47,6 +47,19 @@ class FuncDecl(AST):
         self.parameters = parameters
         self.body = body
 
+    def __str__(self):
+        """String representation of a `FuncDecl` node."""
+        return "{name}({param})".format(
+            name=self.name,
+            param=','.join(
+                str(parameter) for parameter in self.parameters
+            )
+        )
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
+
 
 class Params(AST):
     """Parameters declaration AST representation."""
@@ -54,6 +67,14 @@ class Params(AST):
     def __init__(self, variable):
         """Initialization of `Params` class."""
         self.variable = variable
+
+    def __str__(self):
+        """String representation of a `Params` node."""
+        return f"{str(self.variable)}"
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
 
 
 class VarDecl(AST):
@@ -77,11 +98,34 @@ class Assign(AST):
 class Var(AST):
     """Variable AST representation."""
 
-    def __init__(self, token, is_mutable):
+    def __init__(self, atom, is_mutable):
         """Initialization of `Var` class."""
-        self.token = token
-        self.value = token.value
+        self.atom = atom
         self.is_mutable = is_mutable
+
+    def __str__(self):
+        """String representation of a `Var` node."""
+        return f"{str(self.atom)}"
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
+
+
+class Atom(AST):
+    """Atom AST representation."""
+
+    def __init__(self, name):
+        """Initialization of `Atom` class."""
+        self.name = name
+
+    def __str__(self):
+        """String representation of a `Var` node."""
+        return f"{str(self.name)}"
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
 
 
 class IfStatement(AST):
@@ -125,6 +169,14 @@ class UnaryOp(AST):
         """Initialization of `UnaryOp` class."""
         self.op = self.token = op
         self.right = right
+
+
+class FuncCall(AST):
+    """Function call AST representation"""
+
+    def __init__(self, name, parameters):
+        self.name = name
+        self.parameters = parameters
 
 
 class Integer(AST):
