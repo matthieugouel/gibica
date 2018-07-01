@@ -7,18 +7,18 @@ from gibica.exceptions import SyntaxError
 from gibica.ast import (
     Program,
     Compound,
-    FuncDecl,
-    Params,
-    VarDecl,
-    Assign,
-    Var,
-    Atom,
+    FunctionDeclaration,
+    Parameters,
+    VariableDeclaration,
+    Assignment,
+    Variable,
     IfStatement,
     WhileStatement,
     ReturnStatement,
-    BinOp,
-    UnaryOp,
-    FuncCall,
+    BinaryOperation,
+    UnaryOperation,
+    FunctionCall,
+    Identifier,
     Integer,
     FloatingPoint,
     Boolean
@@ -69,8 +69,8 @@ class Parser(object):
 
     def statement(self):
         """
-        statement: function_definition
-                 | declaration_statement
+        statement: function_declaration
+                 | variable_declaration
                  | assignment_statement
                  | expression_statement
                  | if_statement
@@ -78,9 +78,9 @@ class Parser(object):
                  | jump_statement
         """
         if self.token.name == Name.DEF:
-            node = self.function_definition()
+            node = self.function_declaration()
         elif self.token.name == Name.LET:
-            node = self.declaration_statement()
+            node = self.variable_declaration()
         elif self.token.name == Name.ID:
             # Could either suggest an assignement of an expression statement
             if self._fake_process(Name.ID).name == Name.ASSIGN:
@@ -98,15 +98,18 @@ class Parser(object):
 
         return node
 
-    def function_definition(self):
+    def function_declaration(self):
         """
-        function_definition: DEF atom parameters compound
+        function_declaration: DEF ID parameters compound
         """
         self._process(Name.DEF)
-        name = self.atom()
+
+        identifier = Identifier(self.token.value)
+        self._process(Name.ID)
+
         parameters = self.parameters()
-        return FuncDecl(
-            name=name,
+        return FunctionDeclaration(
+            name=identifier,
             parameters=parameters,
             body=self.compound()
         )
@@ -120,7 +123,7 @@ class Parser(object):
 
         while self.token.name != Name.RPAREN:
 
-            nodes.append(Params(self.variable()))
+            nodes.append(Parameters(self.variable()))
 
             if self.token.name == Name.COMMA:
                 self._process(Name.COMMA)
@@ -141,12 +144,12 @@ class Parser(object):
         self._process(Name.RBRACKET)
         return root
 
-    def declaration_statement(self):
+    def variable_declaration(self):
         """
-        declaration_statement: LET assignment SEMI
+        variable_declaration: LET assignment SEMI
         """
         self._process(Name.LET)
-        node = VarDecl(self.assignment())
+        node = VariableDeclaration(assignment=self.assignment())
         self._process(Name.SEMI)
         return node
 
@@ -166,28 +169,22 @@ class Parser(object):
         token = self.token
         self._process(Name.ASSIGN)
         right = self.logical_or_expr()
-        node = Assign(left, token, right)
+        node = Assignment(left, token, right)
         return node
 
     def variable(self):
         """
-        variable: [MUT] atom
+        variable: [MUT] ID
         """
         is_mutable = False
         if self.token.name == Name.MUT:
             is_mutable = True
             self._process(Name.MUT)
 
-        return Var(self.atom(), is_mutable)
-
-    def atom(self):
-        """
-        atom: ID
-        """
-
-        node = Atom(self.token.value)
+        identifier = Identifier(self.token.value)
         self._process(Name.ID)
-        return node
+
+        return Variable(identifier=identifier, is_mutable=is_mutable)
 
     def expression_statement(self):
         """
@@ -254,7 +251,11 @@ class Parser(object):
             token = self.token
             self._process(Name.OR)
 
-            node = BinOp(left=node, op=token, right=self.logical_and_expr())
+            node = BinaryOperation(
+                left=node,
+                op=token,
+                right=self.logical_and_expr()
+            )
 
         return node
 
@@ -268,7 +269,11 @@ class Parser(object):
             token = self.token
             self._process(Name.AND)
 
-            node = BinOp(left=node, op=token, right=self.logical_not_expr())
+            node = BinaryOperation(
+                left=node,
+                op=token,
+                right=self.logical_not_expr()
+            )
 
         return node
 
@@ -280,7 +285,7 @@ class Parser(object):
         if self.token.name == Name.NOT:
             token = self.token
             self._process(Name.NOT)
-            return UnaryOp(op=token, right=self.logical_not_expr())
+            return UnaryOperation(op=token, right=self.logical_not_expr())
         else:
             return self.comparison()
 
@@ -309,7 +314,11 @@ class Parser(object):
             else:
                 self.error()
 
-            node = BinOp(left=node, op=token, right=self.expr())
+            node = BinaryOperation(
+                left=node,
+                op=token,
+                right=self.expr()
+            )
 
         return node
 
@@ -328,15 +337,19 @@ class Parser(object):
             else:
                 self._error()
 
-            node = BinOp(left=node, op=token, right=self.term())
+            node = BinaryOperation(
+                left=node,
+                op=token,
+                right=self.term()
+            )
 
         return node
 
     def term(self):
         """
-        term: factor ((MUL | DIV | INT_DIV) factor)*
+        term: atom ((MUL | DIV | INT_DIV) atom)*
         """
-        node = self.factor()
+        node = self.atom()
 
         while self.token.name in (Name.MUL, Name.DIV, Name.INT_DIV):
             token = self.token
@@ -349,42 +362,47 @@ class Parser(object):
             else:
                 self._error()
 
-            node = BinOp(left=node, op=token, right=self.factor())
+            node = BinaryOperation(
+                left=node,
+                op=token,
+                right=self.atom()
+            )
 
         return node
 
     def call(self):
         """
-        call: atom [LPAREN parameters RPAREN]
+        call: ID [LPAREN parameters RPAREN]
         """
-        atom = self.atom()
+        identifier = Identifier(self.token.value)
+        self._process(Name.ID)
 
         if self.token.name == Name.LPAREN:
-            return FuncCall(
-                name=atom,
+            return FunctionCall(
+                identifier=identifier,
                 parameters=self.parameters()
             )
         else:
-            return atom
+            return identifier
 
-    def factor(self):
+    def atom(self):
         """
-        factor: PLUS factor
-              | MINUS factor
-              | call
-              | INT_NUMBER
-              | FLOAT_NUMBER
-              | LPAREN logical_or_expr RPAREN
-              | TRUE
-              | FALSE
+        atom: PLUS atom
+            | MINUS atom
+            | call
+            | INT_NUMBER
+            | FLOAT_NUMBER
+            | LPAREN logical_or_expr RPAREN
+            | TRUE
+            | FALSE
         """
         token = self.token
         if token.name == Name.PLUS:
             self._process(Name.PLUS)
-            return UnaryOp(op=token, right=self.factor())
+            return UnaryOperation(op=token, right=self.atom())
         elif token.name == Name.MINUS:
             self._process(Name.MINUS)
-            return UnaryOp(op=token, right=self.factor())
+            return UnaryOperation(op=token, right=self.atom())
         elif token.name == Name.ID:
             return self.call()
         elif token.name == Name.INT_NUMBER:

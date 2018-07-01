@@ -38,17 +38,17 @@ class Compound(AST):
         self.children = []
 
 
-class FuncDecl(AST):
+class FunctionDeclaration(AST):
     """Function declaration AST representation."""
 
-    def __init__(self, name, parameters, body):
-        """Initialization of `FuncDecl` class."""
-        self.name = name
+    def __init__(self, identifier, parameters, body):
+        """Initialization of `FunctionDeclaration` class."""
+        self.identifier = identifier
         self.parameters = parameters
         self.body = body
 
     def __str__(self):
-        """String representation of a `FuncDecl` node."""
+        """String representation of a `FunctionDeclaration` node."""
         return "{name}({param})".format(
             name=self.name,
             param=','.join(
@@ -61,15 +61,15 @@ class FuncDecl(AST):
         return self.__str__()
 
 
-class Params(AST):
+class Parameters(AST):
     """Parameters declaration AST representation."""
 
     def __init__(self, variable):
-        """Initialization of `Params` class."""
+        """Initialization of `Parameters` class."""
         self.variable = variable
 
     def __str__(self):
-        """String representation of a `Params` node."""
+        """String representation of a `Parameters` node."""
         return f"{str(self.variable)}"
 
     def __repr__(self):
@@ -77,51 +77,35 @@ class Params(AST):
         return self.__str__()
 
 
-class VarDecl(AST):
+class VariableDeclaration(AST):
     """Variable declaration AST representation."""
 
     def __init__(self, assignment):
-        """Initialization of `VarDecl` class."""
+        """Initialization of `VariableDeclaration` class."""
         self.assignment = assignment
 
 
-class Assign(AST):
+class Assignment(AST):
     """Assignment AST representation."""
 
     def __init__(self, left, op, right):
-        """Initialization of `Assign` class."""
+        """Initialization of `Assignment` class."""
         self.left = left
         self.token = self.op = op
         self.right = right
 
 
-class Var(AST):
+class Variable(AST):
     """Variable AST representation."""
 
-    def __init__(self, atom, is_mutable):
-        """Initialization of `Var` class."""
-        self.atom = atom
+    def __init__(self, identifier, is_mutable):
+        """Initialization of `Variable` class."""
+        self.identifier = identifier
         self.is_mutable = is_mutable
 
     def __str__(self):
-        """String representation of a `Var` node."""
-        return f"{str(self.atom)}"
-
-    def __repr__(self):
-        """String representation of the class."""
-        return self.__str__()
-
-
-class Atom(AST):
-    """Atom AST representation."""
-
-    def __init__(self, name):
-        """Initialization of `Atom` class."""
-        self.name = name
-
-    def __str__(self):
-        """String representation of a `Var` node."""
-        return f"{str(self.name)}"
+        """String representation of a `Variable` node."""
+        return f"{str(self.identifier)}"
 
     def __repr__(self):
         """String representation of the class."""
@@ -152,30 +136,30 @@ class WhileStatement(AST):
         self.compound = compound
 
 
-class BinOp(AST):
+class BinaryOperation(AST):
     """Binary operands AST representation."""
 
     def __init__(self, left, op, right):
-        """Initialization of `BinOp` class."""
+        """Initialization of `BinaryOperation` class."""
         self.left = left
         self.op = self.token = op
         self.right = right
 
 
-class UnaryOp(AST):
+class UnaryOperation(AST):
     """Unary oprerands AST representation."""
 
     def __init__(self, op, right):
-        """Initialization of `UnaryOp` class."""
+        """Initialization of `UnaryOperation` class."""
         self.op = self.token = op
         self.right = right
 
 
-class FuncCall(AST):
+class FunctionCall(AST):
     """Function call AST representation."""
 
     def __init__(self, name, parameters):
-        """Initialization of `FuncCall` class."""
+        """Initialization of `FunctionCall` class."""
         self.name = name
         self.parameters = parameters
 
@@ -186,6 +170,22 @@ class ReturnStatement(AST):
     def __init__(self, expression):
         """Initialization of `ReturnStatement` class."""
         self.expression = expression
+
+
+class Identifier(AST):
+    """Identifier AST representation."""
+
+    def __init__(self, name):
+        """Initialization of `Identifier` class."""
+        self.name = name
+
+    def __str__(self):
+        """String representation of a `Identifier` node."""
+        return f"{str(self.name)}"
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
 
 
 class Integer(AST):

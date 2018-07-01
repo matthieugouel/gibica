@@ -8,29 +8,27 @@ This is the current grammar of the Gibica language.
 
     program: (statement)*
 
-    statement: function_definition
-             | declaration_statement
+    statement: function_declaration
+             | variable_declaration
              | assignment_statement
              | expression_statement
              | if_statement
              | while_statement
              | jump_statement
 
-    function_definition: DEF atom parameters compound
+    function_declaration: DEF ID parameters compound
 
     parameters: LPAREN [variable] (COMMA variable)* RPAREN
 
     compound: LBRACKET (statement)* RBRACKET
 
-    declaration_statement: LET assignment SEMI
+    variable_declaration: LET assignment SEMI
 
     assignment_statement: assignment SEMI
 
     assignment: variable ASSIGN logical_or_expr
 
-    variable: [MUT] atom
-
-    atom: ID
+    variable: [MUT] ID
 
     expression_statement: logical_or_expr SEMI
 
@@ -53,15 +51,15 @@ This is the current grammar of the Gibica language.
 
     expr: term ((PLUS | MINUS) term)*
 
-    term: factor ((MUL | DIV | INT_DIV) factor)*
+    term: atom ((MUL | DIV | INT_DIV) atom)*
 
-    call: atom [LPAREN parameters RPAREN]
+    call: ID [LPAREN parameters RPAREN]
 
-    factor: PLUS factor
-          | MINUS factor
-          | call
-          | INT_NUMBER
-          | FLOAT_NUMBER
-          | LPAREN logical_or_expr RPAREN
-          | TRUE
-          | FALSE
+    atom: PLUS atom
+        | MINUS atom
+        | call
+        | INT_NUMBER
+        | FLOAT_NUMBER
+        | LPAREN logical_or_expr RPAREN
+        | TRUE
+        | FALSE

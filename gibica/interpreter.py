@@ -1,7 +1,7 @@
 """Interpreter module."""
 
 from gibica.tokens import Name
-from gibica.ast import NodeVisitor, FuncDecl, ReturnStatement
+from gibica.ast import NodeVisitor, FunctionDeclaration, ReturnStatement
 from gibica.types import Int, Float, Bool
 
 
@@ -20,14 +20,14 @@ class Interpreter(NodeVisitor):
     def load_functions(self, tree):
         """Load the functions in the scope."""
         for child in tree.children:
-            if isinstance(child, FuncDecl):
-                self.GLOBAL_MEMORY[child.name.name] = child
+            if isinstance(child, FunctionDeclaration):
+                self.GLOBAL_MEMORY[child.identifier.name] = child
 
     def visit_Program(self, node):
         """Vsitor for `Program` AST node."""
         for child in node.children:
             # Skip function declaration nodes
-            if not isinstance(child, FuncDecl):
+            if not isinstance(child, FunctionDeclaration):
                 self.visit(child)
 
     def visit_Compound(self, node):
@@ -37,30 +37,25 @@ class Interpreter(NodeVisitor):
                 return self.visit(child)
             self.visit(child)
 
-    def visit_FuncDecl(self, node):
-        """Visitor for `FuncDecl` AST node."""
+    def visit_FunctionDeclaration(self, node):
+        """Visitor for `FunctionDeclaration` AST node."""
         return self.visit(node.body)
 
-    def visit_Params(self, node):
-        """Visitor for `Params` AST node."""
+    def visit_Parameters(self, node):
+        """Visitor for `Parameters` AST node."""
         pass
 
-    def visit_VarDecl(self, node):
-        """Visitor for `VarDecl` AST node."""
+    def visit_VariableDeclaration(self, node):
+        """Visitor for `VariableDeclaration` AST node."""
         self.visit(node.assignment)
 
-    def visit_Assign(self, node):
-        """Visitor for `Assign` AST node."""
-        self.GLOBAL_MEMORY[node.left.atom.name] = self.visit(node.right)
+    def visit_Assignment(self, node):
+        """Visitor for `Assignment` AST node."""
+        self.GLOBAL_MEMORY[node.left.identifier.name] = self.visit(node.right)
 
-    def visit_Var(self, node):
-        """Visitor for `Var` AST node."""
-        return self.visit(node.atom)
-
-    def visit_Atom(self, node):
-        """Visitor for `Atom` AST node."""
-        atom_value = self.GLOBAL_MEMORY.get(node.name)
-        return atom_value
+    def visit_Variable(self, node):
+        """Visitor for `Variable` AST node."""
+        return self.visit(node.identifier)
 
     def visit_IfStatement(self, node):
         """Visitor for `IfStatement` AST node."""
@@ -87,8 +82,8 @@ class Interpreter(NodeVisitor):
         """Visitor for `WhileStatement` AST node."""
         return self.visit(node.expression)
 
-    def visit_BinOp(self, node):
-        """Visitor for `BinOp` AST node."""
+    def visit_BinaryOperation(self, node):
+        """Visitor for `BinaryOperation` AST node."""
         if node.op.name == Name.PLUS:
             return self.visit(node.left) + self.visit(node.right)
         elif node.op.name == Name.MINUS:
@@ -116,8 +111,8 @@ class Interpreter(NodeVisitor):
         elif node.op.name == Name.AND:
             return self.visit(node.left) and self.visit(node.right)
 
-    def visit_UnaryOp(self, node):
-        """Visitor for `UnaryOp` AST node."""
+    def visit_UnaryOperation(self, node):
+        """Visitor for `UnaryOperation` AST node."""
         if node.op.name == Name.PLUS:
             return +self.visit(node.right)
         elif node.op.name == Name.MINUS:
@@ -125,11 +120,15 @@ class Interpreter(NodeVisitor):
         elif node.op.name == Name.NOT:
             return Bool(not self.visit(node.right))
 
-    def visit_FuncCall(self, node):
-        """Visitor for `FuncCall` AST node."""
-        node = self.GLOBAL_MEMORY.get(node.name.name)
+    def visit_FunctionCall(self, node):
+        """Visitor for `FunctionCall` AST node."""
+        node = self.GLOBAL_MEMORY.get(node.identifier.name)
         if node is not None:
             return self.visit(node)
+
+    def visit_Identifier(self, node):
+        """Visitor for `Identifier` AST node."""
+        return self.GLOBAL_MEMORY.get(node.name)
 
     def visit_Integer(self, node):
         """Visitor for `Integer` AST node."""

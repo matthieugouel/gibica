@@ -1,7 +1,7 @@
 """Symbols module."""
 
 from collections import OrderedDict
-from gibica.ast import NodeVisitor, FuncDecl, ReturnStatement
+from gibica.ast import NodeVisitor, FunctionDeclaration, ReturnStatement
 from gibica.exceptions import SementicError
 
 
@@ -18,11 +18,11 @@ class Symbol(object):
         self.is_mutable = is_mutable
 
 
-class VarSymbol(Symbol):
+class VariableSymbol(Symbol):
     """Container of a variable symbol."""
 
     def __init__(self, name, is_mutable):
-        """Initialization of `VarSymbol` class."""
+        """Initialization of `VariableSymbol` class."""
         super().__init__(name, is_mutable)
 
     def __str__(self):
@@ -61,7 +61,7 @@ class SymbolTableBuilder(NodeVisitor):
         """Vsitor for `Program` AST node."""
         for child in node.children:
             # Skip function declaration nodes
-            if not isinstance(child, FuncDecl):
+            if not isinstance(child, FunctionDeclaration):
                 self.visit(child)
 
     def visit_Compound(self, node):
@@ -71,19 +71,19 @@ class SymbolTableBuilder(NodeVisitor):
                 return self.visit(child)
             self.visit(child)
 
-    def visit_FuncDecl(self, node):
-        """Visitor for `FuncDecl` AST node."""
+    def visit_FunctionDeclaration(self, node):
+        """Visitor for `FunctionDeclaration` AST node."""
         self.visit(node.body)
 
-    def visit_Params(self, node):
-        """Visitor for `Params` AST node."""
+    def visit_Parameters(self, node):
+        """Visitor for `Parameters` AST node."""
         pass
 
-    def visit_VarDecl(self, node):
-        """Visitor for `VarDecl` AST node."""
-        var_name = node.assignment.left.atom.name
+    def visit_VariableDeclaration(self, node):
+        """Visitor for `VariableDeclaration` AST node."""
+        var_name = node.assignment.left.identifier.name
         var_is_mutable = node.assignment.left.is_mutable
-        var_symbol = VarSymbol(var_name, var_is_mutable)
+        var_symbol = VariableSymbol(var_name, var_is_mutable)
 
         if self.SYMBOL_TABLE.get(var_name) is not None:
             raise SementicError(
@@ -92,9 +92,9 @@ class SymbolTableBuilder(NodeVisitor):
 
         self.SYMBOL_TABLE[var_symbol.name] = var_symbol
 
-    def visit_Assign(self, node):
-        """Visitor for `Assign` AST node."""
-        var_name = node.left.atom.name
+    def visit_Assignment(self, node):
+        """Visitor for `Assignment` AST node."""
+        var_name = node.left.identifier.name
         var_symbol = self.SYMBOL_TABLE.get(var_name)
 
         if var_symbol is not None and not var_symbol.is_mutable:
@@ -105,19 +105,15 @@ class SymbolTableBuilder(NodeVisitor):
         self.visit(node.left)
         self.visit(node.right)
 
-    def visit_Var(self, node):
-        """Visitor for `Var` AST node."""
-        var_name = node.atom.name
+    def visit_Variable(self, node):
+        """Visitor for `Variable` AST node."""
+        var_name = node.identifier.name
         var_symbol = self.SYMBOL_TABLE.get(var_name)
 
         if var_symbol is None:
             raise SementicError(
                 f'Variable `{var_name}` is not declared.'
             )
-
-    def visit_Atom(self, node):
-        """Visitor for `Atom` AST node."""
-        pass
 
     def visit_IfStatement(self, node):
         """Visitor for `IfStatement` AST node."""
@@ -144,17 +140,21 @@ class SymbolTableBuilder(NodeVisitor):
         """Visitor for `WhileStatement` AST node."""
         return self.visit(node.expression)
 
-    def visit_BinOp(self, node):
-        """Visitor for `BinOp` AST node."""
+    def visit_BinaryOperation(self, node):
+        """Visitor for `BinaryOperation` AST node."""
         self.visit(node.left)
         self.visit(node.right)
 
-    def visit_UnaryOp(self, node):
-        """Visitor for `UnaryOp` AST node."""
+    def visit_UnaryOperation(self, node):
+        """Visitor for `UnaryOperation` AST node."""
         self.visit(node.right)
 
-    def visit_FuncCall(self, node):
-        """Visitor for `FuncCall` AST node."""
+    def visit_FunctionCall(self, node):
+        """Visitor for `FunctionCall` AST node."""
+        pass
+
+    def visit_Identifier(self, node):
+        """Visitor for `Identifier` AST node."""
         pass
 
     def visit_Integer(self, node):
