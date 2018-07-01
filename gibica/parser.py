@@ -15,6 +15,7 @@ from gibica.ast import (
     Atom,
     IfStatement,
     WhileStatement,
+    ReturnStatement,
     BinOp,
     UnaryOp,
     FuncCall,
@@ -74,6 +75,7 @@ class Parser(object):
                  | expression_statement
                  | if_statement
                  | while_statement
+                 | jump_statement
         """
         if self.token.name == Name.DEF:
             node = self.function_definition()
@@ -89,6 +91,8 @@ class Parser(object):
             node = self.if_statement()
         elif self.token.name == Name.WHILE:
             node = self.while_statement()
+        elif self.token.name == Name.RETURN:
+            node = self.jump_statement()
         else:
             node = self._error()
 
@@ -230,6 +234,15 @@ class Parser(object):
         condition = self.logical_or_expr()
         compound = self.compound()
         return WhileStatement(condition=condition, compound=compound)
+
+    def jump_statement(self):
+        """
+        jump_statement: RETURN expression_statement
+        """
+        self._process(Name.RETURN)
+        return ReturnStatement(
+            expression=self.expression_statement()
+        )
 
     def logical_or_expr(self):
         """

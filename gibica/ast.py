@@ -172,11 +172,20 @@ class UnaryOp(AST):
 
 
 class FuncCall(AST):
-    """Function call AST representation"""
+    """Function call AST representation."""
 
     def __init__(self, name, parameters):
+        """Initialization of `FuncCall` class."""
         self.name = name
         self.parameters = parameters
+
+
+class ReturnStatement(AST):
+    """Return statement AST representation."""
+
+    def __init__(self, expression):
+        """Initialization of `ReturnStatement` class."""
+        self.expression = expression
 
 
 class Integer(AST):

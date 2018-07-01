@@ -14,6 +14,7 @@ This is the current grammar of the Gibica language.
              | expression_statement
              | if_statement
              | while_statement
+             | jump_statement
 
     function_definition: DEF atom parameters compound
 
@@ -38,6 +39,8 @@ This is the current grammar of the Gibica language.
                 [ELSE compound]
 
     while_statement: WHILE local_or_expr compound
+
+    jump_statement: RETURN expression_statement
 
     logical_or_expr: logical_and_expr (OR logical_and_expr)*
 

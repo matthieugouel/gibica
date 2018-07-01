@@ -1,7 +1,7 @@
 """Interpreter module."""
 
 from gibica.tokens import Name
-from gibica.ast import NodeVisitor, FuncDecl
+from gibica.ast import NodeVisitor, FuncDecl, ReturnStatement
 from gibica.types import Int, Float, Bool
 
 
@@ -33,6 +33,8 @@ class Interpreter(NodeVisitor):
     def visit_Compound(self, node):
         """Visitor for `Compound` AST node."""
         for child in node.children:
+            if isinstance(child, ReturnStatement):
+                return self.visit(child)
             self.visit(child)
 
     def visit_FuncDecl(self, node):
@@ -80,6 +82,10 @@ class Interpreter(NodeVisitor):
         """Visitor for `WhileStatement` AST node."""
         while self.visit(node.condition):
             self.visit(node.compound)
+
+    def visit_ReturnStatement(self, node):
+        """Visitor for `WhileStatement` AST node."""
+        return self.visit(node.expression)
 
     def visit_BinOp(self, node):
         """Visitor for `BinOp` AST node."""

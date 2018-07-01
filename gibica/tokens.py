@@ -46,6 +46,8 @@ class Name(object):
 
     DEF = 'DEF'
 
+    RETURN = 'RETURN'
+
     COMMA = 'COMMA'
     SEMI = 'SEMI'
     EOF = 'EOF'
@@ -87,4 +89,6 @@ RESERVED_KEYWORDS: dict = {
     'while': Token(Name.WHILE, 'while'),
 
     'def': Token(Name.DEF, 'def'),
+
+    'return': Token(Name.RETURN, 'return'),
 }
