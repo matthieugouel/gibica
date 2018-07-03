@@ -26,11 +26,11 @@ from gibica.exceptions import SementicError
     ('let __gibica = 2;', {'__gibica': Int(2)}),
     ('let _gibi_ca = 2;', {'_gibi_ca': Int(2)}),
 ])
-def test_int_declaration(evaluate, input, expected):
+def test_int_declaration(evaluate, memory, input, expected):
     """Test `let` type variable declaration."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -38,11 +38,11 @@ def test_int_declaration(evaluate, input, expected):
     ('let a = 1.5 + 2.5;', {'a': Float(4.0)}),
     ('let a = 1.5 + 2;', {'a': Float(3.5)}),
 ])
-def test_float_declaration(evaluate, input, expected):
+def test_float_declaration(evaluate, memory, input, expected):
     """Test `let` type variable declaration."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -59,22 +59,22 @@ def test_float_declaration(evaluate, input, expected):
     ('let a = true or false;', {'a': Bool(True)}),
     ('let a = not false;', {'a': Bool(True)}),
 ])
-def test_bool_declaration(evaluate, input, expected):
+def test_bool_declaration(evaluate, memory, input, expected):
     """Test `Bool` type variable declaration."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)
 
 
 @pytest.mark.parametrize('input, expected', [
     ('let a = (2 + 2) * 2;', {'a': Int(8)}),
     ('let a = (( 2+2 ) *2) / 2;', {'a': Int(4)}),
 ])
-def test_declaration_with_parenthesis(evaluate, input, expected):
+def test_declaration_with_parenthesis(evaluate, memory, input, expected):
     """Test variable declaration with parenthesis."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -83,22 +83,22 @@ def test_declaration_with_parenthesis(evaluate, input, expected):
     ('let a = (((-4)));', {'a': Int(-4)}),
     ('let a = ((+10));', {'a': Int(10)}),
 ])
-def test_unary_declaration(evaluate, input, expected):
+def test_unary_declaration(evaluate, memory, input, expected):
     """Test unary variable declaration."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)
 
 
 @pytest.mark.parametrize('input, expected', [
     ('let a=2+2; let b=4*2;', {'a': Int(4), 'b': Int(8)}),
     ('let a=2+2; let b=a*2;', {'a': Int(4), 'b': Int(8)}),
 ])
-def test_multiple_declarations(evaluate, input, expected):
+def test_multiple_declarations(evaluate, memory, input, expected):
     """Test multiple variable declarations."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -107,11 +107,11 @@ def test_multiple_declarations(evaluate, input, expected):
     ('let mut a=1; a=2;', {'a': Int(2)}),
     ('let mut a=1; a=a+1;', {'a': Int(2)}),
 ])
-def test_mutable_declaration(evaluate, input, expected):
+def test_mutable_declaration(evaluate, memory, input, expected):
     """Test mutable variable declaration."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)
 
 
 @pytest.mark.parametrize('input', [

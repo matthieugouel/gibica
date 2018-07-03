@@ -4,6 +4,7 @@ import pytest
 from gibica.lexer import Lexer
 from gibica.parser import Parser
 from gibica.symbols import SymbolTableBuilder
+from gibica.memory import Memory
 from gibica.interpreter import Interpreter
 
 
@@ -31,5 +32,16 @@ def evaluate():
 
         # Return the instance
         return interpreter
+
+    return nested
+
+
+@pytest.fixture
+def memory():
+    """Provide the memory structure."""
+
+    def nested(scope):
+        """Actual processing."""
+        return Memory(**scope)
 
     return nested

@@ -20,11 +20,11 @@ from gibica.exceptions import TypeError
     ('let a = 1; let b = 2; let c = a > b;',
         {'a': Int(1), 'b': Int(2), 'c': Bool(False)}),
 ])
-def test_expression_comparison(evaluate, input, expected):
+def test_expression_comparison(evaluate, memory, input, expected):
     """Test expression comparison."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)
 
 
 @pytest.mark.parametrize('input', [

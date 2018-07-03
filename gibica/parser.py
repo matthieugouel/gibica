@@ -109,7 +109,7 @@ class Parser(object):
 
         parameters = self.parameters()
         return FunctionDeclaration(
-            name=identifier,
+            identifier=identifier,
             parameters=parameters,
             body=self.compound()
         )

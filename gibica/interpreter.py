@@ -3,6 +3,7 @@
 from gibica.tokens import Name
 from gibica.ast import NodeVisitor, FunctionDeclaration, ReturnStatement
 from gibica.types import Int, Float, Bool
+from gibica.memory import Memory
 
 
 #
@@ -15,13 +16,13 @@ class Interpreter(NodeVisitor):
     def __init__(self, tree):
         """Initialization of `Interpreter` class."""
         self.tree = tree
-        self.GLOBAL_MEMORY = {}
+        self.memory = Memory()
 
     def load_functions(self, tree):
         """Load the functions in the scope."""
         for child in tree.children:
             if isinstance(child, FunctionDeclaration):
-                self.GLOBAL_MEMORY[child.identifier.name] = child
+                self.memory[child.identifier.name] = child
 
     def visit_Program(self, node):
         """Vsitor for `Program` AST node."""
@@ -51,7 +52,7 @@ class Interpreter(NodeVisitor):
 
     def visit_Assignment(self, node):
         """Visitor for `Assignment` AST node."""
-        self.GLOBAL_MEMORY[node.left.identifier.name] = self.visit(node.right)
+        self.memory[node.left.identifier.name] = self.visit(node.right)
 
     def visit_Variable(self, node):
         """Visitor for `Variable` AST node."""
@@ -122,13 +123,13 @@ class Interpreter(NodeVisitor):
 
     def visit_FunctionCall(self, node):
         """Visitor for `FunctionCall` AST node."""
-        node = self.GLOBAL_MEMORY.get(node.identifier.name)
+        node = self.memory[node.identifier.name]
         if node is not None:
             return self.visit(node)
 
     def visit_Identifier(self, node):
         """Visitor for `Identifier` AST node."""
-        return self.GLOBAL_MEMORY.get(node.name)
+        return self.memory[node.name]
 
     def visit_Integer(self, node):
         """Visitor for `Integer` AST node."""

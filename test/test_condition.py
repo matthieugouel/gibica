@@ -43,8 +43,8 @@ from gibica.types import Int
      }
     """, {'_condition': Int(6), 'container': Int(3)}),
 ])
-def test_condition_statement(evaluate, input, expected):
+def test_condition_statement(evaluate, memory, input, expected):
     """Test condition statement."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)

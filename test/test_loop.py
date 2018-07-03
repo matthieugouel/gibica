@@ -24,8 +24,8 @@ from gibica.types import Int
      }
     """, {'container': Int(4), 'test': Int(1)}),
 ])
-def test_loop_statement(evaluate, input, expected):
+def test_loop_statement(evaluate, memory, input, expected):
     """Test loop statement."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)

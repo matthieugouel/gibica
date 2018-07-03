@@ -49,8 +49,8 @@ class FunctionDeclaration(AST):
 
     def __str__(self):
         """String representation of a `FunctionDeclaration` node."""
-        return "{name}({param})".format(
-            name=self.name,
+        return "{id}({param})".format(
+            id=self.identifier,
             param=','.join(
                 str(parameter) for parameter in self.parameters
             )
@@ -158,9 +158,9 @@ class UnaryOperation(AST):
 class FunctionCall(AST):
     """Function call AST representation."""
 
-    def __init__(self, name, parameters):
+    def __init__(self, identifier, parameters):
         """Initialization of `FunctionCall` class."""
-        self.name = name
+        self.identifier = identifier
         self.parameters = parameters
 
 

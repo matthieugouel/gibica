@@ -35,5 +35,5 @@ def test_cli_debug(runner):
         assert result.exit_code == 0
         assert result.output == (
                                     "SYMBOL TABLE: [<a>, <b:mut>]\n"
-                                    "GLOBAL MEMORY: {'a': 2, 'b': 3}\n"
+                                    "GLOBAL MEMORY: [[{'a': 2, 'b': 3}]]\n"
                                 )

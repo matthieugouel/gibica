@@ -56,8 +56,8 @@ def test_invalid_variable_name(evaluate, input):
     ('let a = 1; # This is a comment', {'a': Int(1)}),
     ('# This is a comment\n let a = 1;', {'a': Int(1)}),
 ])
-def test_with_comments(evaluate, input, expected):
+def test_with_comments(evaluate, memory, input, expected):
     """Test a comment."""
     instance = evaluate(input)
 
-    assert instance.GLOBAL_MEMORY == expected
+    assert instance.memory == memory(expected)
