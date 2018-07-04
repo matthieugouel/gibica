@@ -11,8 +11,16 @@
 
 You can install the package from sources after cloning the project and navigating into the project directory.
 
+This project uses `pipenv` as a package manager.
+
 ```
-pip install .
+pipenv install
+```
+
+Then activate the project's virtualenv with the following command.
+
+```
+pipenv shell
 ```
 
 ## Usage

@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+click = "*"
+gibica = {editable = true, path = "."}
+
+[dev-packages]
+tox = "*"
+flake8 = "*"
+pytest = "*"
+pytest-cov = "*"
+coverage = "*"
+coveralls = "*"
+mypy = "*"
+bumpversion = "*"
+Sphinx = "*"
+sphinx_rtd_theme = "*"
+
+[requires]
+python_version = "3.6"

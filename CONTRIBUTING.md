@@ -4,12 +4,12 @@ Thanks for contributing ! Here is some guidelines to make your life easier durin
 
 ## Installation
 
-Note : The use of a virtual environment is heavily recommended.
+This project uses `pipenv` as a package manager.
 
 For development purposes, you can install the package in editable mode with the development requirements.
 
 ```
-pip install -e . -r requirements-dev.txt
+pipenv install --dev -e .
 ```
 
 ## Debug mode

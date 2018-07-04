@@ -3,12 +3,13 @@ python:
     - "3.6"
 
 stages:
-  - lint
-  - test
-  - type
+    - lint
+    - test
+    - type
 
 install:
-    - pip install -r requirements-dev.txt
+    - pip install pipenv
+    - pipenv install --dev
 
 jobs:
     include:

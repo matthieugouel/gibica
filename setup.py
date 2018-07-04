@@ -1,14 +1,7 @@
 """Setup for gibica package."""
-import uuid
 
 from setuptools import setup, find_packages
-try:  # for pip >= 10
-    from pip._internal.req import parse_requirements
-except ImportError:  # for pip <= 9.0.3
-    from pip.req import parse_requirements
 
-INSTALL_REQS = parse_requirements('requirements.txt', session=uuid.uuid1())
-REQS = [str(ir.req) for ir in INSTALL_REQS]
 
 setup(
     name="gibica",
@@ -17,7 +10,6 @@ setup(
     author_email="matthieu.gouel@gmail.com",
     url="https://github.com/matthieugouel/gibica",
     description="Interprète ? Interprète ? Cuillère !",
-    long_description=open('README.md').read(),
     license='MIT',
     classifiers=[
         'Topic :: Utilities',
@@ -30,8 +22,12 @@ setup(
     ],
     include_package_data=True,
     packages=find_packages(),
-    install_requires=REQS,
-    py_modules=['gibica'],
+    install_requires=[
+        'click'
+    ],
+    py_modules=[
+        'gibica'
+    ],
     entry_points='''
         [console_scripts]
         gibica=gibica.gibica:main
