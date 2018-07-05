@@ -26,27 +26,13 @@ gibica script.gbc --debug
 You can check the syntax using flake8 :
 
 ```
-flake8 gibica
+flake8 gibica tests
 ```
 
 You can also use tox :
 
 ```
 tox -e lint
-```
-
-## Test coverage
-
-You can run the coverage with the following command :
-
-```
-coverage run --source gibica -m py.test
-```
-
-You can also use tox :
-
-```
-tox -e test
 ```
 
 ## Type checking
@@ -61,6 +47,20 @@ You can also use tox :
 
 ```
 tox -e type
+```
+
+## Test coverage
+
+You can run the coverage with the following command :
+
+```
+coverage run --source gibica -m py.test
+```
+
+You can also use tox :
+
+```
+tox -e test
 ```
 
 ## Documentation

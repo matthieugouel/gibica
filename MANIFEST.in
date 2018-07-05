@@ -1,0 +1,7 @@
+include README.md
+include CONTRIBUTING.md
+include AUTHORS
+include LICENSE
+
+graft docs
+graft tests

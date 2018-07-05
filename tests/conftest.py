@@ -1,4 +1,5 @@
 """Configuration of tests."""
+
 import pytest
 
 from gibica.lexer import Lexer

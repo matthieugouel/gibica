@@ -10,6 +10,7 @@ setup(
     author_email="matthieu.gouel@gmail.com",
     url="https://github.com/matthieugouel/gibica",
     description="Interprète ? Interprète ? Cuillère !",
+    long_description=open('README.md').read(),
     license='MIT',
     classifiers=[
         'Topic :: Utilities',
@@ -24,9 +25,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         'click'
-    ],
-    py_modules=[
-        'gibica'
     ],
     entry_points='''
         [console_scripts]
