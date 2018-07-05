@@ -81,5 +81,5 @@ make html
 To update the version of the project, just run the following command according to the nature of the change.
 
 ```
-bumversion [ major | minor | patch ]
+bumpversion [ major | minor | patch ]
 ```
