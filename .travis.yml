@@ -4,8 +4,9 @@ python:
 
 stages:
     - lint
-    - test
     - type
+    - test
+
 
 install:
     - pip install pipenv
