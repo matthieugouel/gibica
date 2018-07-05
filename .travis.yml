@@ -14,12 +14,12 @@ install:
 jobs:
     include:
         - stage: lint
-          script: tox -e lint
+          script: pipenv run tox -e lint
         - stage: type
-          script: tox -e type
+          script: pipenv run tox -e type
         - stage: test
-          script: tox -e test
+          script: pipenv run tox -e test
 
 
 after_success:
-    coveralls
+    pipenv run coveralls

@@ -9,6 +9,7 @@ gibica = {editable = true, path = "."}
 
 [dev-packages]
 tox = "*"
+tox-pipenv = "*"
 flake8 = "*"
 pytest = "*"
 pytest-cov = "*"
@@ -18,6 +19,7 @@ mypy = "*"
 bumpversion = "*"
 Sphinx = "*"
 sphinx_rtd_theme = "*"
+gibica = {editable = true, path = "."}
 
 [requires]
 python_version = "3.6"
