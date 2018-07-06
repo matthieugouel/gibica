@@ -12,16 +12,10 @@ from gibica.interpreter import Interpreter
 # Main
 #
 
+
 @click.command()
-@click.argument(
-    'filepath'
-)
-@click.option(
-    '--debug',
-    'in_debug_mode',
-    is_flag=True,
-    help='Run in debug mode.'
-)
+@click.argument('filepath')
+@click.option('--debug', 'in_debug_mode', is_flag=True, help='Run in debug mode.')
 def main(filepath, in_debug_mode):
     """Gibica Interpreter."""
 
@@ -57,10 +51,7 @@ def main(filepath, in_debug_mode):
 
             # In classic mode, just display the interpreter trace
             else:
-                print(
-                    f'{gibica_exception.__class__.__name__}: '
-                    f'{gibica_exception}'
-                )
+                print(f'{gibica_exception.__class__.__name__}: {gibica_exception}')
 
 
 if __name__ == '__main__':

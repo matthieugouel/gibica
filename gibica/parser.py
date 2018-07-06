@@ -21,13 +21,14 @@ from gibica.ast import (
     Identifier,
     Integer,
     FloatingPoint,
-    Boolean
+    Boolean,
 )
 
 
 #
 # Syntax Analysis
 #
+
 
 class Parser(object):
     """Parser returning an AST of the input."""
@@ -52,9 +53,7 @@ class Parser(object):
 
     def _error(self):
         """Raise a Syntax Error."""
-        raise SyntaxError(
-            f'Unable to process `{self.token}`.'
-        )
+        raise SyntaxError(f'Unable to process `{self.token}`.')
 
     def program(self):
         """
@@ -109,9 +108,7 @@ class Parser(object):
 
         parameters = self.parameters()
         return FunctionDeclaration(
-            identifier=identifier,
-            parameters=parameters,
-            body=self.compound()
+            identifier=identifier, parameters=parameters, body=self.compound()
         )
 
     def parameters(self):
@@ -211,16 +208,14 @@ class Parser(object):
 
             if self.token.name == Name.IF:
                 self._process(Name.IF)
-                else_if_compounds.append(
-                    (self.logical_or_expr(), self.compound())
-                )
+                else_if_compounds.append((self.logical_or_expr(), self.compound()))
             else:
                 else_compound = (None, self.compound())
 
         return IfStatement(
             if_compound=(if_condition, if_body),
             else_if_compounds=else_if_compounds,
-            else_compound=else_compound
+            else_compound=else_compound,
         )
 
     def while_statement(self):
@@ -237,9 +232,7 @@ class Parser(object):
         jump_statement: RETURN expression_statement
         """
         self._process(Name.RETURN)
-        return ReturnStatement(
-            expression=self.expression_statement()
-        )
+        return ReturnStatement(expression=self.expression_statement())
 
     def logical_or_expr(self):
         """
@@ -251,11 +244,7 @@ class Parser(object):
             token = self.token
             self._process(Name.OR)
 
-            node = BinaryOperation(
-                left=node,
-                op=token,
-                right=self.logical_and_expr()
-            )
+            node = BinaryOperation(left=node, op=token, right=self.logical_and_expr())
 
         return node
 
@@ -269,11 +258,7 @@ class Parser(object):
             token = self.token
             self._process(Name.AND)
 
-            node = BinaryOperation(
-                left=node,
-                op=token,
-                right=self.logical_not_expr()
-            )
+            node = BinaryOperation(left=node, op=token, right=self.logical_not_expr())
 
         return node
 
@@ -295,9 +280,7 @@ class Parser(object):
         """
         node = self.expr()
 
-        while self.token.name in (
-                Name.EQ, Name.NE, Name.LE, Name.GE, Name.LT, Name.GT
-        ):
+        while self.token.name in (Name.EQ, Name.NE, Name.LE, Name.GE, Name.LT, Name.GT):
             token = self.token
             if token.name == Name.EQ:
                 self._process(Name.EQ)
@@ -314,11 +297,7 @@ class Parser(object):
             else:
                 self.error()
 
-            node = BinaryOperation(
-                left=node,
-                op=token,
-                right=self.expr()
-            )
+            node = BinaryOperation(left=node, op=token, right=self.expr())
 
         return node
 
@@ -337,11 +316,7 @@ class Parser(object):
             else:
                 self._error()
 
-            node = BinaryOperation(
-                left=node,
-                op=token,
-                right=self.term()
-            )
+            node = BinaryOperation(left=node, op=token, right=self.term())
 
         return node
 
@@ -362,11 +337,7 @@ class Parser(object):
             else:
                 self._error()
 
-            node = BinaryOperation(
-                left=node,
-                op=token,
-                right=self.atom()
-            )
+            node = BinaryOperation(left=node, op=token, right=self.atom())
 
         return node
 
@@ -378,10 +349,7 @@ class Parser(object):
         self._process(Name.ID)
 
         if self.token.name == Name.LPAREN:
-            return FunctionCall(
-                identifier=identifier,
-                parameters=self.parameters()
-            )
+            return FunctionCall(identifier=identifier, parameters=self.parameters())
         else:
             return identifier
 

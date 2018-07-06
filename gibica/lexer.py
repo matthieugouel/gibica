@@ -8,6 +8,7 @@ from gibica.exceptions import LexicalError
 # Lexical Analysis
 #
 
+
 class Lexer(object):
     """Lexical analyser."""
 
@@ -68,8 +69,7 @@ class Lexer(object):
     def _id(self):
         """Handle identifiers and reserverd keywords."""
         result = ''
-        while (self.char is not None and
-               (self.char.isalnum() or self.char == '_')):
+        while self.char is not None and (self.char.isalnum() or self.char == '_'):
             result += self.char
             self.advance()
 
@@ -196,9 +196,7 @@ class Lexer(object):
 
             else:
                 # The current character is unknown
-                raise LexicalError(
-                    f'Invalid character `{self.char}`.'
-                )
+                raise LexicalError(f'Invalid character `{self.char}`.')
 
         # End of raw input
         return Token(Name.EOF, None)

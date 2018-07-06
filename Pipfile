@@ -8,9 +8,9 @@ click = "*"
 gibica = {editable = true, path = "."}
 
 [dev-packages]
+"flake8" = "*"
 tox = "*"
 tox-pipenv = "*"
-flake8 = "*"
 pytest = "*"
 pytest-cov = "*"
 coverage = "*"
@@ -19,7 +19,11 @@ mypy = "*"
 bumpversion = "*"
 Sphinx = "*"
 sphinx_rtd_theme = "*"
+black = "*"
 gibica = {editable = true, path = "."}
 
 [requires]
 python_version = "3.6"
+
+[pipenv]
+allow_prereleases = true

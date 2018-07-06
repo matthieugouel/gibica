@@ -74,21 +74,14 @@ class Token(object):
 RESERVED_KEYWORDS: dict = {
     'let': Token(Name.LET, 'let'),
     'mut': Token(Name.MUT, 'mut'),
-
-
     'true': Token(Name.TRUE, 'true'),
     'false': Token(Name.FALSE, 'false'),
-
     'or': Token(Name.OR, 'or'),
     'and': Token(Name.AND, 'and'),
     'not': Token(Name.NOT, 'not'),
-
     'if': Token(Name.IF, 'if'),
     'else': Token(Name.ELSE, 'else'),
-
     'while': Token(Name.WHILE, 'while'),
-
     'def': Token(Name.DEF, 'def'),
-
     'return': Token(Name.RETURN, 'return'),
 }

@@ -10,6 +10,7 @@ from gibica.memory import Memory
 # Program Evaluation
 #
 
+
 class Interpreter(NodeVisitor):
     """Evaluation of raw input."""
 

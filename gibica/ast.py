@@ -11,14 +11,12 @@ class NodeVisitor(object):
 
     def fallback(self, node):
         """Fallback if the child method doesn't exist."""
-        raise Exception(
-            (f'INTERPRETER ERROR: '
-             f'No visit_{type(node).__name__} method.')
-        )
+        raise Exception((f'INTERPRETER ERROR: No visit_{type(node).__name__} method.'))
 
 
 class AST(object):
     """Parent class of all AST classes."""
+
     pass
 
 
@@ -51,9 +49,7 @@ class FunctionDeclaration(AST):
         """String representation of a `FunctionDeclaration` node."""
         return "{id}({param})".format(
             id=self.identifier,
-            param=','.join(
-                str(parameter) for parameter in self.parameters
-            )
+            param=','.join(str(parameter) for parameter in self.parameters),
         )
 
     def __repr__(self):
@@ -115,9 +111,7 @@ class Variable(AST):
 class IfStatement(AST):
     """If statement AST representation."""
 
-    def __init__(self, if_compound,
-                 else_if_compounds=None,
-                 else_compound=None):
+    def __init__(self, if_compound, else_if_compounds=None, else_compound=None):
         """Initialization of `IfStatement` class."""
         self.if_compound = if_compound
         if else_if_compounds is None:

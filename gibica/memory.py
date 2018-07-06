@@ -3,6 +3,7 @@
 
 class Scope(dict):
     """Memory scope object."""
+
     pass
 
 
