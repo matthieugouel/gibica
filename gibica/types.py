@@ -170,7 +170,7 @@ class Int(AbstractNumber):
             return Float
         else:
             raise TypeError(
-                f'Unsuported operation between `{type(self)}` and `{type(other)}`.'
+                f"Unsuported operation between `{type(self)}` and `{type(other)}`."
             )
 
     def __init__(self, value):
@@ -189,7 +189,7 @@ class Float(AbstractNumber):
             return Float
         else:
             raise TypeError(
-                f'Unsuported operation between `{type(self)}` and `{type(other)}`.'
+                f"Unsuported operation between `{type(self)}` and `{type(other)}`."
             )
 
     def __init__(self, value):

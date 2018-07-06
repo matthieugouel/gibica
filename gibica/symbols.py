@@ -85,7 +85,7 @@ class SymbolTableBuilder(NodeVisitor):
         var_symbol = VariableSymbol(var_name, var_is_mutable)
 
         if self.SYMBOL_TABLE.get(var_name) is not None:
-            raise SementicError(f'Variable `{var_name}` is already declared.')
+            raise SementicError(f"Variable `{var_name}` is already declared.")
 
         self.SYMBOL_TABLE[var_symbol.name] = var_symbol
 
@@ -95,7 +95,7 @@ class SymbolTableBuilder(NodeVisitor):
         var_symbol = self.SYMBOL_TABLE.get(var_name)
 
         if var_symbol is not None and not var_symbol.is_mutable:
-            raise SementicError(f'Re-assignment of immutable variable `{var_name}`.')
+            raise SementicError(f"Re-assignment of immutable variable `{var_name}`.")
 
         self.visit(node.left)
         self.visit(node.right)
@@ -106,7 +106,7 @@ class SymbolTableBuilder(NodeVisitor):
         var_symbol = self.SYMBOL_TABLE.get(var_name)
 
         if var_symbol is None:
-            raise SementicError(f'Variable `{var_name}` is not declared.')
+            raise SementicError(f"Variable `{var_name}` is not declared.")
 
     def visit_IfStatement(self, node):
         """Visitor for `IfStatement` AST node."""

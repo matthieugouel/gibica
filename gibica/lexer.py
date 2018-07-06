@@ -196,7 +196,7 @@ class Lexer(object):
 
             else:
                 # The current character is unknown
-                raise LexicalError(f'Invalid character `{self.char}`.')
+                raise LexicalError(f"Invalid character `{self.char}`.")
 
         # End of raw input
         return Token(Name.EOF, None)

@@ -40,8 +40,8 @@ def main(filepath, in_debug_mode):
 
             # Display internal variables if debug option is enabled
             if in_debug_mode:
-                print(f'SYMBOL TABLE: {symtab_builder.SYMBOL_TABLE}')
-                print(f'GLOBAL MEMORY: {interpreter.memory}')
+                print(f"SYMBOL TABLE: {symtab_builder.SYMBOL_TABLE}")
+                print(f"GLOBAL MEMORY: {interpreter.memory}")
 
         except Exception as gibica_exception:
 
@@ -51,7 +51,7 @@ def main(filepath, in_debug_mode):
 
             # In classic mode, just display the interpreter trace
             else:
-                print(f'{gibica_exception.__class__.__name__}: {gibica_exception}')
+                print(f"{gibica_exception.__class__.__name__}: {gibica_exception}")
 
 
 if __name__ == '__main__':

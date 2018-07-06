@@ -11,7 +11,7 @@ class NodeVisitor(object):
 
     def fallback(self, node):
         """Fallback if the child method doesn't exist."""
-        raise Exception((f'INTERPRETER ERROR: No visit_{type(node).__name__} method.'))
+        raise Exception((f"INTERPRETER ERROR: No visit_{type(node).__name__} method."))
 
 
 class AST(object):
