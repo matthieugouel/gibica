@@ -17,9 +17,9 @@ coverage = "*"
 coveralls = "*"
 mypy = "*"
 bumpversion = "*"
+black = "*"
 Sphinx = "*"
 sphinx_rtd_theme = "*"
-black = "*"
 gibica = {editable = true, path = "."}
 
 [requires]
