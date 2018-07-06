@@ -10,7 +10,6 @@ This is the current grammar of the Gibica language.
 
     statement: function_declaration
              | variable_declaration
-             | assignment_statement
              | expression_statement
              | if_statement
              | while_statement
@@ -24,13 +23,9 @@ This is the current grammar of the Gibica language.
 
     variable_declaration: LET assignment SEMI
 
-    assignment_statement: assignment SEMI
+    expression_statement: assignment SEMI
 
-    assignment: variable ASSIGN logical_or_expr
-
-    variable: [MUT] ID
-
-    expression_statement: logical_or_expr SEMI
+    assignment: logical_or_expr [ASSIGN logical_or_expr]
 
     if_statement: IF logical_or_expr compound
                 (ELSE IF local_or_expr compound)*
@@ -53,7 +48,7 @@ This is the current grammar of the Gibica language.
 
     term: atom ((MUL | DIV | INT_DIV) atom)*
 
-    call: ID [LPAREN parameters RPAREN]
+    call: [MUT] ID [LPAREN parameters RPAREN]
 
     atom: PLUS atom
         | MINUS atom

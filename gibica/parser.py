@@ -1,7 +1,5 @@
 """Parser module."""
 
-from copy import copy
-
 from gibica.tokens import Name
 from gibica.exceptions import SyntaxError
 from gibica.ast import (
@@ -45,12 +43,6 @@ class Parser(object):
         else:
             self._error()
 
-    def _fake_process(self, name):
-        """Simulate the process to have access to the next token."""
-        current_lexer = copy(self.lexer)
-        if self.token.name == name:
-            return current_lexer.next_token()
-
     def _error(self):
         """Raise a Syntax Error."""
         raise SyntaxError(f"Unable to process `{self.token}`.")
@@ -70,7 +62,6 @@ class Parser(object):
         """
         statement: function_declaration
                  | variable_declaration
-                 | assignment_statement
                  | expression_statement
                  | if_statement
                  | while_statement
@@ -80,12 +71,8 @@ class Parser(object):
             node = self.function_declaration()
         elif self.token.name == Name.LET:
             node = self.variable_declaration()
-        elif self.token.name == Name.ID:
-            # Could either suggest an assignement of an expression statement
-            if self._fake_process(Name.ID).name == Name.ASSIGN:
-                node = self.assignment_statement()
-            else:
-                node = self.expression_statement()
+        elif self.token.name in (Name.MUT, Name.ID):
+            node = self.expression_statement()
         elif self.token.name == Name.IF:
             node = self.if_statement()
         elif self.token.name == Name.WHILE:
@@ -150,9 +137,9 @@ class Parser(object):
         self._process(Name.SEMI)
         return node
 
-    def assignment_statement(self):
+    def expression_statement(self):
         """
-        assignment_statement: assignment SEMI
+        expression_statement: assignment SEMI
         """
         node = self.assignment()
         self._process(Name.SEMI)
@@ -160,36 +147,16 @@ class Parser(object):
 
     def assignment(self):
         """
-        assignment : variable ASSIGN logical_or_expr
-        """
-        left = self.variable()
-        token = self.token
-        self._process(Name.ASSIGN)
-        right = self.logical_or_expr()
-        node = Assignment(left, token, right)
-        return node
-
-    def variable(self):
-        """
-        variable: [MUT] ID
-        """
-        is_mutable = False
-        if self.token.name == Name.MUT:
-            is_mutable = True
-            self._process(Name.MUT)
-
-        identifier = Identifier(self.token.value)
-        self._process(Name.ID)
-
-        return Variable(identifier=identifier, is_mutable=is_mutable)
-
-    def expression_statement(self):
-        """
-        expression_statement: logical_or_expr SEMI
+        assignment: logical_or_expr [ASSIGN logical_or_expr]
         """
         node = self.logical_or_expr()
-        self._process(Name.SEMI)
-        return node
+        if self.token.name == Name.ASSIGN:
+            token = self.token
+            self._process(Name.ASSIGN)
+            right = self.logical_or_expr()
+            return Assignment(left=node, op=token, right=right)
+        else:
+            return node
 
     def if_statement(self):
         """
@@ -343,15 +310,20 @@ class Parser(object):
 
     def call(self):
         """
-        call: ID [LPAREN parameters RPAREN]
+        call: [MUT] ID [LPAREN parameters RPAREN]
         """
-        identifier = Identifier(self.token.value)
+        is_mutable = False
+        if self.token.name == Name.MUT:
+            is_mutable = True
+            self._process(Name.MUT)
+
+        identifier = Identifier(name=self.token.value)
         self._process(Name.ID)
 
         if self.token.name == Name.LPAREN:
             return FunctionCall(identifier=identifier, parameters=self.parameters())
         else:
-            return identifier
+            return Variable(identifier=identifier, is_mutable=is_mutable)
 
     def atom(self):
         """
@@ -371,7 +343,7 @@ class Parser(object):
         elif token.name == Name.MINUS:
             self._process(Name.MINUS)
             return UnaryOperation(op=token, right=self.atom())
-        elif token.name == Name.ID:
+        elif token.name in (Name.MUT, Name.ID):
             return self.call()
         elif token.name == Name.INT_NUMBER:
             self._process(Name.INT_NUMBER)
