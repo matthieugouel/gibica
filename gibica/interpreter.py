@@ -1,9 +1,14 @@
 """Interpreter module."""
 
 from gibica.tokens import Name
-from gibica.ast import NodeVisitor, FunctionDeclaration, ReturnStatement
+from gibica.ast import (
+    NodeVisitor,
+    FunctionDeclaration,
+    ReturnStatement,
+)
 from gibica.types import Int, Float, Bool
 from gibica.memory import Memory
+from gibica.exceptions import InterpreterError
 
 
 #
@@ -28,24 +33,33 @@ class Interpreter(NodeVisitor):
     def visit_Program(self, node):
         """Vsitor for `Program` AST node."""
         for child in node.children:
-            # Skip function declaration nodes
             if not isinstance(child, FunctionDeclaration):
                 self.visit(child)
 
-    def visit_Compound(self, node):
-        """Visitor for `Compound` AST node."""
-        for child in node.children:
-            if isinstance(child, ReturnStatement):
-                return self.visit(child)
-            self.visit(child)
-
     def visit_FunctionDeclaration(self, node):
         """Visitor for `FunctionDeclaration` AST node."""
+        scope = self.memory.stack.current.current.copy()
+        args = [parameter.variable.identifier.name for parameter in node.parameters]
+
+        if len(args) == len(scope):
+            for i in scope:
+                self.memory.stack.current.current.pop(i)
+                self.memory[args[i]] = scope[i]
+        else:
+            raise InterpreterError("Function call and declaration parameters mismatch")
+
         return self.visit(node.body)
 
     def visit_Parameters(self, node):
         """Visitor for `Parameters` AST node."""
-        pass
+        return self.visit(node.variable)
+
+    def visit_FunctionBody(self, node):
+        """Visitor for `FunctionBody` AST node."""
+        for child in node.children:
+            if isinstance(child, ReturnStatement):
+                return self.visit(child)
+            self.visit(child)
 
     def visit_VariableDeclaration(self, node):
         """Visitor for `VariableDeclaration` AST node."""
@@ -79,6 +93,13 @@ class Interpreter(NodeVisitor):
         """Visitor for `WhileStatement` AST node."""
         while self.visit(node.condition):
             self.visit(node.compound)
+
+    def visit_Compound(self, node):
+        """Visitor for `Compound` AST node."""
+        self.memory.append_scope()
+        for child in node.children:
+            self.visit(child)
+        self.memory.pop_scope()
 
     def visit_ReturnStatement(self, node):
         """Visitor for `WhileStatement` AST node."""
@@ -124,9 +145,19 @@ class Interpreter(NodeVisitor):
 
     def visit_FunctionCall(self, node):
         """Visitor for `FunctionCall` AST node."""
-        node = self.memory[node.identifier.name]
-        if node is not None:
-            return self.visit(node)
+        call = self.memory[node.identifier.name]
+        if call is not None:
+
+            args = [self.visit(parameter) for parameter in node.parameters]
+
+            self.memory.append_frame()
+            for i, arg in enumerate(args):
+                self.memory[i] = arg
+
+            function_result = self.visit(call)
+
+            self.memory.pop_frame()
+            return function_result
 
     def visit_Identifier(self, node):
         """Visitor for `Identifier` AST node."""

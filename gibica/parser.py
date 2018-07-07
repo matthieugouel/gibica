@@ -7,6 +7,8 @@ from gibica.ast import (
     Compound,
     FunctionDeclaration,
     Parameters,
+    FunctionBody,
+    FunctionCall,
     VariableDeclaration,
     Assignment,
     Variable,
@@ -15,7 +17,6 @@ from gibica.ast import (
     ReturnStatement,
     BinaryOperation,
     UnaryOperation,
-    FunctionCall,
     Identifier,
     Integer,
     FloatingPoint,
@@ -86,7 +87,7 @@ class Parser(object):
 
     def function_declaration(self):
         """
-        function_declaration: DEF ID parameters compound
+        function_declaration: DEF ID parameters function_body
         """
         self._process(Name.DEF)
 
@@ -95,19 +96,31 @@ class Parser(object):
 
         parameters = self.parameters()
         return FunctionDeclaration(
-            identifier=identifier, parameters=parameters, body=self.compound()
+            identifier=identifier, parameters=parameters, body=self.function_body()
         )
 
     def parameters(self):
         """
-        parameters: LPAREN [variable] (COMMA variable)* RPAREN
+        parameters: LPAREN [[MUT] ID] (COMMA [MUT] ID)* RPAREN
         """
         nodes = []
         self._process(Name.LPAREN)
 
         while self.token.name != Name.RPAREN:
 
-            nodes.append(Parameters(self.variable()))
+            is_mutable = False
+            if self.token.name == Name.MUT:
+                is_mutable = True
+                self._process(Name.MUT)
+
+            identifier = Identifier(name=self.token.value)
+            self._process(Name.ID)
+
+            nodes.append(
+                Parameters(
+                    variable=Variable(identifier=identifier, is_mutable=is_mutable)
+                )
+            )
 
             if self.token.name == Name.COMMA:
                 self._process(Name.COMMA)
@@ -115,11 +128,11 @@ class Parser(object):
         self._process(Name.RPAREN)
         return nodes
 
-    def compound(self):
+    def function_body(self):
         """
-        compound: LBRACKET (statement)* RBRACKET
+        function_body: LBRACKET (statement)* RBRACKET
         """
-        root = Compound()
+        root = FunctionBody()
         self._process(Name.LBRACKET)
 
         while self.token.name != Name.RBRACKET:
@@ -193,6 +206,19 @@ class Parser(object):
         condition = self.logical_or_expr()
         compound = self.compound()
         return WhileStatement(condition=condition, compound=compound)
+
+    def compound(self):
+        """
+        compound: LBRACKET (statement)* RBRACKET
+        """
+        root = Compound()
+        self._process(Name.LBRACKET)
+
+        while self.token.name != Name.RBRACKET:
+            root.children.append(self.statement())
+
+        self._process(Name.RBRACKET)
+        return root
 
     def jump_statement(self):
         """

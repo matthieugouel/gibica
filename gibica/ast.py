@@ -28,14 +28,6 @@ class Program(AST):
         self.children = []
 
 
-class Compound(AST):
-    """Compound AST representation."""
-
-    def __init__(self):
-        """Initialization of `Compound` class."""
-        self.children = []
-
-
 class FunctionDeclaration(AST):
     """Function declaration AST representation."""
 
@@ -71,6 +63,23 @@ class Parameters(AST):
     def __repr__(self):
         """String representation of the class."""
         return self.__str__()
+
+
+class FunctionBody(AST):
+    """Function body AST representation."""
+
+    def __init__(self):
+        """Initialization of `FunctionBody` class."""
+        self.children = []
+
+
+class FunctionCall(AST):
+    """Function call AST representation."""
+
+    def __init__(self, identifier, parameters):
+        """Initialization of `FunctionCall` class."""
+        self.identifier = identifier
+        self.parameters = parameters
 
 
 class VariableDeclaration(AST):
@@ -130,6 +139,14 @@ class WhileStatement(AST):
         self.compound = compound
 
 
+class Compound(AST):
+    """Compound AST representation."""
+
+    def __init__(self):
+        """Initialization of `Compound` class."""
+        self.children = []
+
+
 class BinaryOperation(AST):
     """Binary operands AST representation."""
 
@@ -147,15 +164,6 @@ class UnaryOperation(AST):
         """Initialization of `UnaryOperation` class."""
         self.op = self.token = op
         self.right = right
-
-
-class FunctionCall(AST):
-    """Function call AST representation."""
-
-    def __init__(self, identifier, parameters):
-        """Initialization of `FunctionCall` class."""
-        self.identifier = identifier
-        self.parameters = parameters
 
 
 class ReturnStatement(AST):

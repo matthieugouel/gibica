@@ -17,9 +17,9 @@ This is the current grammar of the Gibica language.
 
     function_declaration: DEF ID parameters compound
 
-    parameters: LPAREN [variable] (COMMA variable)* RPAREN
+    parameters: LPAREN [[MUT] ID] (COMMA [MUT] ID)* RPAREN
 
-    compound: LBRACKET (statement)* RBRACKET
+    function_body: LBRACKET (statement)* RBRACKET
 
     variable_declaration: LET assignment SEMI
 
@@ -32,6 +32,8 @@ This is the current grammar of the Gibica language.
                 [ELSE compound]
 
     while_statement: WHILE local_or_expr compound
+
+    compound: LBRACKET (statement)* RBRACKET
 
     jump_statement: RETURN expression_statement
 

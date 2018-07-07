@@ -63,13 +63,6 @@ class SymbolTableBuilder(NodeVisitor):
             if not isinstance(child, FunctionDeclaration):
                 self.visit(child)
 
-    def visit_Compound(self, node):
-        """Visitor for `Compound` AST node."""
-        for child in node.children:
-            if isinstance(child, ReturnStatement):
-                return self.visit(child)
-            self.visit(child)
-
     def visit_FunctionDeclaration(self, node):
         """Visitor for `FunctionDeclaration` AST node."""
         self.visit(node.body)
@@ -128,6 +121,13 @@ class SymbolTableBuilder(NodeVisitor):
         """Visitor for `WhileStatement` AST node."""
         while self.visit(node.condition):
             self.visit(node.compound)
+
+    def visit_Compound(self, node):
+        """Visitor for `Compound` AST node."""
+        for child in node.children:
+            if isinstance(child, ReturnStatement):
+                return self.visit(child)
+            self.visit(child)
 
     def visit_ReturnStatement(self, node):
         """Visitor for `WhileStatement` AST node."""

@@ -56,9 +56,9 @@ class Memory(object):
         """Handle the `!=` operator."""
         return self.stack != other.stack
 
-    def append_frame(self):
+    def append_frame(self, **kwargs):
         """Create a new frame."""
-        self.stack.append(Frame([Scope()]))
+        self.stack.append(Frame([Scope(**kwargs)]))
 
     def pop_frame(self):
         """Delete the current frame."""
@@ -66,11 +66,16 @@ class Memory(object):
 
     def append_scope(self):
         """Create a new scope in the current frame."""
-        self.stack.current.append(Scope())
+        self.stack.current.append(Scope(self.stack.current.current))
 
     def pop_scope(self):
         """Delete the current scope in the current scope."""
+        child_scope = self.stack.current.current
         self.stack.current.pop()
+        parent_scope = self.stack.current.current
+        self.stack.current.current = {
+            key: child_scope[key] for key in child_scope if key in parent_scope
+        }
 
     def __str__(self):
         """String representation of a token."""
