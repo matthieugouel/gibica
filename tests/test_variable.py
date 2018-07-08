@@ -1,9 +1,9 @@
-"""Test: declaration."""
+"""Test: variable."""
 
 import pytest
 
 from gibica.types import Int, Float, Bool
-from gibica.exceptions import SementicError
+from gibica.exceptions import LexicalError, SementicError
 
 
 @pytest.mark.parametrize(
@@ -133,8 +133,30 @@ def test_mutable_declaration(evaluate, memory, input, expected):
     assert instance.memory == memory(expected)
 
 
+@pytest.mark.parametrize('input', ['let gibica§ =2+2;', 'let gibica& =2+2;'])
+def test_invalid_variable_name(evaluate, input):
+    """Test invalid variable name."""
+    with pytest.raises(LexicalError):
+        evaluate(input)
+
+
 @pytest.mark.parametrize('input', ['let a = 1; a = 2;'])
 def test_reassignment_of_immutable_variable(evaluate, input):
     """Test re-assignment of immutable variable."""
+    with pytest.raises(SementicError):
+        evaluate(input)
+
+
+@pytest.mark.parametrize('input', ['let a = 1; b = a + 1;', 'let a = 1; a = 1 + b;'])
+def test_assignment_before_declaration(evaluate, input):
+    """Test assignment before declaration."""
+    with pytest.raises(SementicError):
+        evaluate(input)
+
+
+# Maybe it will be authorized in the future (shadowing)
+@pytest.mark.parametrize('input', ['let a = 1; let a = 2;'])
+def test_redefinition_of_variable(evaluate, input):
+    """Test redefinition of a variable."""
     with pytest.raises(SementicError):
         evaluate(input)

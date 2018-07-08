@@ -34,5 +34,5 @@ def test_cli_debug(runner):
         result = runner.invoke(main, ['script.gbc', '--debug'])
         assert result.exit_code == 0
         assert result.output == (
-            "SYMBOL TABLE: [<a>, <b:mut>]\nGLOBAL MEMORY: [[{'a': 2, 'b': 3}]]\n"
+            "SYMBOL TABLE: [[<a>, <b:mut>]]\nGLOBAL MEMORY: [[{'a': 2, 'b': 3}]]\n"
         )

@@ -1,14 +1,9 @@
 """Interpreter module."""
 
 from gibica.tokens import Name
-from gibica.ast import (
-    NodeVisitor,
-    FunctionDeclaration,
-    ReturnStatement,
-)
-from gibica.types import Int, Float, Bool
+from gibica.ast import NodeVisitor, FunctionDeclaration, ReturnStatement
+from gibica.types import Int, Float, Bool, Function
 from gibica.memory import Memory
-from gibica.exceptions import InterpreterError
 
 
 #
@@ -28,7 +23,8 @@ class Interpreter(NodeVisitor):
         """Load the functions in the scope."""
         for child in tree.children:
             if isinstance(child, FunctionDeclaration):
-                self.memory[child.identifier.name] = child
+                function_name = child.identifier.name
+                self.memory[function_name] = Function(function_name, child)
 
     def visit_Program(self, node):
         """Vsitor for `Program` AST node."""
@@ -41,12 +37,9 @@ class Interpreter(NodeVisitor):
         scope = self.memory.stack.current.current.copy()
         args = [parameter.variable.identifier.name for parameter in node.parameters]
 
-        if len(args) == len(scope):
-            for i in scope:
-                self.memory.stack.current.current.pop(i)
-                self.memory[args[i]] = scope[i]
-        else:
-            raise InterpreterError("Function call and declaration parameters mismatch")
+        for i in scope:
+            self.memory.stack.current.current.pop(i)
+            self.memory[args[i]] = scope[i]
 
         return self.visit(node.body)
 
@@ -60,6 +53,22 @@ class Interpreter(NodeVisitor):
             if isinstance(child, ReturnStatement):
                 return self.visit(child)
             self.visit(child)
+
+    def visit_FunctionCall(self, node):
+        """Visitor for `FunctionCall` AST node."""
+        call = self.memory[node.identifier.name]._node
+        if call is not None:
+
+            args = [self.visit(parameter) for parameter in node.parameters]
+
+            self.memory.append_frame()
+            for i, arg in enumerate(args):
+                self.memory[i] = arg
+
+            function_result = self.visit(call)
+
+            self.memory.pop_frame()
+            return function_result
 
     def visit_VariableDeclaration(self, node):
         """Visitor for `VariableDeclaration` AST node."""
@@ -142,22 +151,6 @@ class Interpreter(NodeVisitor):
             return -self.visit(node.right)
         elif node.op.name == Name.NOT:
             return Bool(not self.visit(node.right))
-
-    def visit_FunctionCall(self, node):
-        """Visitor for `FunctionCall` AST node."""
-        call = self.memory[node.identifier.name]
-        if call is not None:
-
-            args = [self.visit(parameter) for parameter in node.parameters]
-
-            self.memory.append_frame()
-            for i, arg in enumerate(args):
-                self.memory[i] = arg
-
-            function_result = self.visit(call)
-
-            self.memory.pop_frame()
-            return function_result
 
     def visit_Identifier(self, node):
         """Visitor for `Identifier` AST node."""

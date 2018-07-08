@@ -1,7 +1,7 @@
 """Symbols module."""
 
 from collections import OrderedDict
-from gibica.ast import NodeVisitor, FunctionDeclaration, ReturnStatement
+from gibica.ast import NodeVisitor, FunctionDeclaration
 from gibica.exceptions import SementicError
 
 
@@ -13,10 +13,9 @@ from gibica.exceptions import SementicError
 class Symbol(object):
     """Container of a symbol."""
 
-    def __init__(self, name, is_mutable):
+    def __init__(self, name):
         """Initialization of `Symbol` class."""
         self.name = name
-        self.is_mutable = is_mutable
 
 
 class VariableSymbol(Symbol):
@@ -24,7 +23,8 @@ class VariableSymbol(Symbol):
 
     def __init__(self, name, is_mutable):
         """Initialization of `VariableSymbol` class."""
-        super().__init__(name, is_mutable)
+        super().__init__(name)
+        self.is_mutable = is_mutable
 
     def __str__(self):
         """String representation of a variable symbol."""
@@ -35,13 +35,78 @@ class VariableSymbol(Symbol):
         return self.__str__()
 
 
-class SymbolTable(OrderedDict):
-    """Symbol ADT stack."""
+class FunctionSymbol(Symbol):
+    """Container of a function symbol."""
+
+    def __init__(self, name, parameters):
+        """Initialization of `VariableSymbol` class."""
+        super().__init__(name)
+        self.parameters = parameters if parameters else []
+
+    def __str__(self):
+        """String representation of a variable symbol."""
+        return f"<func:{self.name}:{str(self.parameters)}>"
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
+
+
+class Table(OrderedDict):
+    """Symbol table object."""
+
+    def __init__(self, *args, **kwargs):
+        """Initialization of `Table` class."""
+        super().__init__(*args, **kwargs)
 
     def __str__(self):
         """String representation of the symbol table."""
-        str = '{symbols}'.format(symbols=[value for value in self.values()])
-        return str
+        return '{symbols}'.format(symbols=[value for value in self.values()])
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
+
+
+class Stack(list):
+    """Stack of `Table` objects."""
+
+    def __init__(self, *args, **kwargs):
+        """Initialization of `Stack` class."""
+        super().__init__(*args, **kwargs)
+
+    @property
+    def current(self):
+        """Get the current frame of the stack."""
+        return self[-1]
+
+
+class SymbolTable(object):
+    """Symbol ADT stack."""
+
+    def __init__(self, **kwags):
+        """Initialization of `Memory` class."""
+        self.stack = Stack([Table(**kwags)])
+
+    def __getitem__(self, value):
+        """Get a value from the current scope in the current table."""
+        return self.stack.current.get(value)
+
+    def __setitem__(self, key, value):
+        """Set a value from the current scope in the current table."""
+        self.stack.current[key] = value
+
+    def append_table(self, **kwargs):
+        """Create a new table."""
+        self.stack.append(Table(**kwargs))
+
+    def pop_table(self):
+        """Delete the current table."""
+        self.stack.pop()
+
+    def __str__(self):
+        """String representation of the symbol table."""
+        return str(self.stack)
 
     def __repr__(self):
         """String representation of the class."""
@@ -54,22 +119,59 @@ class SymbolTableBuilder(NodeVisitor):
     def __init__(self, tree):
         """Initialization of `SymbolTableBuilder` class."""
         self.tree = tree
-        self.SYMBOL_TABLE = SymbolTable()
+        self.table = SymbolTable()
+
+    def load_functions(self, tree):
+        """Load the functions in the scope."""
+        for child in tree.children:
+            if isinstance(child, FunctionDeclaration):
+                if self.table[child.identifier.name] is not None:
+                    raise SementicError(
+                        f"Function `{child.identifier.name}` already declared."
+                    )
+                self.table[child.identifier.name] = child
 
     def visit_Program(self, node):
         """Vsitor for `Program` AST node."""
         for child in node.children:
-            # Skip function declaration nodes
             if not isinstance(child, FunctionDeclaration):
                 self.visit(child)
 
     def visit_FunctionDeclaration(self, node):
         """Visitor for `FunctionDeclaration` AST node."""
+        for parameter in node.parameters:
+            var_name = parameter.variable.identifier.name
+            var_is_mutable = parameter.variable.is_mutable
+            var_symbol = VariableSymbol(var_name, var_is_mutable)
+
+            if self.table[var_name] is not None:
+                raise SementicError(f"Duplicated `{var_name}` function parameter.")
+
+            self.table[var_name] = var_symbol
+
         self.visit(node.body)
 
     def visit_Parameters(self, node):
         """Visitor for `Parameters` AST node."""
         pass
+
+    def visit_FunctionBody(self, node):
+        """Visitor for `FunctionBody` AST node."""
+        for child in node.children:
+            self.visit(child)
+
+    def visit_FunctionCall(self, node):
+        """Visitor for `FunctionCall` AST node."""
+        call = self.table[node.identifier.name]
+        if call is None:
+            raise SementicError(f"Function `{node.identifier.name}` not declared.")
+
+        if len(call.parameters) != len(node.parameters):
+            raise SementicError("Mismatch between call and function parameters number.")
+
+        self.table.append_table()
+        self.visit(call)
+        self.table.pop_table()
 
     def visit_VariableDeclaration(self, node):
         """Visitor for `VariableDeclaration` AST node."""
@@ -77,15 +179,18 @@ class SymbolTableBuilder(NodeVisitor):
         var_is_mutable = node.assignment.left.is_mutable
         var_symbol = VariableSymbol(var_name, var_is_mutable)
 
-        if self.SYMBOL_TABLE.get(var_name) is not None:
+        if self.table[var_name] is not None:
             raise SementicError(f"Variable `{var_name}` is already declared.")
 
-        self.SYMBOL_TABLE[var_symbol.name] = var_symbol
+        self.table[var_symbol.name] = var_symbol
+
+        self.visit(node.assignment.left)
+        self.visit(node.assignment.right)
 
     def visit_Assignment(self, node):
         """Visitor for `Assignment` AST node."""
         var_name = node.left.identifier.name
-        var_symbol = self.SYMBOL_TABLE.get(var_name)
+        var_symbol = self.table[var_name]
 
         if var_symbol is not None and not var_symbol.is_mutable:
             raise SementicError(f"Re-assignment of immutable variable `{var_name}`.")
@@ -96,7 +201,7 @@ class SymbolTableBuilder(NodeVisitor):
     def visit_Variable(self, node):
         """Visitor for `Variable` AST node."""
         var_name = node.identifier.name
-        var_symbol = self.SYMBOL_TABLE.get(var_name)
+        var_symbol = self.table[var_name]
 
         if var_symbol is None:
             raise SementicError(f"Variable `{var_name}` is not declared.")
@@ -125,8 +230,6 @@ class SymbolTableBuilder(NodeVisitor):
     def visit_Compound(self, node):
         """Visitor for `Compound` AST node."""
         for child in node.children:
-            if isinstance(child, ReturnStatement):
-                return self.visit(child)
             self.visit(child)
 
     def visit_ReturnStatement(self, node):
@@ -141,10 +244,6 @@ class SymbolTableBuilder(NodeVisitor):
     def visit_UnaryOperation(self, node):
         """Visitor for `UnaryOperation` AST node."""
         self.visit(node.right)
-
-    def visit_FunctionCall(self, node):
-        """Visitor for `FunctionCall` AST node."""
-        pass
 
     def visit_Identifier(self, node):
         """Visitor for `Identifier` AST node."""
@@ -164,4 +263,5 @@ class SymbolTableBuilder(NodeVisitor):
 
     def build(self):
         """Generic entrypoint of `SymbolTableBuilder` class."""
+        self.load_functions(self.tree)
         self.visit(self.tree)

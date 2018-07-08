@@ -8,7 +8,7 @@ class Scope(dict):
 
 
 class Frame(list):
-    """Frame of scopes objects."""
+    """Frame of `Scope` objects."""
 
     def __init__(self, *args, **kwargs):
         """Initialization of `Frame` class."""
@@ -19,9 +19,14 @@ class Frame(list):
         """Get the current scope of the frame."""
         return self[-1]
 
+    @current.setter
+    def current(self, value):
+        """Set the current scope of the frame."""
+        self[-1] = value
+
 
 class Stack(list):
-    """Stack of frames objects."""
+    """Stack of `Frame` objects."""
 
     def __init__(self, *args, **kwargs):
         """Initialization of `Stack` class."""
@@ -70,16 +75,16 @@ class Memory(object):
 
     def pop_scope(self):
         """Delete the current scope in the current scope."""
-        child_scope = self.stack.current.current
+        child_scope = self.stack.current.current.copy()
         self.stack.current.pop()
-        parent_scope = self.stack.current.current
+        parent_scope = self.stack.current.current.copy()
         self.stack.current.current = {
             key: child_scope[key] for key in child_scope if key in parent_scope
         }
 
     def __str__(self):
         """String representation of a token."""
-        return f"{str(self.stack)}"
+        return str(self.stack)
 
     def __repr__(self):
         """String representation of the class."""

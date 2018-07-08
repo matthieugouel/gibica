@@ -71,8 +71,5 @@ docs/_build/
 # Temporary files
 *.tmp
 
-# Gibica scripts
-*.gbc
-
 # Others
 debug/

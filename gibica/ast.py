@@ -191,7 +191,7 @@ class Identifier(AST):
 
 
 class Integer(AST):
-    """Integer AST representation."""
+    """Integer number AST representation."""
 
     def __init__(self, token):
         """Initialization of `Integer` class."""
@@ -200,7 +200,7 @@ class Integer(AST):
 
 
 class FloatingPoint(AST):
-    """Floating Point AST representation."""
+    """Floating point number AST representation."""
 
     def __init__(self, token):
         """Initialization of `FloatingPoint` class."""

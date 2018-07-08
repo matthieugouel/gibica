@@ -43,7 +43,6 @@ def memory():
 
     def nested(scope):
         """Actual processing."""
-
         return Memory(**scope)
 
     return nested

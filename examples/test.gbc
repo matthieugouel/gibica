@@ -1,0 +1,9 @@
+#
+# This is a Gibica program.
+#
+
+def zero() {
+    return 0;
+}
+
+let result = zero();

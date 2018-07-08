@@ -55,14 +55,6 @@ class AbstractType(AbstractObject, ABC):
         """Handle the boolean value of the instance."""
         self._type_error()
 
-    def __str__(self):
-        """String representation of a boolean."""
-        return str(self.value)
-
-    def __repr__(self):
-        """String representation of the class."""
-        return self.__str__()
-
 
 class AbstractNumber(AbstractType, ABC):
     """Abstract class for generic number."""
@@ -102,27 +94,35 @@ class AbstractNumber(AbstractType, ABC):
 
     def __eq__(self, other):
         """Handle the `==` operator."""
-        return Bool(True) if self.value == other.value else Bool(False)
+        return Bool(self.value == other.value)
 
     def __ne__(self, other):
         """Handle the `!=` operator."""
-        return Bool(True) if self.value != other.value else Bool(False)
+        return Bool(self.value != other.value)
 
     def __le__(self, other):
         """Handle the `<=` operator."""
-        return Bool(True) if self.value <= other.value else Bool(False)
+        return Bool(self.value <= other.value)
 
     def __ge__(self, other):
         """Handle the `>=` operator."""
-        return Bool(True) if self.value >= other.value else Bool(False)
+        return Bool(self.value >= other.value)
 
     def __lt__(self, other):
         """Handle the `<` operator."""
-        return Bool(True) if self.value < other.value else Bool(False)
+        return Bool(self.value < other.value)
 
     def __gt__(self, other):
         """Handle the `>` operator."""
-        return Bool(True) if self.value > other.value else Bool(False)
+        return Bool(self.value > other.value)
+
+    def __str__(self):
+        """String representation of a boolean."""
+        return str(self.value)
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
 
 
 class Bool(AbstractType):
@@ -135,14 +135,14 @@ class Bool(AbstractType):
     def __eq__(self, other):
         """Handle the `==` operator."""
         if isinstance(other.value, bool):
-            return Bool(True) if self.value == other.value else Bool(False)
+            return Bool(self.value == other.value)
         else:
             raise self._type_error()
 
     def __ne__(self, other):
         """Handle the `!=` operator."""
         if isinstance(other.value, bool):
-            return Bool(True) if self.value != other.value else Bool(False)
+            return Bool(self.value != other.value)
         else:
             raise self._type_error()
 
@@ -195,3 +195,28 @@ class Float(AbstractNumber):
     def __init__(self, value):
         """Initialization of `Float` class."""
         self.value = float(value)
+
+
+class Function(AbstractType):
+    """Representation of a function."""
+
+    def __init__(self, name, node=None):
+        """Initialization of `Function` class."""
+        self.name = name
+        self._node = node
+
+    def __eq__(self, other):
+        """Handle the `==` operator."""
+        return Bool(self.name == other.name)
+
+    def __ne__(self, other):
+        """Handle the `!=` operator."""
+        return Bool(self.name != other.name)
+
+    def __str__(self):
+        """String representation of a boolean."""
+        return str(self.name)
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
