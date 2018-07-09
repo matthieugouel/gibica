@@ -2,9 +2,9 @@
 # Get the nth number of the fibonacci sequence.
 #
 
-def fibonacci(n) {
-    let result = 1;
+def fibonacci(mut n) {
 
+    let result = 1;
 
     if n <= 1 {
 
@@ -32,5 +32,4 @@ def fibonacci(n) {
 
 }
 
-let n = 6;
-let result = fibonacci(n);
+let result = fibonacci(6);

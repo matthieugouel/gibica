@@ -140,8 +140,12 @@ class SymbolTableBuilder(NodeVisitor):
     def visit_FunctionDeclaration(self, node):
         """Visitor for `FunctionDeclaration` AST node."""
         for parameter in node.parameters:
-            var_name = parameter.variable.identifier.name
-            var_is_mutable = parameter.variable.is_mutable
+            try:
+                var_name = parameter.variable.identifier.name
+                var_is_mutable = parameter.variable.is_mutable
+            except AttributeError:
+                raise SementicError('Invalid parameter.')
+
             var_symbol = VariableSymbol(var_name, var_is_mutable)
 
             if self.table[var_name] is not None:

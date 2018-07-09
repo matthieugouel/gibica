@@ -101,26 +101,14 @@ class Parser(object):
 
     def parameters(self):
         """
-        parameters: LPAREN [[MUT] ID] (COMMA [MUT] ID)* RPAREN
+        parameters: LPAREN logical_or_expr (COMMA logical_or_expr)* RPAREN
         """
         nodes = []
         self._process(Name.LPAREN)
 
         while self.token.name != Name.RPAREN:
 
-            is_mutable = False
-            if self.token.name == Name.MUT:
-                is_mutable = True
-                self._process(Name.MUT)
-
-            identifier = Identifier(name=self.token.value)
-            self._process(Name.ID)
-
-            nodes.append(
-                Parameters(
-                    variable=Variable(identifier=identifier, is_mutable=is_mutable)
-                )
-            )
+            nodes.append(Parameters(variable=self.logical_or_expr()))
 
             if self.token.name == Name.COMMA:
                 self._process(Name.COMMA)

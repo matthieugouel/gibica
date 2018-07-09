@@ -2,7 +2,7 @@
 
 import pytest
 
-from gibica.types import Int, Function
+from gibica.types import Int, Bool, Function
 from gibica.exceptions import SementicError
 
 
@@ -36,11 +36,9 @@ from gibica.exceptions import SementicError
             return a + b;
         }
 
-        let n = 1;
-        let m = 1;
-        let result = zero(n, m);
+        let result = zero(1, 1);
     """,
-            {'zero': Function('zero'), 'n': Int(1), 'm': Int(1), 'result': Int(2)},
+            {'zero': Function('zero'), 'result': Int(2)},
         ),
         (
             """
@@ -49,10 +47,29 @@ from gibica.exceptions import SementicError
             return n;
         }
 
-        let n = 1;
-        let result = zero(n);
+        let result = zero(1);
     """,
-            {'zero': Function('zero'), 'n': Int(1), 'result': Int(2)},
+            {'zero': Function('zero'), 'result': Int(2)},
+        ),
+        (
+            """
+        def zero(mut n) {
+            return n;
+        }
+
+        let result = zero(1 > 2);
+    """,
+            {'zero': Function('zero'), 'result': Bool(False)},
+        ),
+        (
+            """
+        def zero(n) {
+            return n;
+        }
+
+        let result = zero(true or false);
+    """,
+            {'zero': Function('zero'), 'result': Bool(True)},
         ),
     ],
 )
@@ -86,7 +103,7 @@ def test_function_not_declared(evaluate, input):
     let m = 1;
     let result = zero();
     """
-    ]
+    ],
 )
 def test_function_already_declared(evaluate, input):
     """Test a function already declared."""
@@ -107,7 +124,7 @@ def test_function_already_declared(evaluate, input):
     let m = 1;
     let result = zero(n, m);
     """
-    ]
+    ],
 )
 def test_function_same_parameters(evaluate, input):
     """Test a function which has two same parameters."""
@@ -127,9 +144,50 @@ def test_function_same_parameters(evaluate, input):
         let n = 1;
         let result = zero(n);
     """
-    ]
+    ],
 )
 def test_redefinition_non_mutable_parameter(evaluate, input):
     """Test the redefinition of a non mutable parameter."""
+    with pytest.raises(SementicError):
+        evaluate(input)
+
+
+@pytest.mark.parametrize(
+    'input',
+    [
+        """
+        def zero(8) {
+            n = n + 1;
+            return n;
+        }
+
+        let result = zero(1);
+    """,
+        """
+        def zero(false or true) {
+            return n;
+        }
+
+        let result = zero(1);
+    """,
+        """
+        def zero(1 < 2) {
+            return n;
+        }
+
+        let result = zero(1);
+    """,
+        """
+        def zero(zero(2)) {
+            return n;
+        }
+
+        let result = zero(1);
+    """,
+    ],
+
+)
+def test_invalid_function_parameter(evaluate, input):
+    """Test an invalid function parameter."""
     with pytest.raises(SementicError):
         evaluate(input)

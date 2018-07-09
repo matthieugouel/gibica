@@ -17,7 +17,7 @@ This is the current grammar of the Gibica language.
 
     function_declaration: DEF ID parameters compound
 
-    parameters: LPAREN [[MUT] ID] (COMMA [MUT] ID)* RPAREN
+    parameters: LPAREN logical_or_expr (COMMA logical_or_expr)* RPAREN
 
     function_body: LBRACKET (statement)* RBRACKET
 
