@@ -55,9 +55,10 @@ class FunctionSymbol(Symbol):
 class Table(OrderedDict):
     """Symbol table object."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, name='global', **kwargs):
         """Initialization of `Table` class."""
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
+        self.name = name
 
     def __str__(self):
         """String representation of the symbol table."""
@@ -80,6 +81,11 @@ class Stack(list):
         """Get the current frame of the stack."""
         return self[-1]
 
+    @property
+    def table_name(self):
+        """Get the name of the table."""
+        return self[-1].name
+
 
 class SymbolTable(object):
     """Symbol ADT stack."""
@@ -96,9 +102,14 @@ class SymbolTable(object):
         """Set a value from the current scope in the current table."""
         self.stack.current[key] = value
 
-    def append_table(self, **kwargs):
+    @property
+    def name(self):
+        """Return the name of the table."""
+        return self.stack.table_name
+
+    def append_table(self, name, **kwargs):
         """Create a new table."""
-        self.stack.append(Table(**kwargs))
+        self.stack.append(Table(name, **kwargs))
 
     def pop_table(self):
         """Delete the current table."""
@@ -166,14 +177,26 @@ class SymbolTableBuilder(NodeVisitor):
 
     def visit_FunctionCall(self, node):
         """Visitor for `FunctionCall` AST node."""
-        call = self.table[node.identifier.name]
+        function_name = node.identifier.name
+        call = self.table[function_name]
         if call is None:
-            raise SementicError(f"Function `{node.identifier.name}` not declared.")
+            raise SementicError(f"Function `{function_name}` not declared.")
 
         if len(call.parameters) != len(node.parameters):
             raise SementicError("Mismatch between call and function parameters number.")
 
-        self.table.append_table()
+        current_table = self.table.stack.current
+        functions_in_table = {
+            key: current_table[key]
+            for key in current_table
+            if isinstance(current_table[key], FunctionDeclaration)
+        }
+
+        if self.table.name == function_name:
+            # End the visit in case of recursion
+            return
+
+        self.table.append_table(function_name, **functions_in_table)
         self.visit(call)
         self.table.pop_table()
 
@@ -213,23 +236,22 @@ class SymbolTableBuilder(NodeVisitor):
     def visit_IfStatement(self, node):
         """Visitor for `IfStatement` AST node."""
         if_conditon, if_body = node.if_compound
-        if self.visit(if_conditon):
-            self.visit(if_body)
-        else:
-            for else_if_compound in node.else_if_compounds:
-                else_if_condition, else_if_body = else_if_compound
-                if self.visit(else_if_condition):
-                    self.visit(else_if_body)
-                    break
-            else:
-                if node.else_compound is not None:
-                    _, else_body = node.else_compound
-                    self.visit(else_body)
+        self.visit(if_conditon)
+        self.visit(if_body)
+
+        for else_if_compound in node.else_if_compounds:
+            else_if_condition, else_if_body = else_if_compound
+            self.visit(else_if_condition)
+            self.visit(else_if_body)
+
+        if node.else_compound is not None:
+            _, else_body = node.else_compound
+            self.visit(else_body)
 
     def visit_WhileStatement(self, node):
         """Visitor for `WhileStatement` AST node."""
-        while self.visit(node.condition):
-            self.visit(node.compound)
+        self.visit(node.condition)
+        self.visit(node.compound)
 
     def visit_Compound(self, node):
         """Visitor for `Compound` AST node."""
@@ -238,7 +260,7 @@ class SymbolTableBuilder(NodeVisitor):
 
     def visit_ReturnStatement(self, node):
         """Visitor for `WhileStatement` AST node."""
-        return self.visit(node.expression)
+        self.visit(node.expression)
 
     def visit_BinaryOperation(self, node):
         """Visitor for `BinaryOperation` AST node."""

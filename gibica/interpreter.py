@@ -1,9 +1,17 @@
 """Interpreter module."""
 
 from gibica.tokens import Name
-from gibica.ast import NodeVisitor, FunctionDeclaration, ReturnStatement
+from gibica.ast import (
+    NodeVisitor,
+    FunctionDeclaration,
+    IfStatement,
+    WhileStatement,
+    ReturnStatement,
+)
 from gibica.types import Int, Float, Bool, Function
 from gibica.memory import Memory
+
+from itertools import islice
 
 
 #
@@ -37,7 +45,7 @@ class Interpreter(NodeVisitor):
         scope = self.memory.stack.current.current.copy()
         args = [parameter.variable.identifier.name for parameter in node.parameters]
 
-        for i in scope:
+        for i in islice(scope, len(args)):
             self.memory.stack.current.current.pop(i)
             self.memory[args[i]] = scope[i]
 
@@ -50,9 +58,14 @@ class Interpreter(NodeVisitor):
     def visit_FunctionBody(self, node):
         """Visitor for `FunctionBody` AST node."""
         for child in node.children:
+            return_value = self.visit(child)
+
             if isinstance(child, ReturnStatement):
-                return self.visit(child)
-            self.visit(child)
+                return return_value
+
+            if isinstance(child, (IfStatement, WhileStatement)):
+                if return_value is not None:
+                    return return_value
 
     def visit_FunctionCall(self, node):
         """Visitor for `FunctionCall` AST node."""
@@ -61,9 +74,19 @@ class Interpreter(NodeVisitor):
 
             args = [self.visit(parameter) for parameter in node.parameters]
 
+            curent_scope = self.memory.stack.current.current
+            memory_functions = {
+                key: curent_scope[key]
+                for key in curent_scope
+                if isinstance(curent_scope[key], Function)
+            }
+
             self.memory.append_frame()
             for i, arg in enumerate(args):
                 self.memory[i] = arg
+
+            for function in memory_functions:
+                self.memory[function] = memory_functions[function]
 
             function_result = self.visit(call)
 
@@ -86,27 +109,33 @@ class Interpreter(NodeVisitor):
         """Visitor for `IfStatement` AST node."""
         if_conditon, if_body = node.if_compound
         if self.visit(if_conditon):
-            self.visit(if_body)
+            return self.visit(if_body)
         else:
             for else_if_compound in node.else_if_compounds:
                 else_if_condition, else_if_body = else_if_compound
                 if self.visit(else_if_condition):
-                    self.visit(else_if_body)
+                    result = self.visit(else_if_body)
+                    if result is not None:
+                        return result
                     break
             else:
                 if node.else_compound is not None:
                     _, else_body = node.else_compound
-                    self.visit(else_body)
+                    return self.visit(else_body)
 
     def visit_WhileStatement(self, node):
         """Visitor for `WhileStatement` AST node."""
         while self.visit(node.condition):
-            self.visit(node.compound)
+            result = self.visit(node.compound)
+            if result is not None:
+                return result
 
     def visit_Compound(self, node):
         """Visitor for `Compound` AST node."""
         self.memory.append_scope()
         for child in node.children:
+            if isinstance(child, ReturnStatement):
+                return self.visit(child)
             self.visit(child)
         self.memory.pop_scope()
 

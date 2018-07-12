@@ -80,6 +80,99 @@ def test_simple_function_call(evaluate, memory, input, expected):
     assert instance.memory == memory(expected)
 
 
+@pytest.mark.parametrize(
+    'input, expected',
+    [
+        (
+            """
+        def zero(n) {
+            if n < 2 {
+                return 1;
+            }
+            else if n < 4 {
+                return 2;
+            }
+            else {
+                return 3;
+            }
+        }
+
+        let result = zero(1);
+    """,
+            {'zero': Function('zero'), 'result': Int(1)},
+        ),
+        (
+            """
+        def zero(n) {
+            if n < 2 {
+                return 1;
+            }
+            else if n < 4 {
+                return 2;
+            }
+            else {
+                return 3;
+            }
+        }
+
+        let result = zero(3);
+    """,
+            {'zero': Function('zero'), 'result': Int(2)},
+        ),
+        (
+            """
+        def zero(n) {
+            if n < 2 {
+                return 1;
+            }
+            else if n < 4 {
+                return 2;
+            }
+            else {
+                return 3;
+            }
+        }
+
+        let result = zero(5);
+    """,
+            {'zero': Function('zero'), 'result': Int(3)},
+        ),
+    ],
+)
+def test_return_in_compound_statement(evaluate, memory, input, expected):
+    """Test simple function call."""
+    instance = evaluate(input)
+
+    assert instance.memory == memory(expected)
+
+
+@pytest.mark.parametrize(
+    'input, expected',
+    [
+        (
+            """
+        def zero(n) {
+            if n < 1 {
+                return 1;
+            }
+
+            return zero(n-1);
+
+        }
+
+        let result = zero(3);
+        """,
+            {'zero': Function('zero'), 'result': Int(1)},
+        ),
+    ],
+)
+def test_recursive_function(evaluate, memory, input, expected):
+    """Test a recursive function."""
+    instance = evaluate(input)
+
+    assert instance.memory == memory(expected)
+
+
 @pytest.mark.parametrize('input', ['let result = zero();'])
 def test_function_not_declared(evaluate, input):
     """Test the call of an undeclared function."""
@@ -118,7 +211,6 @@ def test_function_already_declared(evaluate, input):
     def zero(n, n) {
         return 0;
     }
-
 
     let n = 1;
     let m = 1;
@@ -185,7 +277,6 @@ def test_redefinition_non_mutable_parameter(evaluate, input):
         let result = zero(1);
     """,
     ],
-
 )
 def test_invalid_function_parameter(evaluate, input):
     """Test an invalid function parameter."""
