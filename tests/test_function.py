@@ -21,55 +21,65 @@ from gibica.exceptions import SementicError
         ),
         (
             """
-        def zero(n) {
+        def func(n) {
             return 1;
         }
 
         let n = 1;
-        let result = zero(n);
+        let result = func(n);
     """,
-            {'zero': Function('zero'), 'n': Int(1), 'result': Int(1)},
+            {'func': Function('func'), 'n': Int(1), 'result': Int(1)},
         ),
         (
             """
-        def zero(a, b) {
+        def func(a, b) {
             return a + b;
         }
 
-        let result = zero(1, 1);
+        let result = func(1, 1);
     """,
-            {'zero': Function('zero'), 'result': Int(2)},
+            {'func': Function('func'), 'result': Int(2)},
         ),
         (
             """
-        def zero(mut n) {
+        def func(mut n) {
             n = n + 1;
             return n;
         }
 
-        let result = zero(1);
+        let result = func(1);
     """,
-            {'zero': Function('zero'), 'result': Int(2)},
+            {'func': Function('func'), 'result': Int(2)},
         ),
         (
             """
-        def zero(mut n) {
+        def func(mut n) {
             return n;
         }
 
-        let result = zero(1 > 2);
+        let result = func(1 > 2);
     """,
-            {'zero': Function('zero'), 'result': Bool(False)},
+            {'func': Function('func'), 'result': Bool(False)},
         ),
         (
             """
-        def zero(n) {
+        def func(n) {
             return n;
         }
 
-        let result = zero(true or false);
+        let result = func(true or false);
     """,
-            {'zero': Function('zero'), 'result': Bool(True)},
+            {'func': Function('func'), 'result': Bool(True)},
+        ),
+        (
+            """
+        def func(n) {
+            return n+1;
+        }
+
+        let result = func(func(1));
+    """,
+            {'func': Function('func'), 'result': Int(3)},
         ),
     ],
 )
@@ -85,7 +95,7 @@ def test_simple_function_call(evaluate, memory, input, expected):
     [
         (
             """
-        def zero(n) {
+        def func(n) {
             if n < 2 {
                 return 1;
             }
@@ -97,13 +107,13 @@ def test_simple_function_call(evaluate, memory, input, expected):
             }
         }
 
-        let result = zero(1);
+        let result = func(1);
     """,
-            {'zero': Function('zero'), 'result': Int(1)},
+            {'func': Function('func'), 'result': Int(1)},
         ),
         (
             """
-        def zero(n) {
+        def func(n) {
             if n < 2 {
                 return 1;
             }
@@ -115,13 +125,13 @@ def test_simple_function_call(evaluate, memory, input, expected):
             }
         }
 
-        let result = zero(3);
+        let result = func(3);
     """,
-            {'zero': Function('zero'), 'result': Int(2)},
+            {'func': Function('func'), 'result': Int(2)},
         ),
         (
             """
-        def zero(n) {
+        def func(n) {
             if n < 2 {
                 return 1;
             }
@@ -133,9 +143,9 @@ def test_simple_function_call(evaluate, memory, input, expected):
             }
         }
 
-        let result = zero(5);
+        let result = func(5);
     """,
-            {'zero': Function('zero'), 'result': Int(3)},
+            {'func': Function('func'), 'result': Int(3)},
         ),
     ],
 )
@@ -151,19 +161,43 @@ def test_return_in_compound_statement(evaluate, memory, input, expected):
     [
         (
             """
+        let result = zero(3);
+
         def zero(n) {
+
+            return 0;
+        }
+
+        """,
+            {'zero': Function('zero'), 'result': Int(0)},
+        )
+    ],
+)
+def test_function_declared_after_call(evaluate, memory, input, expected):
+    """Test function a function declared after its call."""
+    instance = evaluate(input)
+
+    assert instance.memory == memory(expected)
+
+
+@pytest.mark.parametrize(
+    'input, expected',
+    [
+        (
+            """
+        def recursive(n) {
             if n < 1 {
                 return 1;
             }
 
-            return zero(n-1);
+            return recursive(n-1);
 
         }
 
-        let result = zero(3);
+        let result = recursive(3);
         """,
-            {'zero': Function('zero'), 'result': Int(1)},
-        ),
+            {'recursive': Function('recursive'), 'result': Int(1)},
+        )
     ],
 )
 def test_recursive_function(evaluate, memory, input, expected):
@@ -228,13 +262,13 @@ def test_function_same_parameters(evaluate, input):
     'input',
     [
         """
-        def zero(n) {
+        def func(n) {
             n = n + 1;
             return n;
         }
 
         let n = 1;
-        let result = zero(n);
+        let result = func(n);
     """
     ],
 )
@@ -248,33 +282,33 @@ def test_redefinition_non_mutable_parameter(evaluate, input):
     'input',
     [
         """
-        def zero(8) {
+        def func(8) {
             n = n + 1;
             return n;
         }
 
-        let result = zero(1);
+        let result = func(1);
     """,
         """
-        def zero(false or true) {
+        def func(false or true) {
             return n;
         }
 
-        let result = zero(1);
+        let result = func(1);
     """,
         """
-        def zero(1 < 2) {
+        def func(1 < 2) {
             return n;
         }
 
-        let result = zero(1);
+        let result = func(1);
     """,
         """
-        def zero(zero(2)) {
+        def func(func(2)) {
             return n;
         }
 
-        let result = zero(1);
+        let result = func(1);
     """,
     ],
 )

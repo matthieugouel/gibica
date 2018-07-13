@@ -9,7 +9,7 @@ This project uses `pipenv` as a package manager.
 For development purposes, you can install the package in editable mode with the development requirements.
 
 ```
-pipenv install --dev -e .
+make install-dev
 ```
 
 ## Debug mode
@@ -26,7 +26,7 @@ gibica script.gbc --debug
 You can check the syntax using flake8 :
 
 ```
-flake8 gibica tests
+make lint
 ```
 
 You can also use tox :
@@ -40,7 +40,7 @@ tox -e lint
 If you used annotations to do static Python type checking with mypy :
 
 ```
-mypy gibica
+make type
 ```
 
 You can also use tox :
@@ -54,7 +54,7 @@ tox -e type
 You can run the coverage with the following command :
 
 ```
-coverage run --source gibica -m py.test
+make test
 ```
 
 You can also use tox :

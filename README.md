@@ -15,13 +15,13 @@ You can install the package from sources after cloning the project and navigatin
 This project uses `pipenv` as a package manager.
 
 ```
-pipenv install
+make install
 ```
 
 Then activate the project's virtualenv with the following command.
 
 ```
-pipenv shell
+make shell
 ```
 
 ## Usage
@@ -45,3 +45,5 @@ See [CONTRIBUTING](CONTRIBUTING.md) for more information about how to contribute
 ## Credits
 
 This project was initially born by the reading of the amazing series of articles [Let’s Build A Simple Interpreter](https://ruslanspivak.com/lsbasi-part1/) written by Ruslan Spivak.
+
+I would also like to mention the project [CInterpreter](https://github.com/SKantar/CInterpreter) created by Slađan Kantar that inspired me during the development of this interpreter.
