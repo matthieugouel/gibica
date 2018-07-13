@@ -10,16 +10,16 @@ stages:
 
 install:
     - pip install pipenv
-    - pipenv install --dev
+    - make install-dev
 
 jobs:
     include:
         - stage: lint
-          script: pipenv run tox -e lint
+          script: make lint
         - stage: type
-          script: pipenv run tox -e type
+          script: make type
         - stage: test
-          script: pipenv run tox -e test
+          script: make test
 
 
 after_success:
