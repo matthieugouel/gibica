@@ -10,7 +10,7 @@ from gibica.ast import (
     WhileStatement,
     ReturnStatement,
 )
-from gibica.types import Int, Float, Bool, Function
+from gibica.types import bind_type, Int, Float, Bool, Function
 from gibica.memory import Memory
 
 from itertools import islice
@@ -103,8 +103,7 @@ class Interpreter(NodeVisitor):
             self.memory.pop_frame()
             return function_result
         else:
-            # TODO Handle return value
-            call(*args)
+            return bind_type(call(*args))
 
     def visit_VariableDeclaration(self, node):
         """Visitor for `VariableDeclaration` AST node."""

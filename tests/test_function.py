@@ -2,7 +2,7 @@
 
 import pytest
 
-from gibica.types import Int, Bool, Function
+from gibica.types import Int, Bool, NoneType, Function
 from gibica.exceptions import SementicError
 
 
@@ -207,18 +207,28 @@ def test_recursive_function(evaluate, memory, input, expected):
     assert instance.memory == memory(expected)
 
 
+@pytest.mark.parametrize('input, expected', [("", {'display': Function('display')})])
+def test_only_builtins(evaluate, memory, input, expected):
+    """Test a recursive function."""
+    instance = evaluate(input, skip_builtins=False)
+
+    assert instance.memory == memory(expected)
+
+
 @pytest.mark.parametrize(
     'input, expected',
     [
         (
-            "",
-            {'display': Function('display')},
+            """
+        let result = display(1);
+        """,
+            {'result': NoneType()},
         )
     ],
 )
-def test_only_builtins(evaluate, memory, input, expected):
+def test_nonetype_function(evaluate, memory, input, expected):
     """Test a recursive function."""
-    instance = evaluate(input, skip_builtins=False)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 

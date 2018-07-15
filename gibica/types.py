@@ -4,6 +4,24 @@ from abc import ABC, abstractmethod
 from gibica.exceptions import ObjectError, TypeError
 
 
+def bind_type(python_value):
+    """Return a Gibica type derived from a Python type."""
+    binding_table = {'bool': Bool,
+                     'int': Int,
+                     'float': Float}
+
+    if python_value is None:
+        return NoneType()
+
+    python_type = type(python_value)
+
+    gibica_type = binding_table.get(python_type.__name__)
+
+    if gibica_type is None:
+        raise TypeError('Impossible to recognize underlying type.')
+    return gibica_type(python_value)
+
+
 class AbstractObject(ABC):
     """Abstract class for generic object."""
 
@@ -114,6 +132,36 @@ class AbstractNumber(AbstractType, ABC):
     def __str__(self):
         """String representation of a boolean."""
         return str(self.value)
+
+    def __repr__(self):
+        """String representation of the class."""
+        return self.__str__()
+
+
+class NoneType(AbstractType):
+
+    def __init__(self):
+        """Initialization of `NoneType` class."""
+        pass
+
+    def __setattr__(self, key, value):
+        raise TypeError("Impossible to set a set a NoneType.")
+
+    def __eq__(self, other):
+        """Handle the `==` operator."""
+        if isinstance(other, NoneType):
+            return Bool(True)
+        return Bool(False)
+
+    def __ne__(self, other):
+        """Handle the `!=` operator."""
+        if not isinstance(other, NoneType):
+            return Bool(True)
+        return Bool(False)
+
+    def __str__(self):
+        """String representation of a none type value."""
+        return 'none'
 
     def __repr__(self):
         """String representation of the class."""
