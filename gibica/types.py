@@ -15,12 +15,7 @@ class AbstractObject(ABC):
     def __getattr__(self, name):
         """Handle methods and attributes fetching."""
         try:
-            if callable(getattr(self, name)):
-                # Requests a method
-                return getattr(self, name)()
-            else:
-                # Requests an attribute
-                return getattr(self, name)
+            return self.__getattribute__(name)
         except AttributeError:
             self._object_error()
 

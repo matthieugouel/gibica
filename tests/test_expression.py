@@ -37,7 +37,7 @@ from gibica.exceptions import SyntaxError, TypeError, LexicalError
 )
 def test_expression_comparison(evaluate, memory, input, expected):
     """Test expression comparison."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -78,7 +78,7 @@ def test_invalid_operation_or_comparison(evaluate, input):
 )
 def test_with_comments(evaluate, memory, input, expected):
     """Test a comment."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -87,18 +87,18 @@ def test_with_comments(evaluate, memory, input, expected):
 def test_invalid_statements(evaluate, input):
     """Test invalid statements."""
     with pytest.raises(SyntaxError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)
 
 
 @pytest.mark.parametrize('input', ['let a=2+2', 'let mut a=2-2; a=2+4'])
 def test_missing_semicolon(evaluate, input):
     """Test missing semicolon."""
     with pytest.raises(SyntaxError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)
 
 
 @pytest.mark.parametrize('input', ['let gibica=2!2;', 'let gibica=2$2;'])
 def test_invalid_operators(evaluate, input):
     """Test invalid operators."""
     with pytest.raises(LexicalError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)

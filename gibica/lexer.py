@@ -14,7 +14,7 @@ class Lexer(object):
 
     def __init__(self, raw):
         """Initialization of `Lexer` class."""
-        self.raw = raw
+        self.raw = raw if raw != '' else '\n'
         self.cursor = 0
         self.char = self.raw[self.cursor]
 
@@ -92,7 +92,7 @@ class Lexer(object):
                 continue
 
             elif self.char.isalpha() or self.char == '_':
-                # The curent character is a letter or `_`
+                # The current character is a letter or `_`
                 return self._id()
 
             elif self.char == ';':

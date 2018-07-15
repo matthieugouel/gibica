@@ -61,6 +61,11 @@ class Memory(object):
         """Handle the `!=` operator."""
         return self.stack != other.stack
 
+    def __iter__(self):
+        """Iterate on the memory."""
+        for key in self.stack.current.current:
+            yield key
+
     def append_frame(self, **kwargs):
         """Create a new frame."""
         self.stack.append(Frame([Scope(**kwargs)]))

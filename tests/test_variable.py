@@ -29,7 +29,7 @@ from gibica.exceptions import LexicalError, SementicError
 )
 def test_int_declaration(evaluate, memory, input, expected):
     """Test `let` type variable declaration."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -44,7 +44,7 @@ def test_int_declaration(evaluate, memory, input, expected):
 )
 def test_float_declaration(evaluate, memory, input, expected):
     """Test `let` type variable declaration."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -68,7 +68,7 @@ def test_float_declaration(evaluate, memory, input, expected):
 )
 def test_bool_declaration(evaluate, memory, input, expected):
     """Test `Bool` type variable declaration."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -82,7 +82,7 @@ def test_bool_declaration(evaluate, memory, input, expected):
 )
 def test_declaration_with_parenthesis(evaluate, memory, input, expected):
     """Test variable declaration with parenthesis."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -98,7 +98,7 @@ def test_declaration_with_parenthesis(evaluate, memory, input, expected):
 )
 def test_unary_declaration(evaluate, memory, input, expected):
     """Test unary variable declaration."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -112,7 +112,7 @@ def test_unary_declaration(evaluate, memory, input, expected):
 )
 def test_multiple_declarations(evaluate, memory, input, expected):
     """Test multiple variable declarations."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -128,7 +128,7 @@ def test_multiple_declarations(evaluate, memory, input, expected):
 )
 def test_mutable_declaration(evaluate, memory, input, expected):
     """Test mutable variable declaration."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -137,21 +137,21 @@ def test_mutable_declaration(evaluate, memory, input, expected):
 def test_invalid_variable_name(evaluate, input):
     """Test invalid variable name."""
     with pytest.raises(LexicalError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)
 
 
 @pytest.mark.parametrize('input', ['let a = 1; a = 2;'])
 def test_reassignment_of_immutable_variable(evaluate, input):
     """Test re-assignment of immutable variable."""
     with pytest.raises(SementicError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)
 
 
 @pytest.mark.parametrize('input', ['let a = 1; b = a + 1;', 'let a = 1; a = 1 + b;'])
 def test_assignment_before_declaration(evaluate, input):
     """Test assignment before declaration."""
     with pytest.raises(SementicError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)
 
 
 # Maybe it will be authorized in the future (shadowing)
@@ -159,4 +159,4 @@ def test_assignment_before_declaration(evaluate, input):
 def test_redefinition_of_variable(evaluate, input):
     """Test redefinition of a variable."""
     with pytest.raises(SementicError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)

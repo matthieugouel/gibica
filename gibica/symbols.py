@@ -1,9 +1,11 @@
 """Symbols module."""
 
 from collections import OrderedDict
-from gibica.ast import NodeVisitor, FunctionDeclaration
-from gibica.exceptions import SementicError
 
+from gibica import builtins
+from gibica.ast import NodeVisitor, AST, FunctionDeclaration
+from gibica.exceptions import SementicError
+from gibica.types import Function
 
 #
 # Symbol table
@@ -38,14 +40,14 @@ class VariableSymbol(Symbol):
 class FunctionSymbol(Symbol):
     """Container of a function symbol."""
 
-    def __init__(self, name, parameters):
-        """Initialization of `VariableSymbol` class."""
-        super().__init__(name)
-        self.parameters = parameters if parameters else []
+    def __init__(self, node):
+        """Initialization of `FunctionSymbol` class."""
+        super().__init__(node)
+        self._node = node
 
     def __str__(self):
-        """String representation of a variable symbol."""
-        return f"<func:{self.name}:{str(self.parameters)}>"
+        """String representation of a function symbol."""
+        return f"<func:{self._node}>"
 
     def __repr__(self):
         """String representation of the class."""
@@ -132,15 +134,24 @@ class SymbolTableBuilder(NodeVisitor):
         self.tree = tree
         self.table = SymbolTable()
 
+    def load_builtins(self):
+        """Load the built-in functions into the scope."""
+        for function_name in dir(builtins):
+            if not function_name.startswith('__'):
+                builtin_function = FunctionSymbol(
+                    Function(function_name, getattr(builtins, function_name))
+                )
+                self.table[function_name] = builtin_function
+
     def load_functions(self, tree):
-        """Load the functions in the scope."""
+        """Load the functions into the scope."""
         for child in tree.children:
             if isinstance(child, FunctionDeclaration):
                 if self.table[child.identifier.name] is not None:
                     raise SementicError(
                         f"Function `{child.identifier.name}` already declared."
                     )
-                self.table[child.identifier.name] = child
+                self.table[child.identifier.name] = FunctionSymbol(child)
 
     def visit_Program(self, node):
         """Vsitor for `Program` AST node."""
@@ -181,24 +192,29 @@ class SymbolTableBuilder(NodeVisitor):
         call = self.table[function_name]
         if call is None:
             raise SementicError(f"Function `{function_name}` not declared.")
+        else:
+            call = call._node
 
-        if len(call.parameters) != len(node.parameters):
-            raise SementicError("Mismatch between call and function parameters number.")
+        if isinstance(call, AST):
+            if len(call.parameters) != len(node.parameters):
+                raise SementicError(
+                    "Mismatch between call and function parameters number."
+                )
 
-        current_table = self.table.stack.current
-        functions_in_table = {
-            key: current_table[key]
-            for key in current_table
-            if isinstance(current_table[key], FunctionDeclaration)
-        }
+            current_table = self.table.stack.current
+            functions_in_table = {
+                key: current_table[key]
+                for key in current_table
+                if isinstance(current_table[key], FunctionSymbol)
+            }
 
-        if self.table.name == function_name:
-            # End the visit in case of recursion
-            return
+            if self.table.name == function_name:
+                # End the visit in case of recursion
+                return
 
-        self.table.append_table(function_name, **functions_in_table)
-        self.visit(call)
-        self.table.pop_table()
+            self.table.append_table(function_name, **functions_in_table)
+            self.visit(call)
+            self.table.pop_table()
 
     def visit_VariableDeclaration(self, node):
         """Visitor for `VariableDeclaration` AST node."""
@@ -289,5 +305,6 @@ class SymbolTableBuilder(NodeVisitor):
 
     def build(self):
         """Generic entrypoint of `SymbolTableBuilder` class."""
+        self.load_builtins()
         self.load_functions(self.tree)
         self.visit(self.tree)

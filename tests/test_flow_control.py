@@ -57,7 +57,7 @@ from gibica.types import Int
 )
 def test_condition_statement(evaluate, memory, input, expected):
     """Test condition statement."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -92,6 +92,6 @@ def test_condition_statement(evaluate, memory, input, expected):
 )
 def test_loop_statement(evaluate, memory, input, expected):
     """Test loop statement."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)

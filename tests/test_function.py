@@ -85,7 +85,7 @@ from gibica.exceptions import SementicError
 )
 def test_simple_function_call(evaluate, memory, input, expected):
     """Test simple function call."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -151,7 +151,7 @@ def test_simple_function_call(evaluate, memory, input, expected):
 )
 def test_return_in_compound_statement(evaluate, memory, input, expected):
     """Test simple function call."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -175,7 +175,7 @@ def test_return_in_compound_statement(evaluate, memory, input, expected):
 )
 def test_function_declared_after_call(evaluate, memory, input, expected):
     """Test function a function declared after its call."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
 
@@ -202,7 +202,23 @@ def test_function_declared_after_call(evaluate, memory, input, expected):
 )
 def test_recursive_function(evaluate, memory, input, expected):
     """Test a recursive function."""
-    instance = evaluate(input)
+    instance = evaluate(input, skip_builtins=True)
+
+    assert instance.memory == memory(expected)
+
+
+@pytest.mark.parametrize(
+    'input, expected',
+    [
+        (
+            "",
+            {'display': Function('display')},
+        )
+    ],
+)
+def test_only_builtins(evaluate, memory, input, expected):
+    """Test a recursive function."""
+    instance = evaluate(input, skip_builtins=False)
 
     assert instance.memory == memory(expected)
 
@@ -211,7 +227,7 @@ def test_recursive_function(evaluate, memory, input, expected):
 def test_function_not_declared(evaluate, input):
     """Test the call of an undeclared function."""
     with pytest.raises(SementicError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)
 
 
 @pytest.mark.parametrize(
@@ -235,7 +251,7 @@ def test_function_not_declared(evaluate, input):
 def test_function_already_declared(evaluate, input):
     """Test a function already declared."""
     with pytest.raises(SementicError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)
 
 
 @pytest.mark.parametrize(
@@ -255,7 +271,7 @@ def test_function_already_declared(evaluate, input):
 def test_function_same_parameters(evaluate, input):
     """Test a function which has two same parameters."""
     with pytest.raises(SementicError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)
 
 
 @pytest.mark.parametrize(
@@ -275,7 +291,7 @@ def test_function_same_parameters(evaluate, input):
 def test_redefinition_non_mutable_parameter(evaluate, input):
     """Test the redefinition of a non mutable parameter."""
     with pytest.raises(SementicError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)
 
 
 @pytest.mark.parametrize(
@@ -315,4 +331,4 @@ def test_redefinition_non_mutable_parameter(evaluate, input):
 def test_invalid_function_parameter(evaluate, input):
     """Test an invalid function parameter."""
     with pytest.raises(SementicError):
-        evaluate(input)
+        evaluate(input, skip_builtins=True)

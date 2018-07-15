@@ -2,34 +2,13 @@
 # Get the nth number of the fibonacci sequence.
 #
 
-def fibonacci(mut n) {
-
-    let result = 1;
+def fibonacci(n) {
 
     if n <= 1 {
-
-        result = n;
-
-    } else {
-
-        let sum = 0;
-        let prev = 1;
-
-
-        let i = 2;
-        while i < n {
-
-            sum = result + prev;
-            prev = result;
-            result = sum;
-
-            i = i + 1;
-
-        }
+        return 1;
     }
 
-    return result;
-
+    return fibonacci(n-2) + fibonacci(n-1);
 }
 
-let result = fibonacci(6);
+display(fibonacci(6));

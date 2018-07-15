@@ -1,8 +1,10 @@
 """Interpreter module."""
 
+from gibica import builtins
 from gibica.tokens import Name
 from gibica.ast import (
     NodeVisitor,
+    AST,
     FunctionDeclaration,
     IfStatement,
     WhileStatement,
@@ -27,8 +29,17 @@ class Interpreter(NodeVisitor):
         self.tree = tree
         self.memory = Memory()
 
+    def load_builtins(self):
+        """Load the built-in functions into the scope."""
+        for function_name in dir(builtins):
+            if not function_name.startswith('__'):
+                builtin_function = Function(
+                    function_name, getattr(builtins, function_name)
+                )
+                self.memory[function_name] = builtin_function
+
     def load_functions(self, tree):
-        """Load the functions in the scope."""
+        """Load the functions into the scope."""
         for child in tree.children:
             if isinstance(child, FunctionDeclaration):
                 function_name = child.identifier.name
@@ -70,15 +81,14 @@ class Interpreter(NodeVisitor):
     def visit_FunctionCall(self, node):
         """Visitor for `FunctionCall` AST node."""
         call = self.memory[node.identifier.name]._node
-        if call is not None:
+        args = [self.visit(parameter) for parameter in node.parameters]
 
-            args = [self.visit(parameter) for parameter in node.parameters]
-
-            curent_scope = self.memory.stack.current.current
+        if isinstance(call, AST):
+            current_scope = self.memory.stack.current.current
             memory_functions = {
-                key: curent_scope[key]
-                for key in curent_scope
-                if isinstance(curent_scope[key], Function)
+                key: current_scope[key]
+                for key in current_scope
+                if isinstance(current_scope[key], Function)
             }
 
             self.memory.append_frame()
@@ -92,6 +102,9 @@ class Interpreter(NodeVisitor):
 
             self.memory.pop_frame()
             return function_result
+        else:
+            # TODO Handle return value
+            call(*args)
 
     def visit_VariableDeclaration(self, node):
         """Visitor for `VariableDeclaration` AST node."""
@@ -202,5 +215,6 @@ class Interpreter(NodeVisitor):
 
     def interpret(self):
         """Generic entrypoint of `Interpreter` class."""
+        self.load_builtins()
         self.load_functions(self.tree)
         self.visit(self.tree)
