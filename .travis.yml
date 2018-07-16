@@ -1,26 +1,26 @@
 language: python
 python:
-    - "3.6"
+  - "3.6"
 
 stages:
-    - lint
-    - type
-    - test
+  - lint
+  - type
+  - test
 
 
 install:
-    - pip install pipenv
-    - make install-dev
+  - pip install pipenv
+  - make install-dev
 
 jobs:
-    include:
-        - stage: lint
-          script: make lint
-        - stage: type
-          script: make type
-        - stage: test
-          script: make test
+  include:
+    - stage: lint
+      script: make lint
+    - stage: type
+      script: make type
+    - stage: test
+      script: make test
 
 
 after_success:
-    pipenv run coveralls
+  pipenv run coveralls
