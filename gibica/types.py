@@ -6,9 +6,7 @@ from gibica.exceptions import ObjectError, TypeError
 
 def bind_type(python_value):
     """Return a Gibica type derived from a Python type."""
-    binding_table = {'bool': Bool,
-                     'int': Int,
-                     'float': Float}
+    binding_table = {'bool': Bool, 'int': Int, 'float': Float}
 
     if python_value is None:
         return NoneType()
@@ -139,7 +137,6 @@ class AbstractNumber(AbstractType, ABC):
 
 
 class NoneType(AbstractType):
-
     def __init__(self):
         """Initialization of `NoneType` class."""
         pass

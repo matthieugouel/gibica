@@ -1,6 +1,6 @@
 """Lexer module."""
 
-from gibica.tokens import Token, Name, RESERVED_KEYWORDS
+from gibica.tokens import Token, Nature, RESERVED_KEYWORDS
 from gibica.exceptions import LexicalError
 
 
@@ -59,10 +59,10 @@ class Lexer(object):
                 number += self.char
                 self.advance()
 
-            token = Token(Name.FLOAT_NUMBER, number)
+            token = Token(Nature.FLOAT_NUMBER, number)
 
         else:
-            token = Token(Name.INT_NUMBER, number)
+            token = Token(Nature.INT_NUMBER, number)
 
         return token
 
@@ -73,7 +73,7 @@ class Lexer(object):
             result += self.char
             self.advance()
 
-        token = RESERVED_KEYWORDS.get(result, Token(Name.ID, result))
+        token = RESERVED_KEYWORDS.get(result, Token(Nature.ID, result))
         return token
 
     def next_token(self):
@@ -98,12 +98,12 @@ class Lexer(object):
             elif self.char == ';':
                 # The current character is `;`
                 self.advance()
-                return Token(Name.SEMI, ';')
+                return Token(Nature.SEMI, ';')
 
             elif self.char == ',':
                 # The current character is `,`
                 self.advance()
-                return Token(Name.COMMA, ';')
+                return Token(Nature.COMMA, ';')
 
             elif self.char.isdigit():
                 # The current character is a number
@@ -113,90 +113,90 @@ class Lexer(object):
                 # The current character is `==`
                 self.advance()
                 self.advance()
-                return Token(Name.EQ, '==')
+                return Token(Nature.EQ, '==')
 
             elif self.char == '!' and self.peek() == '=':
                 # The current character is `!=`
                 self.advance()
                 self.advance()
-                return Token(Name.NE, '!=')
+                return Token(Nature.NE, '!=')
 
             elif self.char == '<' and self.peek() == '=':
                 # The current character is `<=`
                 self.advance()
                 self.advance()
-                return Token(Name.LE, '<=')
+                return Token(Nature.LE, '<=')
 
             elif self.char == '>' and self.peek() == '=':
                 # The current character is `>=`
                 self.advance()
                 self.advance()
-                return Token(Name.GE, '>=')
+                return Token(Nature.GE, '>=')
 
             elif self.char == '<':
                 # The current character is `<`
                 self.advance()
-                return Token(Name.LT, '<')
+                return Token(Nature.LT, '<')
 
             elif self.char == '>':
                 # The current character is `>`
                 self.advance()
-                return Token(Name.GT, '>')
+                return Token(Nature.GT, '>')
 
             elif self.char == '=':
                 # The current character is `=`
                 self.advance()
-                return Token(Name.ASSIGN, '=')
+                return Token(Nature.ASSIGN, '=')
 
             elif self.char == '+':
                 # The current character is `+`
                 self.advance()
-                return Token(Name.PLUS, '+')
+                return Token(Nature.PLUS, '+')
 
             elif self.char == '-':
                 # The current character is `-`
                 self.advance()
-                return Token(Name.MINUS, '-')
+                return Token(Nature.MINUS, '-')
 
             elif self.char == '*':
                 # The current character is `*`
                 self.advance()
-                return Token(Name.MUL, '*')
+                return Token(Nature.MUL, '*')
 
             elif self.char == '/' and self.peek() == '/':
                 # The current character is `//`
                 self.advance()
                 self.advance()
-                return Token(Name.INT_DIV, '//')
+                return Token(Nature.INT_DIV, '//')
 
             elif self.char == '/':
                 # The current character is `/`
                 self.advance()
-                return Token(Name.DIV, '/')
+                return Token(Nature.DIV, '/')
 
             elif self.char == '(':
                 # The current character is `(`
                 self.advance()
-                return Token(Name.LPAREN, '(')
+                return Token(Nature.LPAREN, '(')
 
             elif self.char == ')':
                 # The current character is `)`
                 self.advance()
-                return Token(Name.RPAREN, ')')
+                return Token(Nature.RPAREN, ')')
 
             elif self.char == '{':
                 # The current character is `{`
                 self.advance()
-                return Token(Name.LBRACKET, '{')
+                return Token(Nature.LBRACKET, '{')
 
             elif self.char == '}':
                 # The current character is `}`
                 self.advance()
-                return Token(Name.RBRACKET, '}')
+                return Token(Nature.RBRACKET, '}')
 
             else:
                 # The current character is unknown
                 raise LexicalError(f"Invalid character `{self.char}`.")
 
         # End of raw input
-        return Token(Name.EOF, None)
+        return Token(Nature.EOF, None)

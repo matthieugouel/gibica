@@ -1,8 +1,8 @@
 """Tokens module."""
 
 
-class Name(object):
-    """Enumeration of token names."""
+class Nature(object):
+    """Enumeration of token natures."""
 
     ID = 'ID'
 
@@ -56,14 +56,14 @@ class Name(object):
 class Token(object):
     """Token container"""
 
-    def __init__(self, name, value):
+    def __init__(self, nature, value):
         """Initialization of `Token` class."""
-        self.name = name
+        self.nature = nature
         self.value = value
 
     def __str__(self):
         """String representation of a token."""
-        return f"Token({self.name}, {self.value})"
+        return f"Token({self.nature}, {self.value})"
 
     def __repr__(self):
         """String representation of the class."""
@@ -72,16 +72,16 @@ class Token(object):
 
 # List of reserved keywords
 RESERVED_KEYWORDS: dict = {
-    'let': Token(Name.LET, 'let'),
-    'mut': Token(Name.MUT, 'mut'),
-    'true': Token(Name.TRUE, 'true'),
-    'false': Token(Name.FALSE, 'false'),
-    'or': Token(Name.OR, 'or'),
-    'and': Token(Name.AND, 'and'),
-    'not': Token(Name.NOT, 'not'),
-    'if': Token(Name.IF, 'if'),
-    'else': Token(Name.ELSE, 'else'),
-    'while': Token(Name.WHILE, 'while'),
-    'def': Token(Name.DEF, 'def'),
-    'return': Token(Name.RETURN, 'return'),
+    'let': Token(Nature.LET, 'let'),
+    'mut': Token(Nature.MUT, 'mut'),
+    'true': Token(Nature.TRUE, 'true'),
+    'false': Token(Nature.FALSE, 'false'),
+    'or': Token(Nature.OR, 'or'),
+    'and': Token(Nature.AND, 'and'),
+    'not': Token(Nature.NOT, 'not'),
+    'if': Token(Nature.IF, 'if'),
+    'else': Token(Nature.ELSE, 'else'),
+    'while': Token(Nature.WHILE, 'while'),
+    'def': Token(Nature.DEF, 'def'),
+    'return': Token(Nature.RETURN, 'return'),
 }

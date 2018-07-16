@@ -1,6 +1,6 @@
 """Parser module."""
 
-from gibica.tokens import Name
+from gibica.tokens import Nature
 from gibica.exceptions import SyntaxError
 from gibica.ast import (
     Program,
@@ -39,7 +39,7 @@ class Parser(object):
 
     def _process(self, name):
         """Process the current token."""
-        if self.token.name == name:
+        if self.token.nature == name:
             self.token = self.lexer.next_token()
         else:
             self._error()
@@ -54,7 +54,7 @@ class Parser(object):
         """
         root = Program()
 
-        while self.token.name != Name.EOF:
+        while self.token.nature != Nature.EOF:
             root.children.append(self.statement())
 
         return root
@@ -68,17 +68,17 @@ class Parser(object):
                  | while_statement
                  | jump_statement
         """
-        if self.token.name == Name.DEF:
+        if self.token.nature == Nature.DEF:
             node = self.function_declaration()
-        elif self.token.name == Name.LET:
+        elif self.token.nature == Nature.LET:
             node = self.variable_declaration()
-        elif self.token.name in (Name.MUT, Name.ID):
+        elif self.token.nature in (Nature.MUT, Nature.ID):
             node = self.expression_statement()
-        elif self.token.name == Name.IF:
+        elif self.token.nature == Nature.IF:
             node = self.if_statement()
-        elif self.token.name == Name.WHILE:
+        elif self.token.nature == Nature.WHILE:
             node = self.while_statement()
-        elif self.token.name == Name.RETURN:
+        elif self.token.nature == Nature.RETURN:
             node = self.jump_statement()
         else:
             node = self._error()
@@ -89,10 +89,10 @@ class Parser(object):
         """
         function_declaration: DEF ID parameters function_body
         """
-        self._process(Name.DEF)
+        self._process(Nature.DEF)
 
         identifier = Identifier(self.token.value)
-        self._process(Name.ID)
+        self._process(Nature.ID)
 
         parameters = self.parameters()
         return FunctionDeclaration(
@@ -104,16 +104,16 @@ class Parser(object):
         parameters: LPAREN logical_or_expr (COMMA logical_or_expr)* RPAREN
         """
         nodes = []
-        self._process(Name.LPAREN)
+        self._process(Nature.LPAREN)
 
-        while self.token.name != Name.RPAREN:
+        while self.token.nature != Nature.RPAREN:
 
             nodes.append(Parameters(variable=self.logical_or_expr()))
 
-            if self.token.name == Name.COMMA:
-                self._process(Name.COMMA)
+            if self.token.nature == Nature.COMMA:
+                self._process(Nature.COMMA)
 
-        self._process(Name.RPAREN)
+        self._process(Nature.RPAREN)
         return nodes
 
     def function_body(self):
@@ -121,21 +121,21 @@ class Parser(object):
         function_body: LBRACKET (statement)* RBRACKET
         """
         root = FunctionBody()
-        self._process(Name.LBRACKET)
+        self._process(Nature.LBRACKET)
 
-        while self.token.name != Name.RBRACKET:
+        while self.token.nature != Nature.RBRACKET:
             root.children.append(self.statement())
 
-        self._process(Name.RBRACKET)
+        self._process(Nature.RBRACKET)
         return root
 
     def variable_declaration(self):
         """
         variable_declaration: LET assignment SEMI
         """
-        self._process(Name.LET)
+        self._process(Nature.LET)
         node = VariableDeclaration(assignment=self.assignment())
-        self._process(Name.SEMI)
+        self._process(Nature.SEMI)
         return node
 
     def expression_statement(self):
@@ -143,7 +143,7 @@ class Parser(object):
         expression_statement: assignment SEMI
         """
         node = self.assignment()
-        self._process(Name.SEMI)
+        self._process(Nature.SEMI)
         return node
 
     def assignment(self):
@@ -151,9 +151,9 @@ class Parser(object):
         assignment: logical_or_expr [ASSIGN logical_or_expr]
         """
         node = self.logical_or_expr()
-        if self.token.name == Name.ASSIGN:
+        if self.token.nature == Nature.ASSIGN:
             token = self.token
-            self._process(Name.ASSIGN)
+            self._process(Nature.ASSIGN)
             right = self.logical_or_expr()
             return Assignment(left=node, op=token, right=right)
         else:
@@ -165,17 +165,17 @@ class Parser(object):
                     (ELSE IF local_or_expr compound)*
                     [ELSE compound]
         """
-        self._process(Name.IF)
+        self._process(Nature.IF)
         if_condition = self.logical_or_expr()
         if_body = self.compound()
 
         else_compound = None
         else_if_compounds = []
-        while self.token.name == Name.ELSE:
-            self._process(Name.ELSE)
+        while self.token.nature == Nature.ELSE:
+            self._process(Nature.ELSE)
 
-            if self.token.name == Name.IF:
-                self._process(Name.IF)
+            if self.token.nature == Nature.IF:
+                self._process(Nature.IF)
                 else_if_compounds.append((self.logical_or_expr(), self.compound()))
             else:
                 else_compound = (None, self.compound())
@@ -190,7 +190,7 @@ class Parser(object):
         """
         while_statement: WHILE local_or_expr compound
         """
-        self._process(Name.WHILE)
+        self._process(Nature.WHILE)
         condition = self.logical_or_expr()
         compound = self.compound()
         return WhileStatement(condition=condition, compound=compound)
@@ -200,19 +200,19 @@ class Parser(object):
         compound: LBRACKET (statement)* RBRACKET
         """
         root = Compound()
-        self._process(Name.LBRACKET)
+        self._process(Nature.LBRACKET)
 
-        while self.token.name != Name.RBRACKET:
+        while self.token.nature != Nature.RBRACKET:
             root.children.append(self.statement())
 
-        self._process(Name.RBRACKET)
+        self._process(Nature.RBRACKET)
         return root
 
     def jump_statement(self):
         """
         jump_statement: RETURN expression_statement
         """
-        self._process(Name.RETURN)
+        self._process(Nature.RETURN)
         return ReturnStatement(expression=self.expression_statement())
 
     def logical_or_expr(self):
@@ -221,9 +221,9 @@ class Parser(object):
         """
         node = self.logical_and_expr()
 
-        while self.token.name == Name.OR:
+        while self.token.nature == Nature.OR:
             token = self.token
-            self._process(Name.OR)
+            self._process(Nature.OR)
 
             node = BinaryOperation(left=node, op=token, right=self.logical_and_expr())
 
@@ -235,9 +235,9 @@ class Parser(object):
         """
         node = self.logical_not_expr()
 
-        while self.token.name == Name.AND:
+        while self.token.nature == Nature.AND:
             token = self.token
-            self._process(Name.AND)
+            self._process(Nature.AND)
 
             node = BinaryOperation(left=node, op=token, right=self.logical_not_expr())
 
@@ -248,9 +248,9 @@ class Parser(object):
         logical_not_expr: NOT logical_not_expr
                         | comparison
         """
-        if self.token.name == Name.NOT:
+        if self.token.nature == Nature.NOT:
             token = self.token
-            self._process(Name.NOT)
+            self._process(Nature.NOT)
             return UnaryOperation(op=token, right=self.logical_not_expr())
         else:
             return self.comparison()
@@ -261,20 +261,27 @@ class Parser(object):
         """
         node = self.expr()
 
-        while self.token.name in (Name.EQ, Name.NE, Name.LE, Name.GE, Name.LT, Name.GT):
+        while self.token.nature in (
+            Nature.EQ,
+            Nature.NE,
+            Nature.LE,
+            Nature.GE,
+            Nature.LT,
+            Nature.GT,
+        ):
             token = self.token
-            if token.name == Name.EQ:
-                self._process(Name.EQ)
-            elif token.name == Name.NE:
-                self._process(Name.NE)
-            elif token.name == Name.LE:
-                self._process(Name.LE)
-            elif token.name == Name.GE:
-                self._process(Name.GE)
-            elif token.name == Name.LT:
-                self._process(Name.LT)
-            elif token.name == Name.GT:
-                self._process(Name.GT)
+            if token.nature == Nature.EQ:
+                self._process(Nature.EQ)
+            elif token.nature == Nature.NE:
+                self._process(Nature.NE)
+            elif token.nature == Nature.LE:
+                self._process(Nature.LE)
+            elif token.nature == Nature.GE:
+                self._process(Nature.GE)
+            elif token.nature == Nature.LT:
+                self._process(Nature.LT)
+            elif token.nature == Nature.GT:
+                self._process(Nature.GT)
             else:
                 self.error()
 
@@ -288,12 +295,12 @@ class Parser(object):
         """
         node = self.term()
 
-        while self.token.name in (Name.PLUS, Name.MINUS):
+        while self.token.nature in (Nature.PLUS, Nature.MINUS):
             token = self.token
-            if token.name == Name.PLUS:
-                self._process(Name.PLUS)
-            elif token.name == Name.MINUS:
-                self._process(Name.MINUS)
+            if token.nature == Nature.PLUS:
+                self._process(Nature.PLUS)
+            elif token.nature == Nature.MINUS:
+                self._process(Nature.MINUS)
             else:
                 self._error()
 
@@ -307,14 +314,14 @@ class Parser(object):
         """
         node = self.atom()
 
-        while self.token.name in (Name.MUL, Name.DIV, Name.INT_DIV):
+        while self.token.nature in (Nature.MUL, Nature.DIV, Nature.INT_DIV):
             token = self.token
-            if token.name == Name.MUL:
-                self._process(Name.MUL)
-            elif token.name == Name.DIV:
-                self._process(Name.DIV)
-            elif token.name == Name.INT_DIV:
-                self._process(Name.INT_DIV)
+            if token.nature == Nature.MUL:
+                self._process(Nature.MUL)
+            elif token.nature == Nature.DIV:
+                self._process(Nature.DIV)
+            elif token.nature == Nature.INT_DIV:
+                self._process(Nature.INT_DIV)
             else:
                 self._error()
 
@@ -327,14 +334,14 @@ class Parser(object):
         call: [MUT] ID [LPAREN parameters RPAREN]
         """
         is_mutable = False
-        if self.token.name == Name.MUT:
+        if self.token.nature == Nature.MUT:
             is_mutable = True
-            self._process(Name.MUT)
+            self._process(Nature.MUT)
 
         identifier = Identifier(name=self.token.value)
-        self._process(Name.ID)
+        self._process(Nature.ID)
 
-        if self.token.name == Name.LPAREN:
+        if self.token.nature == Nature.LPAREN:
             return FunctionCall(identifier=identifier, parameters=self.parameters())
         else:
             return Variable(identifier=identifier, is_mutable=is_mutable)
@@ -351,30 +358,30 @@ class Parser(object):
             | FALSE
         """
         token = self.token
-        if token.name == Name.PLUS:
-            self._process(Name.PLUS)
+        if token.nature == Nature.PLUS:
+            self._process(Nature.PLUS)
             return UnaryOperation(op=token, right=self.atom())
-        elif token.name == Name.MINUS:
-            self._process(Name.MINUS)
+        elif token.nature == Nature.MINUS:
+            self._process(Nature.MINUS)
             return UnaryOperation(op=token, right=self.atom())
-        elif token.name in (Name.MUT, Name.ID):
+        elif token.nature in (Nature.MUT, Nature.ID):
             return self.call()
-        elif token.name == Name.INT_NUMBER:
-            self._process(Name.INT_NUMBER)
+        elif token.nature == Nature.INT_NUMBER:
+            self._process(Nature.INT_NUMBER)
             return Integer(token)
-        elif token.name == Name.FLOAT_NUMBER:
-            self._process(Name.FLOAT_NUMBER)
+        elif token.nature == Nature.FLOAT_NUMBER:
+            self._process(Nature.FLOAT_NUMBER)
             return FloatingPoint(token)
-        elif token.name == Name.LPAREN:
-            self._process(Name.LPAREN)
+        elif token.nature == Nature.LPAREN:
+            self._process(Nature.LPAREN)
             node = self.logical_or_expr()
-            self._process(Name.RPAREN)
+            self._process(Nature.RPAREN)
             return node
-        elif token.name == Name.TRUE:
-            self._process(Name.TRUE)
+        elif token.nature == Nature.TRUE:
+            self._process(Nature.TRUE)
             return Boolean(token)
-        elif token.name == Name.FALSE:
-            self._process(Name.FALSE)
+        elif token.nature == Nature.FALSE:
+            self._process(Nature.FALSE)
             return Boolean(token)
         else:
             self._error()
@@ -382,7 +389,7 @@ class Parser(object):
     def parse(self):
         """Generic entrypoint of the `Parser` class."""
         node = self.program()
-        if self.token.name != Name.EOF:
+        if self.token.nature != Nature.EOF:
             self._error()
 
         return node

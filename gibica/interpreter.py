@@ -1,7 +1,7 @@
 """Interpreter module."""
 
 from gibica import builtins
-from gibica.tokens import Name
+from gibica.tokens import Nature
 from gibica.ast import (
     NodeVisitor,
     AST,
@@ -157,40 +157,40 @@ class Interpreter(NodeVisitor):
 
     def visit_BinaryOperation(self, node):
         """Visitor for `BinaryOperation` AST node."""
-        if node.op.name == Name.PLUS:
+        if node.op.nature == Nature.PLUS:
             return self.visit(node.left) + self.visit(node.right)
-        elif node.op.name == Name.MINUS:
+        elif node.op.nature == Nature.MINUS:
             return self.visit(node.left) - self.visit(node.right)
-        elif node.op.name == Name.MUL:
+        elif node.op.nature == Nature.MUL:
             return self.visit(node.left) * self.visit(node.right)
-        elif node.op.name == Name.DIV:
+        elif node.op.nature == Nature.DIV:
             return self.visit(node.left) / self.visit(node.right)
-        elif node.op.name == Name.INT_DIV:
+        elif node.op.nature == Nature.INT_DIV:
             return self.visit(node.left) // self.visit(node.right)
-        elif node.op.name == Name.EQ:
+        elif node.op.nature == Nature.EQ:
             return self.visit(node.left) == self.visit(node.right)
-        elif node.op.name == Name.NE:
+        elif node.op.nature == Nature.NE:
             return self.visit(node.left) != self.visit(node.right)
-        elif node.op.name == Name.LE:
+        elif node.op.nature == Nature.LE:
             return self.visit(node.left) <= self.visit(node.right)
-        elif node.op.name == Name.GE:
+        elif node.op.nature == Nature.GE:
             return self.visit(node.left) >= self.visit(node.right)
-        elif node.op.name == Name.LT:
+        elif node.op.nature == Nature.LT:
             return self.visit(node.left) < self.visit(node.right)
-        elif node.op.name == Name.GT:
+        elif node.op.nature == Nature.GT:
             return self.visit(node.left) > self.visit(node.right)
-        elif node.op.name == Name.OR:
+        elif node.op.nature == Nature.OR:
             return self.visit(node.left) or self.visit(node.right)
-        elif node.op.name == Name.AND:
+        elif node.op.nature == Nature.AND:
             return self.visit(node.left) and self.visit(node.right)
 
     def visit_UnaryOperation(self, node):
         """Visitor for `UnaryOperation` AST node."""
-        if node.op.name == Name.PLUS:
+        if node.op.nature == Nature.PLUS:
             return +self.visit(node.right)
-        elif node.op.name == Name.MINUS:
+        elif node.op.nature == Nature.MINUS:
             return -self.visit(node.right)
-        elif node.op.name == Name.NOT:
+        elif node.op.nature == Nature.NOT:
             return Bool(not self.visit(node.right))
 
     def visit_Identifier(self, node):
