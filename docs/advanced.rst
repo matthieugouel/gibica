@@ -1,6 +1,9 @@
 ==================
-Grammar
+Advanced usage
 ==================
+
+Grammar
+--------
 
 This is the current grammar of the Gibica language.
 
