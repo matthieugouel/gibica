@@ -19,6 +19,6 @@ type:
 	@$(ENVRUN) mypy gibica
 
 test:
-	@$(ENVRUN) py.test --cov=gibica --cov-fail-under=80
+	@$(ENVRUN) py.test
 
 .PHONY: install install-dev shell format lint mypy test
