@@ -1,4 +1,4 @@
-"""Test: flow control."""
+"""Test: control flow."""
 
 import pytest
 
