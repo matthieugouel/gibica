@@ -38,6 +38,8 @@ For more information, you can display the help.
 gibica --help
 ```
 
+Feel free to checkout the documentation [here](http://gibica.readthedocs.io/en/latest/?badge=latest) !
+
 ## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md) for more information about how to contribute to this project.
