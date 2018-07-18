@@ -72,7 +72,7 @@ To rebuild the configuration, you can use the makefile (or the make.bat for Wind
 ```
 cd docs/
 make clean
-sphinx-apidoc -F -P -o . ../gibica
+sphinx-apidoc -M -f -o . ../gibica
 make html
 ```
 

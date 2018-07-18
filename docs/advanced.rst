@@ -63,3 +63,8 @@ This is the current grammar of the Gibica language.
         | LPAREN logical_or_expr RPAREN
         | TRUE
         | FALSE
+
+Package content
+---------------
+
+.. include:: modules.rst
