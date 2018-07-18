@@ -207,7 +207,7 @@ def test_recursive_function(evaluate, memory, input, expected):
     assert instance.memory == memory(expected)
 
 
-@pytest.mark.parametrize('input, expected', [("", {'display': Function('display')})])
+@pytest.mark.parametrize('input, expected', [("", {'print': Function('print')})])
 def test_only_builtins(evaluate, memory, input, expected):
     """Test a recursive function."""
     instance = evaluate(input, skip_builtins=False)
@@ -220,7 +220,7 @@ def test_only_builtins(evaluate, memory, input, expected):
     [
         (
             """
-        let result = display(1);
+        let result = print(1);
         """,
             {'result': NoneType()},
         )

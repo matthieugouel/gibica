@@ -1,6 +1,6 @@
 """Built-in functions module."""
 
 
-def display(*args):
+def _print(*args):
     """Print an object in the stdout."""
     return print(*args)

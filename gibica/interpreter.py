@@ -22,7 +22,7 @@ from itertools import islice
 
 
 class Interpreter(NodeVisitor):
-    """Evaluation of raw input."""
+    """Evaluation of the parsed input."""
 
     def __init__(self, tree):
         """Initialization of `Interpreter` class."""
@@ -31,11 +31,15 @@ class Interpreter(NodeVisitor):
 
     def load_builtins(self):
         """Load the built-in functions into the scope."""
-        for function_name in dir(builtins):
-            if not function_name.startswith('__'):
-                builtin_function = Function(
-                    function_name, getattr(builtins, function_name)
-                )
+        for raw_name in dir(builtins):
+            if not raw_name.startswith('__'):
+
+                if raw_name.startswith('_'):
+                    function_name = raw_name[1:]
+                else:
+                    function_name = raw_name
+
+                builtin_function = Function(function_name, getattr(builtins, raw_name))
                 self.memory[function_name] = builtin_function
 
     def load_functions(self, tree):

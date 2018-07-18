@@ -29,7 +29,7 @@ def test_cli_with_display(runner):
 
     with runner.isolated_filesystem():
         with open('script.gbc', 'w') as f:
-            f.write('display(1);')
+            f.write('print(1);')
 
         result = runner.invoke(main, ['script.gbc'])
         assert result.exit_code == 0
@@ -46,6 +46,6 @@ def test_cli_debug(runner):
         result = runner.invoke(main, ['script.gbc', '--debug'])
         assert result.exit_code == 0
         assert result.output == (
-            "SYMBOL TABLE: [[<func:display>, <a>, <b:mut>]]\n"
-            "GLOBAL MEMORY: [[{'display': display, 'a': 2, 'b': 3}]]\n"
+            "SYMBOL TABLE: [[<func:print>, <a>, <b:mut>]]\n"
+            "GLOBAL MEMORY: [[{'print': print, 'a': 2, 'b': 3}]]\n"
         )

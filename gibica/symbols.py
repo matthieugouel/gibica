@@ -136,10 +136,16 @@ class SymbolTableBuilder(NodeVisitor):
 
     def load_builtins(self):
         """Load the built-in functions into the scope."""
-        for function_name in dir(builtins):
-            if not function_name.startswith('__'):
+        for raw_name in dir(builtins):
+            if not raw_name.startswith('__'):
+
+                if raw_name.startswith('_'):
+                    function_name = raw_name[1:]
+                else:
+                    function_name = raw_name
+
                 builtin_function = FunctionSymbol(
-                    Function(function_name, getattr(builtins, function_name))
+                    Function(function_name, getattr(builtins, raw_name))
                 )
                 self.table[function_name] = builtin_function
 
