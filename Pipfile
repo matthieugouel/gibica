@@ -9,8 +9,6 @@ gibica = {editable = true, path = "."}
 
 [dev-packages]
 "flake8" = "*"
-tox = "*"
-tox-pipenv = "*"
 pytest = "*"
 pytest-cov = "*"
 coverage = "*"

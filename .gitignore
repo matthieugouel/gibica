@@ -73,6 +73,3 @@ docs/_build/
 
 # Gibica test file
 examples/test.gbc
-
-# Others
-debug/

@@ -29,12 +29,6 @@ You can check the syntax using flake8 :
 make lint
 ```
 
-You can also use tox :
-
-```
-tox -e lint
-```
-
 ## Type checking
 
 If you used annotations to do static Python type checking with mypy :
@@ -43,37 +37,22 @@ If you used annotations to do static Python type checking with mypy :
 make type
 ```
 
-You can also use tox :
-
-```
-tox -e type
-```
-
 ## Test coverage
 
 You can run the coverage with the following command :
 
 ```
-make test
-```
-
-You can also use tox :
-
-```
-tox -e test
+make tests
 ```
 
 ## Documentation
 
 The documentation of the project can be found under the directory `./doc/_build/html`.
 
-To rebuild the configuration, you can use the makefile (or the make.bat for Windows users) :
+To rebuild the configuration, you can use the following command :
 
 ```
-cd docs/
-make clean
-sphinx-apidoc -M -f -o . ../gibica
-make html
+make docs
 ```
 
 ## Version bumping
