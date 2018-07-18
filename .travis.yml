@@ -5,7 +5,7 @@ python:
 stages:
   - lint
   - type
-  - test
+  - tests
 
 
 install:
@@ -18,8 +18,8 @@ jobs:
       script: make lint
     - stage: type
       script: make type
-    - stage: test
-      script: make test
+    - stage: tests
+      script: make tests
 
 
 after_success:

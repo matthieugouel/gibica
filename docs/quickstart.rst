@@ -3,7 +3,7 @@ Getting Started
 ==================
 
 Installation
---------
+------------
 
 Gibica is still a very young project. Hence, It's still on an early stage of development and doesn't have a proper release on Pypi.
 So, in order to install it, you must do it like a boss with the sources. Don't worry it's easy !
@@ -30,7 +30,7 @@ Finally enter in the virual environment.
 That's it ! Now you have everything to build and run your Gibica programs.
 
 Hello, numbers !
---------
+----------------
 
 For now Gibica doesn't understand strings so we cannot actually write the traditionnal "Hello, world!" program.
 Nonetheless, we can write a first piece of code that display a number. Pretty much the same right ?!

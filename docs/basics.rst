@@ -21,7 +21,7 @@ Overview
     display(1); # Here is an other.
 
 Variable and mutability
---------
+-----------------------
 
 Gibica uses the dynamic type feature from Python so you don't have to declare explicitly the type of your variables.
 Let's declare a first variable with an integer number.
@@ -63,7 +63,7 @@ There is currently three implicit types in the Gibica implementation.
 
 
 Control flow
---------
+------------
 
 For now Gibica provides two types of control flows.
 
@@ -93,7 +93,7 @@ For now Gibica provides two types of control flows.
     }
 
 Functions
---------
+---------
 
 Here is a basic example of a function declaration.
 
