@@ -1,10 +1,10 @@
 ENVRUN = pipenv run
 
 install:
-	@pipenv install
+	@pipenv install --three
 
 install-dev:
-	@pipenv install --dev -e .
+	@pipenv install --three --dev -e .
 
 shell:
 	@pipenv shell
