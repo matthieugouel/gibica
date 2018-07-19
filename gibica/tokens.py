@@ -1,7 +1,9 @@
 """Tokens module."""
 
+from enum import Enum
 
-class Nature(object):
+
+class Nature(Enum):
     """Enumeration of token natures."""
 
     ID = 'ID'

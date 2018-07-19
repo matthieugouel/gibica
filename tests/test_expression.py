@@ -83,6 +83,13 @@ def test_with_comments(evaluate, memory, input, expected):
     assert instance.memory == memory(expected)
 
 
+@pytest.mark.parametrize('input', ['let a = 1/0;', 'let a = 1//0;'])
+def test_zero_division_error(evaluate, input):
+    """Test a division by zero."""
+    with pytest.raises(TypeError):
+        evaluate(input, skip_builtins=True)
+
+
 @pytest.mark.parametrize('input', ['2+2;', 'a 2;', '2 1;', '2 a;', 'a=;', 'a=toto'])
 def test_invalid_statements(evaluate, input):
     """Test invalid statements."""

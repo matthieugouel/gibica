@@ -89,11 +89,17 @@ class AbstractNumber(AbstractType, ABC):
 
     def __truediv__(self, other):
         """Handle the `/` operator."""
-        return Float(self.value / other.value)
+        try:
+            return Float(self.value / other.value)
+        except ZeroDivisionError:
+            raise TypeError('Zero division error.')
 
     def __floordiv__(self, other):
         """Handle the `//` operator."""
-        return self._handle_type(other)(self.value // other.value)
+        try:
+            return self._handle_type(other)(self.value // other.value)
+        except ZeroDivisionError:
+            raise TypeError('Zero division error.')
 
     def __pos__(self):
         """Handle the unary `+` operator."""
