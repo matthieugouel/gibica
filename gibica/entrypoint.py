@@ -4,7 +4,7 @@ import click
 
 from gibica.lexer import Lexer
 from gibica.parser import Parser
-from gibica.symbols import SymbolTableBuilder
+from gibica.sementic import SymbolTableBuilder
 from gibica.interpreter import Interpreter
 
 

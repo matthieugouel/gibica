@@ -18,7 +18,6 @@ bumpversion = "*"
 black = "*"
 Sphinx = "*"
 sphinx_rtd_theme = "*"
-gibica = {editable = true, path = "."}
 
 [pipenv]
 allow_prereleases = true

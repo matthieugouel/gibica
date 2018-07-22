@@ -87,7 +87,7 @@ class Parser(object):
 
     def function_declaration(self):
         """
-        function_declaration: DEF ID parameters function_body
+        function_declaration: 'def' ID parameters compound
         """
         self._process(Nature.DEF)
 
@@ -101,7 +101,7 @@ class Parser(object):
 
     def parameters(self):
         """
-        parameters: LPAREN logical_or_expr (COMMA logical_or_expr)* RPAREN
+        parameters: '(' logical_or_expr (',' logical_or_expr)* ')'
         """
         nodes = []
         self._process(Nature.LPAREN)
@@ -118,7 +118,7 @@ class Parser(object):
 
     def function_body(self):
         """
-        function_body: LBRACKET (statement)* RBRACKET
+        function_body: '{' (statement)* '}'
         """
         root = FunctionBody()
         self._process(Nature.LBRACKET)
@@ -131,7 +131,7 @@ class Parser(object):
 
     def variable_declaration(self):
         """
-        variable_declaration: LET assignment SEMI
+        variable_declaration: 'let' assignment ';'
         """
         self._process(Nature.LET)
         node = VariableDeclaration(assignment=self.assignment())
@@ -140,7 +140,7 @@ class Parser(object):
 
     def expression_statement(self):
         """
-        expression_statement: assignment SEMI
+        expression_statement: assignment ';'
         """
         node = self.assignment()
         self._process(Nature.SEMI)
@@ -148,7 +148,7 @@ class Parser(object):
 
     def assignment(self):
         """
-        assignment: logical_or_expr [ASSIGN logical_or_expr]
+        assignment: logical_or_expr ['=' logical_or_expr]
         """
         node = self.logical_or_expr()
         if self.token.nature == Nature.ASSIGN:
@@ -161,9 +161,9 @@ class Parser(object):
 
     def if_statement(self):
         """
-        if_statement: IF logical_or_expr compound
-                    (ELSE IF local_or_expr compound)*
-                    [ELSE compound]
+        if_statement: 'if' logical_or_expr compound
+                    ('else' 'if' local_or_expr compound)*
+                    ['else' compound]
         """
         self._process(Nature.IF)
         if_condition = self.logical_or_expr()
@@ -188,7 +188,7 @@ class Parser(object):
 
     def while_statement(self):
         """
-        while_statement: WHILE local_or_expr compound
+        while_statement: 'while' local_or_expr compound
         """
         self._process(Nature.WHILE)
         condition = self.logical_or_expr()
@@ -197,7 +197,7 @@ class Parser(object):
 
     def compound(self):
         """
-        compound: LBRACKET (statement)* RBRACKET
+        compound: '{' (statement)* '}'
         """
         root = Compound()
         self._process(Nature.LBRACKET)
@@ -210,14 +210,14 @@ class Parser(object):
 
     def jump_statement(self):
         """
-        jump_statement: RETURN expression_statement
+        jump_statement: 'return' expression_statement
         """
         self._process(Nature.RETURN)
         return ReturnStatement(expression=self.expression_statement())
 
     def logical_or_expr(self):
         """
-        logical_or_expr: logical_and_expr (OR logical_and_expr)*
+        logical_or_expr: logical_and_expr ('or' logical_and_expr)*
         """
         node = self.logical_and_expr()
 
@@ -231,7 +231,7 @@ class Parser(object):
 
     def logical_and_expr(self):
         """
-        logical_and_expr: logical_not_expr (AND logical_not_expr)*
+        logical_and_expr: logical_not_expr ('and' logical_not_expr)*
         """
         node = self.logical_not_expr()
 
@@ -245,7 +245,7 @@ class Parser(object):
 
     def logical_not_expr(self):
         """
-        logical_not_expr: NOT logical_not_expr
+        logical_not_expr: 'not' logical_not_expr
                         | comparison
         """
         if self.token.nature == Nature.NOT:
@@ -257,7 +257,7 @@ class Parser(object):
 
     def comparison(self):
         """
-        comparison: expr ((EQ | NE | LE | GE | LT | GT) expr)*
+        comparison: expr (('==' | '!=' | '<=' | '>=' | '<' | '>') expr)*
         """
         node = self.expr()
 
@@ -291,7 +291,7 @@ class Parser(object):
 
     def expr(self):
         """
-        expr: term ((PLUS | MINUS) term)*
+        expr: term (('+' | '-') term)*
         """
         node = self.term()
 
@@ -310,7 +310,7 @@ class Parser(object):
 
     def term(self):
         """
-        term: atom ((MUL | DIV | INT_DIV) atom)*
+        term: atom (('*' | '/' | '//') atom)*
         """
         node = self.atom()
 
@@ -331,7 +331,7 @@ class Parser(object):
 
     def call(self):
         """
-        call: [MUT] ID [LPAREN parameters RPAREN]
+        call: ['mut'] ID ['(' parameters ')']
         """
         is_mutable = False
         if self.token.nature == Nature.MUT:
@@ -348,12 +348,12 @@ class Parser(object):
 
     def atom(self):
         """
-        atom: PLUS atom
-            | MINUS atom
+        atom: '+' atom
+            | '-' atom
             | call
             | INT_NUMBER
             | FLOAT_NUMBER
-            | LPAREN logical_or_expr RPAREN
+            | '(' logical_or_expr ')'
             | TRUE
             | FALSE
         """

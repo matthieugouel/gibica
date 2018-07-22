@@ -5,7 +5,7 @@ import pytest
 from gibica.lexer import Lexer
 from gibica.parser import Parser
 from gibica.ast import AST
-from gibica.symbols import SymbolTableBuilder
+from gibica.sementic import SymbolTableBuilder
 from gibica.memory import Memory
 from gibica.interpreter import Interpreter
 from gibica.exceptions import ObjectError

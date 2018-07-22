@@ -1,4 +1,4 @@
-"""Symbols module."""
+"""Sementic module."""
 
 from collections import OrderedDict
 
@@ -7,8 +7,9 @@ from gibica.ast import NodeVisitor, AST, FunctionDeclaration
 from gibica.exceptions import SementicError
 from gibica.types import Function
 
+
 #
-# Symbol table
+# Sementic anaysis
 #
 
 

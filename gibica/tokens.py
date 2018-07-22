@@ -65,7 +65,7 @@ class Token(object):
 
     def __str__(self):
         """String representation of a token."""
-        return f"Token({self.nature}, {self.value})"
+        return f"Token({self.nature}, \"{self.value}\")"
 
     def __repr__(self):
         """String representation of the class."""

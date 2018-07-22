@@ -18,49 +18,49 @@ This is the current grammar of the Gibica language.
              | while_statement
              | jump_statement
 
-    function_declaration: DEF ID parameters compound
+    function_declaration: 'def' ID parameters compound
 
-    parameters: LPAREN logical_or_expr (COMMA logical_or_expr)* RPAREN
+    parameters: '(' logical_or_expr (',' logical_or_expr)* ')'
 
-    function_body: LBRACKET (statement)* RBRACKET
+    function_body: '{' (statement)* '}'
 
-    variable_declaration: LET assignment SEMI
+    variable_declaration: 'let' assignment ';'
 
-    expression_statement: assignment SEMI
+    expression_statement: assignment ';'
 
-    assignment: logical_or_expr [ASSIGN logical_or_expr]
+    assignment: logical_or_expr ['=' logical_or_expr]
 
-    if_statement: IF logical_or_expr compound
-                (ELSE IF local_or_expr compound)*
-                [ELSE compound]
+    if_statement: 'if' logical_or_expr compound
+                ('else' 'if' local_or_expr compound)*
+                ['else' compound]
 
-    while_statement: WHILE local_or_expr compound
+    while_statement: 'while' local_or_expr compound
 
-    compound: LBRACKET (statement)* RBRACKET
+    compound: '{' (statement)* '}'
 
-    jump_statement: RETURN expression_statement
+    jump_statement: 'return' expression_statement
 
-    logical_or_expr: logical_and_expr (OR logical_and_expr)*
+    logical_or_expr: logical_and_expr ('or' logical_and_expr)*
 
-    logical_and_expr: logical_not_expr (AND logical_not_expr)*
+    logical_and_expr: logical_not_expr ('and' logical_not_expr)*
 
-    logical_not_expr: NOT logical_not_expr
+    logical_not_expr: 'not' logical_not_expr
                     | comparison
 
-    comparison: expr ((EQ | NE | LE | GE | LT | GT) expr)*
+    comparison: expr (('==' | '!=' | '<=' | '>=' | '<' | '>') expr)*
 
-    expr: term ((PLUS | MINUS) term)*
+    expr: term (('+' | '-') term)*
 
-    term: atom ((MUL | DIV | INT_DIV) atom)*
+    term: atom (('*' | '/' | '//') atom)*
 
-    call: [MUT] ID [LPAREN parameters RPAREN]
+    call: ['mut'] ID ['(' parameters ')']
 
-    atom: PLUS atom
-        | MINUS atom
+    atom: '+' atom
+        | '-' atom
         | call
         | INT_NUMBER
         | FLOAT_NUMBER
-        | LPAREN logical_or_expr RPAREN
+        | '(' logical_or_expr ')'
         | TRUE
         | FALSE
 

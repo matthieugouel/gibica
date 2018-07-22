@@ -3,7 +3,7 @@
 import pytest
 
 from click.testing import CliRunner
-from gibica.gibica import main
+from gibica.entrypoint import main
 
 
 @pytest.fixture
