@@ -46,7 +46,7 @@ class FunctionDeclaration(AST):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class Parameters(AST):
@@ -62,7 +62,7 @@ class Parameters(AST):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class FunctionBody(AST):
@@ -114,7 +114,7 @@ class Variable(AST):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class IfStatement(AST):
@@ -187,7 +187,7 @@ class Identifier(AST):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class Integer(AST):

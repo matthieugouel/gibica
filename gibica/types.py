@@ -73,7 +73,7 @@ class AbstractNumber(AbstractType, ABC):
     @abstractmethod
     def _handle_type(self, other):
         """Helper to handle the return type."""
-        pass
+        pass  # pragma: no cover
 
     def __add__(self, other):
         """Handle the `+` operator."""
@@ -139,7 +139,7 @@ class AbstractNumber(AbstractType, ABC):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class NoneType(AbstractType):
@@ -168,7 +168,7 @@ class NoneType(AbstractType):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class Bool(AbstractType):
@@ -202,7 +202,7 @@ class Bool(AbstractType):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class Int(AbstractNumber):
@@ -265,4 +265,4 @@ class Function(AbstractType):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover

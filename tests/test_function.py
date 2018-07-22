@@ -161,6 +161,33 @@ def test_return_in_compound_statement(evaluate, memory, input, expected):
     [
         (
             """
+        def zero() {
+            let mut i = 5;
+            while i != 0 {
+                return 0;
+                i = i-1;
+            }
+            return 1;
+        }
+
+        let result = zero();
+        """,
+            {'zero': Function('zero'), 'result': Int(0)},
+        )
+    ],
+)
+def test_function_return_in_while(evaluate, memory, input, expected):
+    """Test function a function declared after its call."""
+    instance = evaluate(input, skip_builtins=True)
+
+    assert instance.memory == memory(expected)
+
+
+@pytest.mark.parametrize(
+    'input, expected',
+    [
+        (
+            """
         let result = zero(3);
 
         def zero(n) {

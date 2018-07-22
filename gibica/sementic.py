@@ -35,7 +35,7 @@ class VariableSymbol(Symbol):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class FunctionSymbol(Symbol):
@@ -52,7 +52,7 @@ class FunctionSymbol(Symbol):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class Table(OrderedDict):
@@ -69,7 +69,7 @@ class Table(OrderedDict):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class Stack(list):
@@ -124,7 +124,7 @@ class SymbolTable(object):
 
     def __repr__(self):
         """String representation of the class."""
-        return self.__str__()
+        return self.__str__()  # pragma: no cover
 
 
 class SymbolTableBuilder(NodeVisitor):
