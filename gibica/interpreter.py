@@ -10,7 +10,7 @@ from gibica.ast import (
     WhileStatement,
     ReturnStatement,
 )
-from gibica.types import bind_type, Int, Float, Bool, Function
+from gibica.types import bind_type, NoneType, Int, Float, Bool, Function
 from gibica.memory import Memory
 
 from itertools import islice
@@ -81,6 +81,8 @@ class Interpreter(NodeVisitor):
             if isinstance(child, (IfStatement, WhileStatement)):
                 if return_value is not None:
                     return return_value
+
+        return NoneType()
 
     def visit_FunctionCall(self, node):
         """Visitor for `FunctionCall` AST node."""

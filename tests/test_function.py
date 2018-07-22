@@ -185,6 +185,28 @@ def test_function_declared_after_call(evaluate, memory, input, expected):
     [
         (
             """
+        def null() {
+            let a = 1;
+        }
+
+        let result = null();
+        """,
+            {'null': Function('null'), 'result': NoneType()},
+        )
+    ],
+)
+def test_function_with_no_return(evaluate, memory, input, expected):
+    """Test function a function declared after its call."""
+    instance = evaluate(input, skip_builtins=True)
+
+    assert instance.memory == memory(expected)
+
+
+@pytest.mark.parametrize(
+    'input, expected',
+    [
+        (
+            """
         def recursive(n) {
             if n < 1 {
                 return 1;
