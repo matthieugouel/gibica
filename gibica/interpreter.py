@@ -115,7 +115,14 @@ class Interpreter(NodeVisitor):
 
     def visit_Assignment(self, node):
         """Visitor for `Assignment` AST node."""
-        self.memory[node.left.identifier.name] = self.visit(node.right)
+        obj_memory = self.memory[node.left.identifier.name]
+        obj_program = self.visit(node.right)
+        if obj_memory is not None:
+            obj_program_value = obj_program.value
+            obj_program = obj_memory
+            obj_program.value = obj_program_value
+
+        self.memory[node.left.identifier.name] = obj_program
 
     def visit_Variable(self, node):
         """Visitor for `Variable` AST node."""
