@@ -177,7 +177,62 @@ def test_return_in_compound_statement(evaluate, memory, input, expected):
     ],
 )
 def test_function_return_in_while(evaluate, memory, input, expected):
-    """Test function a function declared after its call."""
+    """Test a function with a return in a while."""
+    instance = evaluate(input, skip_builtins=True)
+
+    assert instance.memory == memory(expected)
+
+
+@pytest.mark.parametrize(
+    'input, expected',
+    [
+        (
+            """
+        def function(n) {
+            let mut i = 0;
+            while i < n {
+                if i == 2 {
+                    return i + 2;
+                }
+                i = i + 1;
+            }
+            return 0;
+        }
+        let result = function(5);
+        """,
+            {'function': Function('function'), 'result': Int(4)},
+        )
+    ],
+)
+def test_function_return_in_if_in_while(evaluate, memory, input, expected):
+    """Test a function with a return in a if in a while."""
+    instance = evaluate(input, skip_builtins=True)
+
+    assert instance.memory == memory(expected)
+
+
+@pytest.mark.parametrize(
+    'input, expected',
+    [
+        (
+            """
+        def function(n) {
+            let mut i = 0;
+            if n == 5 {
+                while i < 5 {
+                    return 2;
+                }
+            }
+            return 0;
+        }
+        let result = function(5);
+        """,
+            {'function': Function('function'), 'result': Int(2)},
+        )
+    ],
+)
+def test_function_return_in_while_in_if(evaluate, memory, input, expected):
+    """Test a function with a return in while in a if."""
     instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
@@ -223,7 +278,7 @@ def test_function_declared_after_call(evaluate, memory, input, expected):
     ],
 )
 def test_function_with_no_return(evaluate, memory, input, expected):
-    """Test function a function declared after its call."""
+    """Test a function with no return"""
     instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)
@@ -258,7 +313,7 @@ def test_recursive_function(evaluate, memory, input, expected):
 
 @pytest.mark.parametrize('input, expected', [("", {'print': Function('print')})])
 def test_only_builtins(evaluate, memory, input, expected):
-    """Test a recursive function."""
+    """Test a program with only builtins functions."""
     instance = evaluate(input, skip_builtins=False)
 
     assert instance.memory == memory(expected)
@@ -276,7 +331,7 @@ def test_only_builtins(evaluate, memory, input, expected):
     ],
 )
 def test_nonetype_function(evaluate, memory, input, expected):
-    """Test a recursive function."""
+    """Test a NoneType builtin function."""
     instance = evaluate(input, skip_builtins=True)
 
     assert instance.memory == memory(expected)

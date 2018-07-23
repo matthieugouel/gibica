@@ -159,9 +159,14 @@ class Interpreter(NodeVisitor):
         """Visitor for `Compound` AST node."""
         self.memory.append_scope()
         for child in node.children:
+            return_value = self.visit(child)
+
             if isinstance(child, ReturnStatement):
-                return self.visit(child)
-            self.visit(child)
+                return return_value
+
+            if isinstance(child, (IfStatement, WhileStatement)):
+                if return_value is not None:
+                    return return_value
         self.memory.pop_scope()
 
     def visit_ReturnStatement(self, node):
