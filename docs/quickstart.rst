@@ -12,7 +12,7 @@ First, get the latest version of sources from Github.
 
 .. code-block:: shell
 
-    git clone https://github.com/matthieugouel/gibica gibica
+    git clone https://github.com/matthieugouel/gibica
 
 Now get into the sources directory and install the project inside a virtual environment.
 This project uses `pipenv` to manage as a package manager so you must install it first. Then just install it with *make*.
@@ -37,7 +37,7 @@ Nonetheless, we can write a first piece of code that display a number. Pretty mu
 
 ::
 
-    display(1);
+    print(1);
 
 Yes that's it. You can save that super fancy program in a file named `hello.gbc` and execute it with the following command :
 
@@ -45,4 +45,4 @@ Yes that's it. You can save that super fancy program in a file named `hello.gbc`
 
     gibica hello.gbc
 
-if **1** is printed on you screen, congratulation ! You just written your first Gibica program !
+if **1** is printed on you screen, congratulation ! You have just written your first Gibica program !

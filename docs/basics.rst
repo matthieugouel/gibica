@@ -9,7 +9,7 @@ Overview
 
 ::
 
-    display(1);
+    print(1);
 
 * You can write comments in your programs. Comments are code that will be ignored during the interpretation.
   To do that, just put the character **#** before your comment.
@@ -18,7 +18,7 @@ Overview
 
     # This is a comment !
 
-    display(1); # Here is an other.
+    print(1); # Here is an other.
 
 Variable and mutability
 -----------------------

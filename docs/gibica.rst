@@ -25,18 +25,18 @@ gibica.builtins module
     :undoc-members:
     :show-inheritance:
 
-gibica.exceptions module
+gibica.entrypoint module
 ------------------------
 
-.. automodule:: gibica.exceptions
+.. automodule:: gibica.entrypoint
     :members:
     :undoc-members:
     :show-inheritance:
 
-gibica.gibica module
---------------------
+gibica.exceptions module
+------------------------
 
-.. automodule:: gibica.gibica
+.. automodule:: gibica.exceptions
     :members:
     :undoc-members:
     :show-inheritance:
@@ -73,10 +73,10 @@ gibica.parser module
     :undoc-members:
     :show-inheritance:
 
-gibica.symbols module
----------------------
+gibica.sementic module
+----------------------
 
-.. automodule:: gibica.symbols
+.. automodule:: gibica.sementic
     :members:
     :undoc-members:
     :show-inheritance:
