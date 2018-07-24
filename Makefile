@@ -1,5 +1,8 @@
 ENVRUN = pipenv run
 
+build:
+	@$(ENVRUN) python setup.py sdist bdist_wheel
+
 install:
 	@pipenv install --three
 
@@ -29,5 +32,14 @@ clean-docs:
 
 docs: generate-docs
 	@$(MAKE) html -C ./docs
+
+upload-test: build
+	@$(ENVRUN) twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+upload: build
+	@$(ENVRUN) twine upload dist/*
+
+clean:
+	@rm -Rf dist build
 
 .PHONY: install install-dev shell format lint mypy tests docs

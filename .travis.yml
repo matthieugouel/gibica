@@ -1,12 +1,11 @@
 language: python
 python:
-  - "3.6"
+  - '3.6'
 
 stages:
   - lint
   - type
   - tests
-
 
 install:
   - pip install pipenv
@@ -14,13 +13,12 @@ install:
 
 jobs:
   include:
-    - stage: lint
-      script: make lint
-    - stage: type
-      script: make type
-    - stage: tests
-      script: make tests
-
+  - stage: lint
+    script: make lint
+  - stage: type
+    script: make type
+  - stage: test
+    script: make tests
 
 after_success:
   pipenv run coveralls

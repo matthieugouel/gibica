@@ -10,18 +10,10 @@
 
 ## Installation
 
-You can install the package from sources after cloning the project and navigating into the project directory.
-
-This project uses `pipenv` as a package manager.
+You can install the package using `pip` or `pipenv`. It requires Python 3.6.0+ to run.
 
 ```
-make install
-```
-
-Then activate the project's virtualenv with the following command.
-
-```
-make shell
+pip install gibica
 ```
 
 ## Usage

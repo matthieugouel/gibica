@@ -11,21 +11,23 @@ setup(
     url="https://github.com/matthieugouel/gibica",
     description="Interprète ? Interprète ? Cuillère !",
     long_description=open("README.md").read(),
+    long_description_content_type='text/markdown',
     license="MIT",
     classifiers=[
-        "Topic :: Utilities",
+        "Development Status :: 3 - Alpha",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
-        "Operating System :: POSIX :: Linux",
-        "Operating System :: MacOS",
+        "Operating System :: OS Independent",
+        "Environment :: Console",
+        "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
     ],
     python_requires=">=3.6",
     include_package_data=True,
     packages=find_packages(),
-    install_requires=["click", "cython"],
+    install_requires=["click"],
     entry_points="""
         [console_scripts]
         gibica=gibica.entrypoint:main

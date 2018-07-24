@@ -5,27 +5,11 @@ Getting Started
 Installation
 ------------
 
-Gibica is still a very young project. Hence, It's still on an early stage of development and doesn't have a proper release on Pypi.
-So, in order to install it, you must do it like a boss with the sources. Don't worry it's easy !
+You can install the package using `pip` or `pipenv`. It requires Python 3.6.0+ to run.
 
-First, get the latest version of sources from Github.
+::
 
-.. code-block:: shell
-
-    git clone https://github.com/matthieugouel/gibica
-
-Now get into the sources directory and install the project inside a virtual environment.
-This project uses `pipenv` to manage as a package manager so you must install it first. Then just install it with *make*.
-
-.. code-block:: shell
-
-    make install
-
-Finally enter in the virual environment.
-
-.. code-block:: shell
-
-    make shell
+    pip install gibica
 
 That's it ! Now you have everything to build and run your Gibica programs.
 

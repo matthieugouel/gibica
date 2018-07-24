@@ -4,12 +4,22 @@ Thanks for contributing ! Here is some guidelines to make your life easier durin
 
 ## Installation
 
-This project uses `pipenv` as a package manager.
+First you need to download the sources of the project from Github.
 
-For development purposes, you can install the package in editable mode with the development requirements.
+```
+git clone https://github.com/matthieugouel/gibica
+```
+
+For development purposes, you can install the package in editable mode with the development requirements. Note: this project uses `pipenv` as a package manager.
 
 ```
 make install-dev
+```
+
+Then, enter in the virual environment.
+
+```
+make shell
 ```
 
 ## Debug mode

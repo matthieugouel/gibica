@@ -8,6 +8,7 @@ click = "*"
 gibica = {editable = true, path = "."}
 
 [dev-packages]
+twine = "*"
 "flake8" = "*"
 pytest = "*"
 pytest-cov = "*"
