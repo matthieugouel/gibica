@@ -1,10 +1,12 @@
 # Gibica
 
+[![Release Status](https://img.shields.io/pypi/status/gibica.svg)](https://pypi.org/project/gibica)
+[![Python Version](https://img.shields.io/pypi/pyversions/gibica.svg)](https://pypi.org/project/gibica)
 [![Build Status](https://travis-ci.org/matthieugouel/gibica.svg?branch=master)](https://travis-ci.org/matthieugouel/gibica)
 [![Coverage Status](https://img.shields.io/coveralls/github/matthieugouel/gibica.svg)](https://coveralls.io/github/matthieugouel/gibica?branch=master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-[![license](https://img.shields.io/github/license/matthieugouel/gibica.svg)](https://github.com/matthieugouel/gibica/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/gibica/badge/?version=latest)](http://gibica.readthedocs.io/en/latest/?badge=latest)
+[![license](https://img.shields.io/github/license/matthieugouel/gibica.svg)](https://github.com/matthieugouel/gibica/blob/master/LICENSE)
 
 > Interprète ? Interprète ? Cuillère ! -- King of Burgundy (Kaamelott).
 

@@ -1,8 +1,5 @@
 ENVRUN = pipenv run
 
-build:
-	@$(ENVRUN) python setup.py sdist bdist_wheel
-
 install:
 	@pipenv install --three
 
@@ -25,13 +22,13 @@ tests:
 	@$(ENVRUN) py.test
 
 generate-docs:
-	@sphinx-apidoc -M -f -o docs gibica
-
-clean-docs:
-	@$(MAKE) clean -C ./docs
+	@$(ENVRUN) sphinx-apidoc -M -f -o docs gibica
 
 docs: generate-docs
 	@$(MAKE) html -C ./docs
+
+build: docs
+	@$(ENVRUN) python setup.py sdist bdist_wheel
 
 upload-test: build
 	@$(ENVRUN) twine upload --repository-url https://test.pypi.org/legacy/ dist/*
@@ -39,7 +36,10 @@ upload-test: build
 upload: build
 	@$(ENVRUN) twine upload dist/*
 
-clean:
+clean-docs:
+	@$(MAKE) clean -C ./docs > /dev/null
+
+clean: clean-docs
 	@rm -Rf dist build
 
 .PHONY: install install-dev shell format lint mypy tests docs

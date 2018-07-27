@@ -11,7 +11,7 @@ setup(
     url="https://github.com/matthieugouel/gibica",
     description="Interprète ? Interprète ? Cuillère !",
     long_description=open("README.md").read(),
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     license="MIT",
     classifiers=[
         "Development Status :: 3 - Alpha",
