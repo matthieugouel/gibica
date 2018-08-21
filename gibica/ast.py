@@ -2,7 +2,7 @@
 
 
 class NodeVisitor(object):
-    """AST Postorder traversal strategy."""
+    """AST post-order traversal strategy."""
 
     def visit(self, node):
         """Visit the right method of the child class according to the node."""

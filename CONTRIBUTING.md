@@ -52,17 +52,17 @@ make type
 You can run the coverage with the following command :
 
 ```
-make tests
+make test
 ```
 
 ## Documentation
 
-The documentation of the project can be found under the directory `./doc/_build/html`.
+The documentation of the project can be found under the directory `./docs/_build/html`.
 
 To rebuild the configuration, you can use the following command :
 
 ```
-make docs
+make doc
 ```
 
 ## Version bumping
