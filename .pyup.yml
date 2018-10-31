@@ -1,5 +1,0 @@
-branch: develop
-
-requirements:
-  - Pipfile
-  - Pipfile.lock
