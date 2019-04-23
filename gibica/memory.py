@@ -79,7 +79,7 @@ class Memory(object):
         self.stack.current.append(Scope(self.stack.current.current))
 
     def pop_scope(self):
-        """Delete the current scope in the current scope."""
+        """Delete the current scope in the current frame."""
         child_scope = self.stack.current.current.copy()
         self.stack.current.pop()
         parent_scope = self.stack.current.current.copy()

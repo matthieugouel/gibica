@@ -53,7 +53,7 @@ This is the current grammar of the Gibica language.
 
     term: atom (('*' | '/' | '//') atom)*
 
-    call: ['mut'] ID ['(' parameters ')']
+    call: ['mut'] ID [parameters]
 
     atom: '+' atom
         | '-' atom

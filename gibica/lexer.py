@@ -19,7 +19,7 @@ class Lexer(object):
         self.char = self.raw[self.cursor]
 
     def advance(self):
-        """Increments the cursor position."""
+        """Increment the cursor position."""
         self.cursor += 1
         if self.cursor >= len(self.raw):
             self.char = None
@@ -35,7 +35,7 @@ class Lexer(object):
             return self.raw[peek_cursor]
 
     def whitespace(self):
-        """Handle whitespace."""
+        """Handle whitespaces."""
         while self.char is not None and self.char.isspace():
             self.advance()
 

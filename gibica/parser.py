@@ -331,7 +331,7 @@ class Parser(object):
 
     def call(self):
         """
-        call: ['mut'] ID ['(' parameters ')']
+        call: ['mut'] ID [parameters]
         """
         is_mutable = False
         if self.token.nature == Nature.MUT:
