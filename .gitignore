@@ -71,5 +71,8 @@ docs/_build/
 # Temporary files
 *.tmp
 
+# VS Code
+.vscode
+
 # Gibica test file
 examples/test.gbc
