@@ -3,9 +3,8 @@
 [![Release Status](https://img.shields.io/pypi/status/gibica.svg)](https://pypi.org/project/gibica)
 [![Python Version](https://img.shields.io/pypi/pyversions/gibica.svg)](https://pypi.org/project/gibica)
 [![Build Status](https://travis-ci.org/matthieugouel/gibica.svg?branch=master)](https://travis-ci.org/matthieugouel/gibica)
-[![Coverage Status](https://img.shields.io/coveralls/github/matthieugouel/gibica.svg)](https://coveralls.io/github/matthieugouel/gibica?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/matthieugouel/gibica/badge.svg?branch=master)](https://coveralls.io/github/matthieugouel/gibica?branch=master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-[![Updates](https://pyup.io/repos/github/matthieugouel/gibica/shield.svg)](https://pyup.io/repos/github/matthieugouel/gibica/)
 [![Documentation Status](https://readthedocs.org/projects/gibica/badge/?version=latest)](http://gibica.readthedocs.io/en/latest/?badge=latest)
 [![license](https://img.shields.io/github/license/matthieugouel/gibica.svg)](https://github.com/matthieugouel/gibica/blob/master/LICENSE)
 
