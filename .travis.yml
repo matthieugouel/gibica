@@ -14,13 +14,14 @@ install:
 
 jobs:
   include:
-    - stage: lint
+    - stage: Quality
+      name: lint
       script: make lint
-    - stage: type
+    - name: type
       script: make type
-    - stage: test
-      script: make tests
-    - stage: deploy
+    - name: tests
+      script: make test
+    - stage: Publish
       script: skip
       deploy:
         provider: pypi
