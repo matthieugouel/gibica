@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="gibica",
-    version="0.8.1",
+    version="0.8.2",
     author="Matthieu Gouel",
     author_email="matthieu.gouel@gmail.com",
     url="https://github.com/matthieugouel/gibica",
